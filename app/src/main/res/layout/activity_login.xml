@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_app"
+    android:gravity="center"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/linearlayout"
+        android:paddingTop="20dp"
+        >
+
+
+        <TextView
+            android:id="@+id/rfid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:textSize="30dp"
+            android:textColor="@color/white"
+            android:text="RFID"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="30dp"
+            android:textColor="@color/white"
+            android:text="仓储系统"
+            />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/view_mobi_wrapper"
+            android:layout_width="match_parent"
+            android:background="@drawable/bg_nosolid_border"
+            android:paddingLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_height="wrap_content">
+
+
+            <EditText
+                android:id="@+id/txt_mobi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left|center"
+                android:singleLine="true"
+                android:textCursorDrawable="@null"
+                android:background="@null"
+                android:hint="@string/mobi"
+                />
+
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/view_password_wrapper"
+            android:background="@drawable/bg_nosolid_border"
+            android:layout_width="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_height="wrap_content">
+
+
+            <EditText
+                android:id="@+id/txt_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:gravity="left|center"
+                android:singleLine="true"
+                android:textCursorDrawable="@null"
+                android:background="@null"
+                />
+
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <com.ioter.warehouse.ui.widget.LoadingButton
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_btn"
+            app:loadingText="正在登录"
+            app:progressColor="@color/colorAccent"
+            app:text="@string/login"
+            app:textColor="@color/white"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/white"
+            android:text="注册账号"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

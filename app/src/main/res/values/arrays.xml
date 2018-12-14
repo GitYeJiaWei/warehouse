@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <declare-styleable name="RangeGraph">
+        <!-- Allow optional setting of min and max from the XML layout -->
+        <attr name="minimum" format="integer"/>
+        <attr name="maximum" format="integer"/>
+        <!-- Provide an Orientation parameter as an enum ** Not implemented yet! -->
+        <attr name="orientation" format="enum">
+            <enum name="vertical" value="0"/>
+            <enum name="horizontal" value="1"/>
+        </attr>
+        <!-- Allow to override the default colors for plain, In, and Out of Range -->
+        <attr name="colorNeutral" format="color" />
+        <attr name="colorInRange" format="color" />
+        <attr name="colorOutOfRange" format="color" />
+    </declare-styleable>
+
+    <string-array name="Array_Shelf">
+        <item >采购收货上架</item>
+    </string-array>
+    <string-array name="Array_Push">
+        <item >商品出库</item>
+    </string-array>
+    <string-array name="Array_check">
+        <item >货物盘点</item>
+    </string-array>
+    <string-array name="Array_Type">
+        <item >内向交货单</item>
+        <!--      <item >采购订单</item>-->
+    </string-array>
+
+</resources>

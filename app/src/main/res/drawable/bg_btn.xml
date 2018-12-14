@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 定义矩形rectangle -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+
+            <solid android:color="#CCC3C3C3" />
+
+            <!-- 定义边框颜色 -->
+            <stroke android:width="0.1dp" android:color="#CCC3C3C3" />
+            <corners
+                android:bottomLeftRadius="5dp"
+                android:bottomRightRadius="5dp"
+                android:topLeftRadius="5dp"
+                android:topRightRadius="5dp" />
+
+
+        </shape>
+
+    </item>
+    <item android:state_enabled="false">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+
+            <solid android:color="#CCC3C3C3" />
+
+            <!-- 定义边框颜色 -->
+            <stroke android:width="0.1dp" android:color="#CCC3C3C3" />
+            <corners
+                android:bottomLeftRadius="5dp"
+                android:bottomRightRadius="5dp"
+                android:topLeftRadius="5dp"
+                android:topRightRadius="5dp" />
+
+        </shape>
+    </item>
+    <item>
+
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+
+            <solid android:color="#CC000000" />
+
+            <!-- 定义边框颜色 -->
+            <stroke android:width="0.1dp" android:color="#CC000000" />
+
+            <corners
+                android:bottomLeftRadius="5dp"
+                android:bottomRightRadius="5dp"
+                android:topLeftRadius="5dp"
+                android:topRightRadius="5dp" />
+
+
+        </shape>
+
+    </item>
+</selector>

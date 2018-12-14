@@ -1,0 +1,511 @@
+<resources>
+    <string name="app_name">仓储系统</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_search" />
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
+
+    <string name="guide_1">全新改版</string>
+    <string name="guide_2">视频购物</string>
+    <string name="guide_3">评价晒图</string>
+
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="start">开始</string>
+    <string name="stop">结束</string>
+    <string name="uhf_please_stop">请先停止读标签!</string>
+    <string name="uhf_low_power_info">电量低,请充电!</string>
+    <string name="uhf_low_power_consumption">副电点亮低， 是否切换到主电池?</string>
+
+    <string name="user_name">用户名</string>
+    <string name="user_password">密	码</string>
+    <string name="number">序号</string>
+    <string name="EPC">EPC</string>
+    <string name="shelf">货架</string>
+    <string name="setting">设置</string>
+    <string name="versions">版本</string>
+    <string name="power">功率</string>
+    <string name="frequency">频率</string>
+    <string name="base_band_rate">基带速率</string>
+    <string name="Qvalue">Q值</string>
+    <string name="session">Session</string>
+    <string name="get">获取</string>
+
+    <!-- 主页 -->
+    <string name="main_out">出库</string>
+    <string name="main_out_box">装箱</string>
+    <string name="main_in">入库</string>
+    <string name="store_in">入店</string>
+    <string name="main_check">盘点</string>
+    <string name="main_scan">扫描查询</string>
+    <string name="main_more">更多</string>
+
+    <!-- 读EPC -->
+    <string name="readEpc">读EPC</string>
+    <string name="readCount">读取次数</string>
+    <string name="readTemp">读取温度</string>
+    <string name="Tag_Time">Time:0 S </string>
+    <string name="Tag_Count">Total:0</string>
+    <string name="Tag_ReadTotalCount">SP:0 T/S</string>
+    <string name="back">返回</string>
+
+    <!-- 基础对话框 -->
+    <string name="dialog_confirm">确定</string>
+    <string name="dialog_cancel">取消</string>
+
+
+    <string name="error_unkown">未知错误</string>
+    <string name="error_http">网络连接错误</string>
+    <string name="error_system">服务器出错</string>
+    <string name="error_account_freeze">账户被冻结，请联系管理员</string>
+    <string name="error_api_no_perission">调用了无权限的API接口</string>
+    <string name="error_login">用户名或者密码错误</string>
+    <string name="error_http_400">bad request</string>
+    <string name="error_http_404">服务器资源找不到</string>
+    <string name="error_http_500">服务器错误</string>
+    <string name="error_socket_timeout">网络超时</string>
+    <string name="error_socket_unreachable">网络不可用</string>
+    <string name="loading">加载中...</string>
+    <string name="empty_data">暂无数据</string>
+    <string name="hot_game">热门游戏</string>
+    <string name="hot_top">热门主题</string>
+    <string name="hot_app">热门应用</string>
+    <string name="mobi">账号</string>
+    <string name="password">密码</string>
+    <string name="login">登录</string>
+    <string name="default_loading">loading</string>
+
+    <string name="apps_update">应用切换</string>
+    <string name="sys_setting">系统设置</string>
+    <string name="logining">正在登陆...</string>
+    <string name="logout">退出登录</string>
+    <string name="download">下载</string>
+    <string name="manage">管理</string>
+    <string name="error_token">登录失效，请重新登录</string>
+
+    <string name="epc_sku_num">货品款号:</string>
+    <string name="epc_ware_house_position">仓位:</string>
+    <string name="epc_left_num">库存量:</string>
+    <string name="epc_shop_qcode">货品条码:</string>
+
+
+    <string name="rapid_read">Rapid Read</string>
+    <string name="title_activity_inventory">InventoryActivity</string>
+
+    <!-- Options available in the Navigation Drawer of the application -->
+    <string-array name="options_array">
+        <item>主菜单</item>
+        <item>设置</item>
+        <item>退出</item>
+
+        <item>收货</item>
+        <item>上架</item>
+        <item>拣货</item>
+        <item>库存移动</item>
+        <item>库存查询</item>
+        <item>库存盘点</item>
+        <item>系统设置</item>
+
+    </string-array>
+
+    <!-- Strings for the navigation drawer -->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Strings for actions in Inventory Fragment -->
+    <string name="action_none">None</string>
+    <string name="action_user">User</string>
+    <string name="action_reserved">Reserved</string>
+    <string name="action_tid">TID</string>
+    <string name="action_epic">EPC</string>
+    <string name="title_activity_antenna_settings">Antenna</string>
+    <string name="title_activity_readers_list">Readers List</string>
+    <string name="title_activity_application_settings">Application</string>
+    <string name="title_activity_singulation_control">Singulation Control</string>
+    <string name="unique_tag_settings">Unique Tag Settings</string>
+    <string name="unique_tag_reads">Report Unique tags</string>
+    <string name="report_unique_tags">Report Unique tags</string>
+
+    <!-- Items for link profile -->
+    <string-array name="link_profile_array">
+        <item>RF Mode 1</item>
+        <item>RF Mode 2</item>
+        <item>RR Mode 1</item>
+        <item>RR Mode 2</item>
+        <item>RS Mode 1</item>
+        <item>RS Mode 2</item>
+    </string-array>
+
+    <!-- Strings for Singulation Control Fragment -->
+    <!-- Items for sessions -->
+    <string-array name="session_array">
+        <item>S0</item>
+        <item>S1</item>
+        <item>S2</item>
+        <item>S3</item>
+    </string-array>
+
+    <!-- Items for populating tags -->
+    <string-array name="tag_population_array">
+        <item>30</item>
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+        <item>400</item>
+        <item>500</item>
+        <item>600</item>
+    </string-array>
+
+    <!-- Items for inventory state -->
+    <string-array name="inventory_state_array">
+        <item>STATE A</item>
+        <item>STATE B</item>
+        <item>AB FLIP</item>
+    </string-array>
+
+    <!-- Items for sl flag -->
+    <string-array name="sl_flags_array">
+        <item>ALL</item>
+        <item>DEASSERTED</item>
+        <item>ASSERTED</item>
+    </string-array>
+
+    <string-array name="inv_menu_items">
+        <item>None</item>
+        <item>User</item>
+        <item>Reserved</item>
+        <item>TID</item>
+        <item>EPC</item>
+    </string-array>
+
+    <!-- Strings for Access Operations Read Write Fragment -->
+
+    <!-- Items for memory bank state -->
+    <string-array name="acess_read_write_memory_bank_array">
+        <item>EPC</item>
+        <item>RESV</item>
+        <item>TID</item>
+        <item>USER</item>
+    </string-array>
+
+    <!-- Strings for Access Operations Lock Fragment -->
+    <!-- Items for memory bank state -->
+    <string-array name="acess_lock_memory_bank_array">
+        <item>EPC</item>
+        <item>ACCESS PWD</item>
+        <item>KILL PWD</item>
+        <item>TID</item>
+        <item>USER</item>
+    </string-array>
+
+    <!-- Items for lock privilege state -->
+    <string-array name="acess_lock_privilege_array">
+        <!--<item>None</item>-->
+        <item>Read and Write</item>
+        <item>Permanent Lock</item>
+        <item>Permanent Unlock</item>
+        <item>Unlock</item>
+    </string-array>
+
+    <!-- Strings for Access Operations Kill Fragment -->
+
+    <!-- Strings for Access Operations Kill Fragment -->
+    <!-- Items for tagID -->
+    <string-array name="pre_filter_memory_bank_array">
+        <item>EPC</item>
+        <item>TID</item>
+        <item>USER</item>
+    </string-array>
+
+    <string-array name="pre_filter_action_array">
+        <item>INV A NOT INV B OR ASRT SL NOT DSRT SL</item>
+        <item>INV A OR ASRT SL</item>
+        <item>NOT INV B OR NOT DSRT SL</item>
+        <item>INV A2BB2A NOT INV A OR NEG SL NOT ASRT SL</item>
+        <item>INV B NOT INV A OR DSRT SL NOT ASRT SL</item>
+        <item>INV B OR DSRT SL</item>
+        <item>NOT INV A OR NOT ASRT SL</item>
+        <item>NOT INV A2BB2A OR NOT NEG SL</item>
+    </string-array>
+
+    <string-array name="pre_filter_target_options">
+        <item>SESSION S0</item>
+        <item>SESSION S1</item>
+        <item>SESSION S2</item>
+        <item>SESSION S3</item>
+        <item>SL FLAG</item>
+    </string-array>
+
+    <string-array name="pre_filter_tag_id_array">
+        <item>AD9915404190725965400412</item>
+        <item>AD9915404190725965400413</item>
+        <item>AD9915404190725965400414</item>
+        <item>AD9915404190725965400415</item>
+        <item>AD9915404190725965400416</item>
+    </string-array>
+
+    <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
+    <string name="title_activity_access_operations">AccessOperationsActivity</string>
+
+    <!-- Strings for StartStopTrigger Fragment -->
+    <!-- Strings for start trigger Selection -->
+    <string-array name="start_trigger_array">
+        <item>Immediate</item>
+        <item>Handheld</item>
+        <item>Periodic</item>
+    </string-array>
+    <!-- Strings for stop trigger Selection -->
+    <string-array name="stop_trigger_array">
+        <item>Immediate</item>
+        <item>Handheld</item>
+        <item>Duration</item>
+        <item>Tag Observation</item>
+        <item>N attempts</item>
+    </string-array>
+
+    <!-- beeper volume -->
+    <string-array name="beeper_volume_array">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
+
+    <!-- Error Indicators -->
+    <string name="none_paired">No Devices Found</string>
+    <string name="select_device">Select A Device</string>
+    <string name="none_found">No Devices Found</string>
+    <string name="error_security">Security Error in SerialPortActivity</string>
+    <string name="error_unknown">Unknown Error in Serial Port Activity</string>
+    <string name="error_configuration">Configuration Error in SerialPortActivity</string>
+    <string name="title_activity_base_receiver">BaseReceiverActivity</string>
+    <string name="error_unsatisfied_link">UnsatisfiedLinkError in SerialPortActivity</string>
+    <string name="title_activity_main_activity2">MainActivity2</string>
+    <string name="title_activity_regulatory_settings">Regulatory</string>
+    <string name="title_activity_start_stop_trigger">Start\\Stop Triggers</string>
+    <string name="title_activity_save_configuration">Save Configuration</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_beeper">Beeper</string>
+    <string name="title_activity_led">LED</string>
+    <string name="led_settings_title">Host LED Settings</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="title_activity_settings_detail">Setting Details</string>
+    <string name="action_search">Search</string>
+    <string name="action_rr">Rapid Read</string>
+    <string name="search_hint">Enter Tag ID</string>
+
+    <!-- Titles in ReadersList -->
+    <string name="active_reader_title">Active Reader</string>
+    <string name="available_readers_title">Available Readers</string>
+
+    <!-- Titles in regulatory settings -->
+    <string name="channel_selection">Channel Selection</string>
+
+    <!-- Titles in connection settings -->
+    <string name="reader_conn_sett">Reader Connection Settings</string>
+    <string name="notification_settings">Notification Settings</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="tag_reporting">Tag Reporting</string>
+    <string name="battery">Battery</string>
+    <string name="rr_unique_tags_title">Unique Tags</string>
+    <string name="rr_total_tag_title">TOTAL READS</string>
+    <string name="rr_read_time_title">READ TIME</string>
+    <string name="rr_read_rate_title">READ RATE</string>
+    <string name="start_title">START</string>
+    <string name="tag_id">Tag ID</string>
+    <string name="locationing_distance_title">Relative Distance</string>
+    <string name="stop_title">STOP</string>
+    <string name="tag_pattern_title">Tag Pattern</string>
+    <string name="password_title">Password</string>
+    <string name="memory_bank_title">Memory Bank</string>
+    <string name="offset_title">Offset (words)</string>
+    <string name="length_title">Length (words)</string>
+    <string name="data_title">Data</string>
+    <string name="operation_success">Operation Completed Successfully</string>
+    <string name="read_title">READ</string>
+    <string name="write_title">WRITE</string>
+    <string name="lock_privilege_title">Lock Privilege</string>
+    <string name="lock_title">LOCK</string>
+    <string name="kill_pass_title">Kill Password</string>
+    <string name="kill_title">KILL</string>
+    <string name="offset_bits_title">Offset (words)</string>
+    <string name="target_title">Target</string>
+    <string name="action_title">Action</string>
+    <string name="enable_filter_1">Enable Filter 1</string>
+    <string name="enable_filter_2">Enable Filter 2</string>
+    <string name="power_level_title">Power Level (dbm)</string>
+    <string name="link_profile_title">Link Profile</string>
+    <string name="status_success_message">Settings Applied Successfully</string>
+    <string name="auto_detect_readers">Auto Detect Readers</string>
+    <string name="auto_reconnect_reader">Auto Connect Reader</string>
+    <string name="readers_available">Reader Available</string>
+    <string name="readers_connection">Reader Connection</string>
+    <string name="reader_battery_status">Reader Battery Status</string>
+    <string name="region_title">Region</string>
+    <string name="warning_title">Warning:</string>
+    <string name="country_selection_warning">Select only the country in which you are using the device</string>
+    <string name="first_seen_time">First Seen Time</string>
+    <string name="last_seen_time">Last Seen Time</string>
+    <string name="pc">PC</string>
+    <string name="rssi">RSSI</string>
+    <string name="phase">Phase</string>
+    <string name="channel_index">Channel Index</string>
+    <string name="tag_seen_count">Tag Seen Count</string>
+    <string name="save_to_sled">SAVE</string>
+    <string name="battery_discharging_message">Status: Discharging.</string>
+    <string name="RFID_demo_app">RFID Demonstration Application</string>
+    <string name="moto_solutions">Zebra Technologies</string>
+    <string name="app_version_title">Application Version</string>
+    <string name="rfid_sled">RFID sled:</string>
+    <string name="module_version">Module Version</string>
+    <string name="radio_version">Radio Version</string>
+    <string name="copyright_info">Copyright © 2017</string>
+    <string name="sl_flag_title">SL Flag</string>
+    <string name="inv_state_title">Inventory State</string>
+    <string name="tag_population_title">Tag Population</string>
+    <string name="session_title">Session</string>
+    <string name="sled_beeper_title">Host Beeper</string>
+    <string name="led_subtitle">Enable</string>
+    <string name="beeper_volume_control_title">Sled Beeper Volume Control</string>
+    <string name="start_trigger_title">Start Trigger</string>
+    <string name="start_time_title">Start Time</string>
+    <string name="periodic_title">Period (ms)</string>
+    <string name="stop_trigger_title">Stop Trigger</string>
+    <string name="duration_title">Duration (ms)</string>
+    <string name="report_title">Report</string>
+    <string name="periodic_report_title">Periodic Report</string>
+    <string name="paired_devices_title">Paired Device</string>
+    <string name="OK">OK</string>
+    <string name="drawer_item_text">Drawer Item</string>
+    <string name="drawer_image_desc">Icon for the Navigation drawer item</string>
+    <string name="app_version">1.0.5.15</string>
+    <string name="module_version_no">1.0.1.20</string>
+    <string name="radio_version_no">2.4.3.55</string>
+    <string name="battery_level_desc">Icon depicting level of battery in the reader</string>
+    <string name="battery_percentage_text">0%</string>
+    <string name="inv_filter_title">MEMORY BANK</string>
+    <string name="inv_read_time_title">READ TIME</string>
+    <string name="inv_unique_title">UNIQUE TAGS</string>
+    <string name="inv_count_title">TOTAL READS</string>
+    <string name="save_antenna_power">Antenna Power</string>
+    <string name="save_link_profile">Link Profile</string>
+    <string name="save_seesion">Session</string>
+    <string name="save_start_trigger">Start Trigger</string>
+    <string name="save_stop_trigger">Stop Trigger</string>
+    <string name="save_beeper">Beeper Volume</string>
+    <string name="save_region">Region</string>
+    <string name="start_trigger_released_title">Trigger Released</string>
+    <string name="home_rapid_read">Rapid Read</string>
+    <string name="home_inventory">Inventory</string>
+    <string name="err_locationing_failed">Locationing Failed</string>
+    <string name="err_stop_locationing_failed">Stop Locationing Failed</string>
+    <string name="home_settings">Settings</string>
+    <string name="home_locate">Locate Tag</string>
+    <string name="home_filter">Pre Filters</string>
+    <string name="home_access">Access Control</string>
+    <string name="inv_user_memory_title">USER MEMORY</string>
+    <string name="inv_pc_title">PC</string>
+    <string name="inv_rssi_title">RSSI</string>
+    <string name="inv_phase_title">PHASE</string>
+    <string name="inv_channel_title">CHANNEL</string>
+    <string name="setting_icon_desc">Setting Icon</string>
+    <string name="stop_trigger_timeout">Timeout (ms)</string>
+    <string name="stop_trigger_released">Trigger Released</string>
+    <string name="stop_trigger_pressed">Trigger Pressed</string>
+    <string name="stop_trigger_tag_observation">Tag Observation</string>
+    <string name="stop_trigger_attempts">No. of Attempts</string>
+    <string name="start_trigger_pressed">Trigger Pressed</string>
+    <string name="inventory_settings_title">Inventory modes</string>
+    <string name="title_activity_inventory_settings">Inventory Settings</string>
+    <string name="title_pre_filters">Pre Filters</string>
+    <string-array name="inventory_modes_array">
+        <item>regular inventory</item>
+        <item>radio engine</item>
+        <item>HAL</item>
+    </string-array>
+    <string name="save_antenna_title">ANTENNA</string>
+    <string name="save_singulation_title">SINGULATION</string>
+    <string name="save_tag_report_title">TAG REPORT</string>
+    <string name="save_start_stop_title">START \\ STOP TRIGGERS</string>
+    <string name="save_beeper_title">BEEPER</string>
+    <string name="save_regulatory_title">REGULATORY</string>
+    <string name="save_dpo_title">POWER MANAGEMENT</string>
+    <string name="save_sled_beeper_volume_title">Beeper volume</string>
+    <string name="off">OFF</string>
+    <string name="on">ON</string>
+    <string name="error_disconnected">No Active Connection with Reader</string>
+    <string name="error_reader_not_updated">Reader capabilities not updated</string>
+    <string name="beeper_id_title">Beeper Id</string>
+    <string name="beeper_tone_title">Tone</string>
+    <string name="beeper_volume_title">Volume</string>
+    <string name="beeper_duration_title">Duration</string>
+    <string name="title_model">Model</string>
+    <string name="title_serial">Serial</string>
+    <string name="colon">:</string>
+    <string name="msg_read_succeed">Read succeed</string>
+    <string name="msg_write_succeed">Write succeed</string>
+    <string name="msg_lock_succeed">Lock succeed</string>
+    <string name="msg_kill_succeed">Kill succeed</string>
+    <string name="err_access_op_failed">Access operation Failed</string>
+    <string name="password_connection_title">Connection password required !</string>
+    <string name="hint_password">Password</string>
+    <string name="cancel_title">Cancel</string>
+    <string name="connect_title">Connect</string>
+    <string name="battery_status__critical_message">Battery is critical !\nPlease charge the Sled</string>
+    <string name="battery_charging_message">Status: Charging</string>
+    <string name="set_region_msg">Please set the region</string>
+    <string name="start_stop_progress_title">saving start/stop triggers...</string>
+    <string name="start_stop_triggers">start/stop Triggers</string>
+    <string name="regulatory_progress_title">Saving Regulatory Settings...</string>
+    <string name="regulatory_settings">Regulatory Settings</string>
+    <string name="antenna_progress_title">Saving Antenna Settings...</string>
+    <string name="antenna_configuration">AntennaConfiguration</string>
+    <string name="singulation_progress_title">Saving Singulation Settings...</string>
+    <string name="singulation_control">SingulationControl</string>
+    <string name="save_config_progress_title">Saving Configuration...</string>
+    <string name="save_configuration">Save Configuration</string>
+    <string name="tag_reporting_progress_title">Saving Tag Report Settings...</string>
+    <string name="tag_report_settings">SetReportConfig</string>
+    <string name="beeper_progress_title">Saving Beeper Settings...</string>
+    <string name="set_beeper_volume">SetBeeperVolume</string>
+    <string name="filter_progress_title">Saving Filter Settings...</string>
+    <string name="pre_filter">PreFiltersCommand</string>
+    <string name="app_title">RFID Reader</string>
+    <string name="battery_no_active_connection_message">Status: No active connection</string>
+    <string name="status_failure_message">Failed to apply settings</string>
+    <string name="battery_status_low_message">Battery is low !\nPlease charge the Sled</string>
+    <string name="battery_critical_message">Status: Battery level is critical</string>
+    <string name="battery_low_message">Status: Battery level is low</string>
+    <string name="battery_full_message">Status: Battery is fully charged</string>
+    <string name="default_timeout">10000</string>
+    <string name="default_no_of_attempts">10</string>
+    <string name="default_tag_observe_count">100</string>
+    <string name="error_empty_fields_start_trigger">Empty fields in start trigger settings</string>
+    <string name="error_empty_fields_stop_trigger">Empty fields in stop trigger settings</string>
+    <string name="error_empty_fields_preFilters">Empty fields in pre filters</string>
+    <string name="empty_length">Please fill legth</string>
+    <string name="empty_offset">Please fill offset</string>
+    <string name="dynamic_power_title">Dynamic power</string>
+    <string name="export_data_sett">Data Export Settings</string>
+    <string name="export_data">Export Data</string>
+    <string name="tag_report_settings_title">Tag Report Settings</string>
+    <string name="title_activity_dpo_settings">Power Management </string>
+    <string name="dpo_message_title">Dynamic Power optimization configures the reader for best battery life and works with Pre configured settings. Dynamic Power optimization works only for inventory operation</string>
+    <string name="error_empty_fields_antenna_config">Empty fields in antenna settings</string>
+    <string name="error_invalid_fields_antenna_config">Invalid fields in antenna settings</string>
+    <string name="tari_title">Tari</string>
+    <string name="dpo_progress_title">Saving Power Management settings...</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="action_bc">BC Scanning</string>
+
+    <string name="pref_beeper">BeeperPreference</string>
+    <string name="beeper_volume">BeepVolume</string>
+
+    <string name="title_activity_main">MainActivity</string>
+
+</resources>

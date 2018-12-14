@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="5"
+    >
+
+    <TextView
+        android:id="@+id/skustyle_tv"
+        android:layout_width="0dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.4"
+        android:gravity="center"
+        android:text="fds"
+        android:textSize="12sp"
+        />
+
+    <View
+        android:layout_width="1.5dip"
+        android:layout_height="match_parent"
+        android:background="#B4B3B3"/>
+
+    <TextView
+        android:id="@+id/skucolor_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="fds"
+        android:textSize="12sp"
+        />
+
+    <View
+        android:layout_width="1.5dip"
+        android:layout_height="match_parent"
+        android:background="#B4B3B3"/>
+
+    <TextView
+        android:id="@+id/skusize_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="fds"
+        android:textSize="12sp"
+        />
+
+    <View
+        android:layout_width="1.5dip"
+        android:layout_height="match_parent"
+        android:background="#B4B3B3"/>
+
+    <TextView
+        android:id="@+id/num_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="fds"
+        android:textSize="12sp"
+        />
+
+    <View
+        android:layout_width="1.5dip"
+        android:layout_height="match_parent"
+        android:background="#B4B3B3"/>
+    <TextView
+        android:id="@+id/count_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="fds"
+        android:textSize="12sp"
+        />
+
+</LinearLayout>
