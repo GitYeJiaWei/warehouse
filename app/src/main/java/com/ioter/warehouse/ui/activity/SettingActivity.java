@@ -30,50 +30,13 @@ public class SettingActivity extends NewBaseActivity {
         tv_scan = findViewById(R.id.tv_scan);
         tv_read = findViewById(R.id.tv_read);
         tv_read1 = findViewById(R.id.tv_read1);
-        init();
+        new SettingActivity.InitBarCodeTask().execute();
         tv_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ScanBarcode();
             }
         });
-    }
-
-    //初始化二维码扫描头
-    public void init()
-    {
-        if (Build.VERSION.SDK_INT > 21)
-        {
-            //扫条码 需要相机对应用开启相机和存储权限；
-            if (ContextCompat.checkSelfPermission(this,
-                    android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                //先判断有没有权限 ，没有就在这里进行权限的申请
-                ActivityCompat.requestPermissions(SettingActivity.this,
-                        new String[]{android.Manifest.permission.CAMERA,android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
-            } else
-            {
-                //说明已经获取到摄像头权限了 想干嘛干嘛
-            }
-            //读写内存权限
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            {
-                // 请求权限
-                ActivityCompat
-                        .requestPermissions(
-                                this,
-                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                                2);
-            }
-
-        } else
-        {
-            //这个说明系统版本在6.0之下，不需要动态获取权限。
-        }
-        new SettingActivity.InitBarCodeTask().execute();
     }
 
     //扫条码
@@ -117,8 +80,26 @@ public class SettingActivity extends NewBaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        readTag();
+        if (keyCode == 139 || keyCode == 280)
+        {
+            if (event.getRepeatCount() == 0)
+            {
+                readTag();
+            }
+        }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == 139 || keyCode == 280)
+        {
+            if (event.getRepeatCount() == 0)
+            {
+                readTag();
+            }
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     private void readTag() {
@@ -162,11 +143,7 @@ public class SettingActivity extends NewBaseActivity {
 
     }
 
-    @Override
-    public void onDestroy() {
-        stopInventory();
-        super.onDestroy();
-    }
+
 
     /**
      * 停止识别

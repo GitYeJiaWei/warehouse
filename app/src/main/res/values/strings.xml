@@ -2,6 +2,15 @@
     <string name="app_name">仓储系统</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="ware_title">请输入库单号或客户订单号(选一即可)</string>
+    <string name="ware_title1">请输入产品</string>
+    <string name="ware_danhao">入库单号：</string>
+    <string name="ware_dingdan">客户订单号：</string>
+    <string name="ware_while">📄 逐件</string>
+    <string name="ware_sure">√ 确定</string>
+    <string name="ware_cancle">× 取消</string>
+    <string name="ware_product">产品：</string>
+    <string name="ware_prod_name">品名：</string>
 
     <string name="menu_search" />
     <string name="open">打开</string>

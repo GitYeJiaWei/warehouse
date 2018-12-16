@@ -165,8 +165,27 @@ public class NewBaseActivity extends AppCompatActivity {
         }
     }
 
+   /* @Override
+    protected void onDestroy() {
+        if (AppApplication.mReader != null)
+        {
+            AppApplication.mReader.free();
+        }
+        if (barcode2DWithSoft != null)
+        {
+            barcode2DWithSoft.stopScan();
+            barcode2DWithSoft.close();
+        }
+        super.onDestroy();
+    }*/
+
     @Override
     protected void onDestroy() {
+        if (barcode2DWithSoft != null)
+        {
+            barcode2DWithSoft.stopScan();
+            barcode2DWithSoft.close();
+        }
         super.onDestroy();
     }
 }

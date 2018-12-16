@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activity.SettingActivity"
+            android:name=".ui.activity.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Notitle.FullScreen">
@@ -44,7 +44,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <!--<activity android:name=".ui.activity.SettingActivity"></activity>-->
+        <activity android:name=".ui.activity.SettingActivity" />
+        <activity android:name=".ui.activity.ReceiveActivity" />
+        <activity android:name=".ui.activity.ReceiveMessActivity" />
+        <activity android:name=".ui.activity.ReceiveDateActivity"></activity>
     </application>
 
 </manifest>
