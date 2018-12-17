@@ -23,6 +23,7 @@ public class FindDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_data);
         ButterKnife.bind(this);
+        setTitle("库存查询");
     }
 
     @OnClick({R.id.bt_sure, R.id.btn_cancel})

@@ -15,15 +15,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FindMessFragment#newInstance} factory method to
+ * Use the {@link GroundMessFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindMessFragment extends Fragment {
+public class GroundMessFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,8 +33,6 @@ public class FindMessFragment extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.et_danhao)
     EditText etDanhao;
-    @BindView(R.id.et_dingdan)
-    EditText etDingdan;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -41,7 +40,7 @@ public class FindMessFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public FindMessFragment() {
+    public GroundMessFragment() {
         // Required empty public constructor
     }
 
@@ -51,11 +50,11 @@ public class FindMessFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FindMessFragment.
+     * @return A new instance of fragment GroundMessFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FindMessFragment newInstance(String param1, String param2) {
-        FindMessFragment fragment = new FindMessFragment();
+    public static GroundMessFragment newInstance(String param1, String param2) {
+        GroundMessFragment fragment = new GroundMessFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -76,19 +75,15 @@ public class FindMessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_find_mess, container, false);
+        View view = inflater.inflate(R.layout.fragment_ground_mess, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         Bundle bundle = getArguments();
         String message = null;
-        String message1 = null;
         if (bundle != null) {
             message = bundle.getString(ARG_PARAM1);
-            message1 = bundle.getString(ARG_PARAM2);
         }
         etDanhao.setText(message);
-        etDingdan.setText(message1);
-
         return view;
     }
 

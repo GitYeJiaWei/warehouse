@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity{
     //上架
     public void isGrounding(View view)
     {
-
+        startActivity(new Intent(MainActivity.this,GroundActivity.class));
     }
 
     //拣货
