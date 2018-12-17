@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
     android:focusableInTouchMode="true"
     tools:context=".ui.activity.ReceiveActivity">
 
     <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -30,6 +30,7 @@
     </LinearLayout>
 
     <TextView
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -37,15 +38,17 @@
         android:text="@string/ware_danhao"/>
 
     <EditText
+        android:layout_margin="5dp"
         android:id="@+id/et_danhao"
         android:singleLine="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
         android:hint="请输入入库单号"
         android:gravity="center"/>
 
     <TextView
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -53,10 +56,11 @@
         android:text="@string/ware_dingdan"/>
 
     <EditText
+        android:layout_margin="5dp"
         android:id="@+id/et_dingdan"
         android:singleLine="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
         android:hint="请输入客户订单号"
         android:gravity="center"/>

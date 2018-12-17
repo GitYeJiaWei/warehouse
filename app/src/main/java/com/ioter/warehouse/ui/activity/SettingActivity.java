@@ -1,11 +1,6 @@
 package com.ioter.warehouse.ui.activity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.media.ToneGenerator;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -30,7 +25,6 @@ public class SettingActivity extends NewBaseActivity {
         tv_scan = findViewById(R.id.tv_scan);
         tv_read = findViewById(R.id.tv_read);
         tv_read1 = findViewById(R.id.tv_read1);
-        new SettingActivity.InitBarCodeTask().execute();
         tv_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,10 +36,10 @@ public class SettingActivity extends NewBaseActivity {
     //扫条码
     private void ScanBarcode()
     {
-        if (barcode2DWithSoft != null)
+        if (AppApplication.barcode2DWithSoft != null)
         {
-            barcode2DWithSoft.scan();
-            barcode2DWithSoft.setScanCallback(ScanBack);
+            AppApplication.barcode2DWithSoft.scan();
+            AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
         }
     }
 
@@ -142,8 +136,6 @@ public class SettingActivity extends NewBaseActivity {
         });
 
     }
-
-
 
     /**
      * 停止识别

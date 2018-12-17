@@ -47,7 +47,10 @@
         <activity android:name=".ui.activity.SettingActivity" />
         <activity android:name=".ui.activity.ReceiveActivity" />
         <activity android:name=".ui.activity.ReceiveMessActivity" />
-        <activity android:name=".ui.activity.ReceiveDateActivity"></activity>
+        <activity android:name=".ui.activity.ReceiveDateActivity" />
+        <activity android:name=".ui.activity.FindActivity" />
+        <activity android:name=".ui.activity.FindMessActivity" />
+        <activity android:name=".ui.activity.FindDataActivity"></activity>
     </application>
 
 </manifest>

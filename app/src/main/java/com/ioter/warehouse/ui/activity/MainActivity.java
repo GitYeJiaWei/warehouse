@@ -1,6 +1,7 @@
 package com.ioter.warehouse.ui.activity;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.ui.adapter.DrawerListAdapter;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity{
     {
         if (Build.VERSION.SDK_INT > 21)
         {
+
             //扫条码 需要相机对应用开启相机和存储权限；
             if (ContextCompat.checkSelfPermission(this,
                     android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity{
         {
             //这个说明系统版本在6.0之下，不需要动态获取权限。
         }
-
+        new AppApplication.InitBarCodeTask().execute();
     }
 
     private void initview(){
@@ -185,16 +188,16 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    //移仓
+    //库存移动
     public void isMoving(View view)
     {
 
     }
 
-    //查询
+    //库存查询
     public void isFinding(View view)
     {
-
+        startActivity(new Intent(MainActivity.this,FindActivity.class));
     }
 
     //库存盘点
@@ -204,7 +207,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    //设置
+    //系统设置
     public void isSetting(View view)
     {
         startActivity(new Intent(MainActivity.this,SettingActivity.class));
@@ -246,6 +249,19 @@ public class MainActivity extends AppCompatActivity{
                 baseDialog.dismiss();
             }
         });
+    }
+
+    protected void onDestroy() {
+        if (AppApplication.mReader != null)
+        {
+            AppApplication.mReader.free();
+        }
+        if (AppApplication.barcode2DWithSoft != null)
+        {
+            AppApplication.barcode2DWithSoft.stopScan();
+            AppApplication.barcode2DWithSoft.close();
+        }
+        super.onDestroy();
     }
 }
 

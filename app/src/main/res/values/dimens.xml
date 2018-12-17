@@ -62,5 +62,7 @@
     <dimen name="default_top_padding">10dp</dimen>
     <dimen name="reader_list_item_padding">5dp</dimen>
 
+    <dimen name="ed_height">35dp</dimen>
+
 
 </resources>

@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
     android:focusableInTouchMode="true"
     tools:context=".ui.activity.ReceiveMessActivity">
 
         <LinearLayout
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -30,6 +30,7 @@
         </LinearLayout>
 
         <TextView
+            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
@@ -37,15 +38,17 @@
             android:text="@string/ware_product"/>
 
         <EditText
+            android:layout_margin="5dp"
             android:id="@+id/et_danhao"
             android:singleLine="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/ed_height"
             android:background="@drawable/back_text"
             android:hint="请输入产品"
             android:gravity="center"/>
 
         <TextView
+            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -53,15 +56,17 @@
             android:text="@string/ware_prod_name"/>
 
         <EditText
-            android:id="@+id/et_dingdan"
+            android:layout_margin="5dp"
             android:singleLine="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/ed_height"
             android:enabled="false"
             android:background="@drawable/back_text"
+            android:hint="请输入品名"
             android:gravity="center"/>
 
         <LinearLayout
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2"
@@ -71,7 +76,8 @@
             <LinearLayout
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:padding="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
 
@@ -80,13 +86,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:textSize="18sp"
-                    android:text="预期数量："/>
+                    android:text="预期数量"/>
 
                 <EditText
                     android:singleLine="true"
                     android:enabled="false"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/ed_height"
                     android:background="@drawable/back_text"
                     android:gravity="center"/>
 
@@ -95,12 +101,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="包装规格："/>
+                    android:text="包装规格"/>
 
                 <EditText
                     android:singleLine="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/ed_height"
                     android:enabled="false"
                     android:background="@drawable/back_text"
                     android:gravity="center"/>
@@ -110,12 +116,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="收货数量："/>
+                    android:text="收货数量"/>
 
                 <EditText
                     android:singleLine="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/ed_height"
                     android:background="@drawable/back_text"
                     android:gravity="center"/>
 
@@ -124,12 +130,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="收获跟踪号："/>
+                    android:text="收获跟踪号"/>
 
                 <EditText
+                    android:id="@+id/et_dingdan"
                     android:singleLine="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/ed_height"
                     android:background="@drawable/back_text"
                     android:gravity="center"/>
             </LinearLayout>
@@ -138,7 +145,8 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:orientation="vertical"
-                android:padding="10dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -146,13 +154,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:textSize="18sp"
-                    android:text="已收数量："/>
+                    android:text="已收数量"/>
 
                 <EditText
                     android:singleLine="true"
                     android:enabled="false"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/ed_height"
                     android:background="@drawable/back_text"
                     android:gravity="center"/>
 
@@ -161,12 +169,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="单位："/>
+                    android:text="单位"/>
 
                 <EditText
                     android:singleLine="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/ed_height"
                     android:background="@drawable/back_text"
                     android:gravity="center"/>
 
@@ -175,12 +183,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="收货库位："/>
+                    android:text="收货库位"/>
 
                 <EditText
                     android:singleLine="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/ed_height"
                     android:enabled="false"
                     android:background="@drawable/back_text"
                     android:gravity="center"/>

@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
     android:focusableInTouchMode="true"
     >
 
     <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -30,21 +30,24 @@
     </LinearLayout>
 
     <TextView
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:textSize="18sp"
-        android:text="入库日期："/>
+        android:text="入库日期"/>
 
     <EditText
+        android:layout_margin="5dp"
         android:id="@+id/et_danhao"
         android:singleLine="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
         android:gravity="center"/>
 
     <TextView
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -52,14 +55,16 @@
         android:text="生产日期："/>
 
     <EditText
+        android:layout_margin="5dp"
         android:id="@+id/et_dingdan"
         android:singleLine="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
         android:gravity="center"/>
 
     <TextView
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -67,9 +72,10 @@
         android:text="质量状态："/>
 
     <EditText
+        android:layout_margin="5dp"
         android:singleLine="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
         android:gravity="center"/>
     <RelativeLayout

@@ -17,7 +17,6 @@ public class NewBaseActivity extends AppCompatActivity {
     protected Boolean IsFlushList = true; // 是否刷列表
     protected Object beep_Lock = new Object();
     protected ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_SYSTEM, ToneGenerator.MAX_VOLUME);
-    public static Barcode2DWithSoft barcode2DWithSoft = null; //扫条码
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,74 +117,5 @@ public class NewBaseActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    public class InitBarCodeTask extends AsyncTask<String, Integer, Boolean>
-    {
-        @Override
-        protected Boolean doInBackground(String... params)
-        {
-
-            if (barcode2DWithSoft == null)
-            {
-                barcode2DWithSoft = Barcode2DWithSoft.getInstance();
-            }
-            boolean reuslt = false;
-            if (barcode2DWithSoft != null)
-            {
-                reuslt = barcode2DWithSoft.open(getApplicationContext());
-            }
-            return reuslt;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result)
-        {
-            super.onPostExecute(result);
-            if (result)
-            {
-                barcode2DWithSoft.setParameter(324, 1);
-                barcode2DWithSoft.setParameter(300, 0); // Snapshot Aiming
-                barcode2DWithSoft.setParameter(361, 0); // Image Capture Illumination
-
-                // interleaved 2 of 5
-                barcode2DWithSoft.setParameter(6, 1);
-                barcode2DWithSoft.setParameter(22, 0);
-                barcode2DWithSoft.setParameter(23, 55);
-
-            } else
-            {
-            }
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            super.onPreExecute();
-        }
-    }
-
-   /* @Override
-    protected void onDestroy() {
-        if (AppApplication.mReader != null)
-        {
-            AppApplication.mReader.free();
-        }
-        if (barcode2DWithSoft != null)
-        {
-            barcode2DWithSoft.stopScan();
-            barcode2DWithSoft.close();
-        }
-        super.onDestroy();
-    }*/
-
-    @Override
-    protected void onDestroy() {
-        if (barcode2DWithSoft != null)
-        {
-            barcode2DWithSoft.stopScan();
-            barcode2DWithSoft.close();
-        }
-        super.onDestroy();
     }
 }

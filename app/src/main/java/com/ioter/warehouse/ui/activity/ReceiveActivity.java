@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
@@ -24,7 +25,7 @@ public class ReceiveActivity extends NewBaseActivity {
     Button btSure;
     @BindView(R.id.btn_cancel)
     Button btnCancel;
-    private int a =0;
+    private int a = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class ReceiveActivity extends NewBaseActivity {
                 if (hasFocus) {
                     etDanhao.setFocusableInTouchMode(true);
                     etDanhao.requestFocus();
-                    a=1;
+                    a = 1;
                 }
             }
         });
@@ -50,18 +51,13 @@ public class ReceiveActivity extends NewBaseActivity {
                 if (hasFocus) {
                     etDingdan.setFocusableInTouchMode(true);
                     etDingdan.requestFocus();
-                    a=2;
+                    a = 2;
                 }
             }
         });
-        new ReceiveActivity.InitBarCodeTask().execute();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
 
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -75,9 +71,9 @@ public class ReceiveActivity extends NewBaseActivity {
 
     //扫条码
     private void ScanBarcode() {
-        if (barcode2DWithSoft != null) {
-            barcode2DWithSoft.scan();
-            barcode2DWithSoft.setScanCallback(ScanBack);
+        if (AppApplication.barcode2DWithSoft!=null){
+            AppApplication.barcode2DWithSoft.scan();
+            AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
         }
     }
 
@@ -90,11 +86,13 @@ public class ReceiveActivity extends NewBaseActivity {
                 final String barCode = new String(bytes, 0, length);
                 if (barCode != null && barCode.length() > 0) {
                     SoundManage.PlaySound(ReceiveActivity.this, SoundManage.SoundType.SUCCESS);
-                    if (a==2){
+                    if (a == 2) {
                         etDingdan.setText(barCode);
-                    }else if (a==1){
+                        a=1;
+                    } else if (a == 1) {
                         etDanhao.setText(barCode);
-                    }else {
+                        a=2;
+                    } else {
                         return;
                     }
                 }
@@ -106,10 +104,10 @@ public class ReceiveActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                startActivity(new Intent(ReceiveActivity.this,ReceiveMessActivity.class));
+                startActivity(new Intent(ReceiveActivity.this, ReceiveMessActivity.class));
                 break;
             case R.id.btn_cancel:
-                finish();
+                this.finish();
                 break;
         }
     }
