@@ -10,7 +10,12 @@ import android.widget.ListView;
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.bean.BaseEpc;
+import com.ioter.warehouse.bean.EPC;
 import com.ioter.warehouse.common.util.ToastUtil;
+import com.ioter.warehouse.ui.adapter.RecevieScamadapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,12 +25,14 @@ public class ReceiveScanActivity extends NewBaseActivity {
 
     @BindView(R.id.et_danhao)
     EditText etDanhao;
-    @BindView(R.id.lv_)
-    ListView lv;
+    @BindView(R.id.lv_scan)
+    ListView lvScan;
     @BindView(R.id.bt_sure)
     Button btSure;
     @BindView(R.id.btn_cancel)
     Button btnCancel;
+    RecevieScamadapter recevieScamadapter;
+    List<EPC> epcList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +41,19 @@ public class ReceiveScanActivity extends NewBaseActivity {
         ButterKnife.bind(this);
 
         setTitle("收货");
+
+        recevieScamadapter = new RecevieScamadapter(this);
+        lvScan.setAdapter(recevieScamadapter);
     }
 
     //获取EPC群读数据
     @Override
     public void handleUi(BaseEpc baseEpc) {
         super.handleUi(baseEpc);
-        etDanhao.setText(baseEpc._EPC);
+        EPC epc = new EPC();
+        epc.setEpc(baseEpc._EPC);
+        epcList.add(epc);
+        recevieScamadapter.updateDatas(epcList);
     }
 
     @Override

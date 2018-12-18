@@ -91,7 +91,7 @@
            </LinearLayout>
 
            <ListView
-               android:id="@+id/lv_"
+               android:id="@+id/lv_scan"
                android:divider="@null"
                android:dividerHeight="0dp"
                android:layout_width="match_parent"

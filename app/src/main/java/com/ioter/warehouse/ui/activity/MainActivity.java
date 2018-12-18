@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity{
     //库存移动
     public void isMoving(View view)
     {
-
+        startActivity(new Intent(MainActivity.this,MoveActivity.class));
     }
 
     //库存查询
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity{
     //库存盘点
     public void isChecking(View view)
     {
-
+        startActivity(new Intent(MainActivity.this,CheckActivity.class));
     }
 
 
