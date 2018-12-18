@@ -143,6 +143,8 @@ public class MainActivity extends AppCompatActivity{
                 fragment = HomeFragment.newInstance();
                 break;
             case 1:
+                mDrawerLayout.closeDrawer(mDrawerList);
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
                 return;
 
             case 2:
@@ -185,7 +187,7 @@ public class MainActivity extends AppCompatActivity{
     //拣货
     public void isPicking(View view)
     {
-
+        startActivity(new Intent(MainActivity.this,PickActivity.class));
     }
 
     //库存移动

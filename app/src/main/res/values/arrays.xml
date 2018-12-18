@@ -31,4 +31,11 @@
         <!--      <item >采购订单</item>-->
     </string-array>
 
+    <string-array name="number_array">
+        <item>OT</item>
+        <item>PL</item>
+        <item>CS</item>
+        <item>IP</item>
+        <item>EA</item>
+    </string-array>
 </resources>

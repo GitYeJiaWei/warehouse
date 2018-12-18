@@ -48,6 +48,23 @@ public class NewBaseActivity extends AppCompatActivity {
     //配置读写器参数
     protected  void initSound()
     {
+        // 蜂鸣器发声
+        AppApplication.getExecutorService().submit(new Runnable() {
+            @Override
+            public void run() {
+                while (IsFlushList) {
+                    synchronized (beep_Lock) {
+                        try {
+                            beep_Lock.wait();
+                        } catch (InterruptedException e) {
+                        }
+                    }
+                    if (IsFlushList) {
+                        toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP);
+                    }
+                }
+            }
+        });
     }
 
     @Override

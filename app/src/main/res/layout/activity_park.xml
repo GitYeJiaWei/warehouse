@@ -25,64 +25,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/md_red_500"
-            android:text="请选择仓库"/>
+            android:text="请输入订单号"/>
 
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
         android:padding="5dp"
-        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textSize="18sp"
+        android:text="出库单号"/>
+
+    <EditText
+        android:layout_margin="5dp"
+        android:id="@+id/et_danhao"
+        android:singleLine="true"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:padding="5dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="0dp"
-            android:textSize="18sp"
-            android:text="仓库"/>
-
-        <Spinner
-            android:id="@+id/sp_cangku"
-            android:singleLine="true"
-            android:gravity="center"
-            android:background="@drawable/spinner_back"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:padding="5dp"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:padding="5dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="0dp"
-            android:textSize="18sp"
-            android:text="库区"/>
-
-        <Spinner
-            android:id="@+id/sp_kuqu"
-            android:singleLine="true"
-            android:layout_width="match_parent"
-            android:background="@drawable/spinner_back"
-            android:layout_height="match_parent"
-            />
-
-    </LinearLayout>
+        android:layout_height="@dimen/ed_height"
+        android:background="@drawable/back_text"
+        android:hint="请输入出库单号"
+        android:gravity="center"/>
 
 
     <RelativeLayout
@@ -95,7 +58,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <Button
                 android:id="@+id/bt_sure"
                 android:layout_weight="1"

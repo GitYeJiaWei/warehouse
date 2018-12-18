@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:textSize="18sp"
-        android:text="@string/ware_product"/>
+        android:text="货主"/>
 
     <EditText
         android:id="@+id/et_danhao"
@@ -22,7 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
-        android:hint="请输入产品"
         android:gravity="center"/>
 
     <TextView
@@ -30,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textSize="18sp"
-        android:text="@string/ware_prod_name"/>
+        android:text="产品"/>
 
     <EditText
         android:singleLine="true"
@@ -38,7 +37,21 @@
         android:layout_height="@dimen/ed_height"
         android:enabled="false"
         android:background="@drawable/back_text"
-        android:hint="请输入品名"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:text="品名"/>
+
+    <EditText
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ed_height"
+        android:enabled="false"
+        android:background="@drawable/back_text"
         android:gravity="center"/>
 
     <LinearLayout
@@ -61,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:textSize="18sp"
-                android:text="预期数量"/>
+                android:text="库位"/>
 
             <EditText
                 android:singleLine="true"
@@ -76,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
-                android:text="包装规格"/>
+                android:text="库存数量"/>
 
             <EditText
                 android:singleLine="true"
@@ -91,21 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
-                android:text="收货数量"/>
-
-            <EditText
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ed_height"
-                android:background="@drawable/back_text"
-                android:gravity="center"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:text="收获跟踪号"/>
+                android:text="分配数量"/>
 
             <EditText
                 android:id="@+id/et_dingdan"
@@ -129,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:textSize="18sp"
-                android:text="已收数量"/>
+                android:text="跟踪号"/>
 
             <EditText
                 android:singleLine="true"
@@ -144,21 +143,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
-                android:text="单位"/>
+                android:text="包装单位"/>
 
             <EditText
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
                 android:background="@drawable/back_text"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:text="EA"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
-                android:text="收货库位"/>
+                android:text="可用数量"/>
 
             <EditText
                 android:singleLine="true"

@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
-                android:text="预期数量"
+                android:text="跟踪号"
                 android:textSize="18sp" />
 
             <EditText
@@ -60,26 +60,64 @@
                 android:gravity="center"
                 android:singleLine="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="包装规格"
-                android:textSize="18sp" />
-
-            <EditText
+            <LinearLayout
+                android:layout_marginRight="2.5dp"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ed_height"
-                android:background="@drawable/back_text"
-                android:enabled="false"
-                android:gravity="center"
-                android:singleLine="true" />
+                android:layout_height="wrap_content"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="数量"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/ed_height"
+                        android:background="@drawable/back_text"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="单位"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/sp_cangku"
+                        android:singleLine="true"
+                        android:gravity="center"
+                        android:background="@drawable/spinner_back"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/ed_height"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="收货数量"
+                android:text="推荐库位"
                 android:textSize="18sp" />
 
             <EditText
@@ -104,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
-                android:text="已收数量"
+                android:text="产品"
                 android:textSize="18sp" />
 
             <EditText
@@ -115,25 +153,62 @@
                 android:gravity="center"
                 android:singleLine="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="单位"
-                android:textSize="18sp" />
-
-            <EditText
+            <LinearLayout
+                android:layout_marginRight="2.5dp"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ed_height"
-                android:background="@drawable/back_text"
-                android:gravity="center"
-                android:singleLine="true" />
+                android:layout_height="wrap_content"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="包装规格"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/ed_height"
+                        android:background="@drawable/back_text"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="上架总数"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/ed_height"
+                        android:background="@drawable/back_text"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="收货库位"
+                android:text="目标库位"
                 android:textSize="18sp" />
 
             <EditText
@@ -152,7 +227,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-        android:text="@string/ware_product"
+        android:text="品名"
         android:textSize="18sp" />
 
     <EditText
@@ -161,7 +236,6 @@
         android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
         android:gravity="center"
-        android:hint="请输入产品"
         android:singleLine="true" />
 
 

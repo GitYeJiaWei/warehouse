@@ -1,156 +1,102 @@
 package com.ioter.warehouse.ui.activity;
 
-import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Spinner;
 
-import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
-import com.ioter.warehouse.bean.BaseEpc;
-import com.ioter.warehouse.common.util.SoundManage;
-import com.ioter.warehouse.common.util.ToastUtil;
-import com.zebra.adc.decoder.Barcode2DWithSoft;
 
-public class SettingActivity extends NewBaseActivity {
-    private Button tv_read,tv_scan;
-    private TextView tv_read1;
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class SettingActivity extends NewBaseActivity implements AdapterView.OnItemSelectedListener {
+
+    @BindView(R.id.bt_sure)
+    Button btSure;
+    @BindView(R.id.btn_cancel)
+    Button btnCancel;
+    @BindView(R.id.sp_cangku)
+    Spinner spCangku;
+    @BindView(R.id.sp_kuqu)
+    Spinner spKuqu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        ButterKnife.bind(this);
 
-        tv_scan = findViewById(R.id.tv_scan);
-        tv_read = findViewById(R.id.tv_read);
-        tv_read1 = findViewById(R.id.tv_read1);
-        tv_scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ScanBarcode();
-            }
-        });
+        setTitle("系统设置");
+
+        initView();
     }
 
-    //扫条码
-    private void ScanBarcode()
-    {
-        if (AppApplication.barcode2DWithSoft != null)
-        {
-            AppApplication.barcode2DWithSoft.scan();
-            AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
-        }
+    private void initView(){
+        /*静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
+         * 第二个参数：已经编写好的数组
+         * 第三个数据：默认的样式
+         */
+        ArrayAdapter<CharSequence> adapter =
+                ArrayAdapter.createFromResource(this, R.array.number_array, android.R.layout.simple_spinner_item);
+        //设置spinner中每个条目的样式，同样是引用android提供的布局文件
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCangku.setAdapter(adapter);
+        //spCangku.setPrompt("测试");
+        spCangku.setOnItemSelectedListener(this);
+
+        /*
+         * 动态添显示下来菜单的选项，可以动态添加元素
+         */
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("1.苹果");
+        list.add("2.橘子");
+        /*
+         * 第二个参数是显示的布局
+         * 第三个参数是在布局显示的位置id
+         * 第四个参数是将要显示的数据
+         */
+        ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item,list);
+        spKuqu.setAdapter(adapter2);
+        spKuqu.setOnItemSelectedListener(this);
     }
 
-    public Barcode2DWithSoft.ScanCallback
-            ScanBack = new Barcode2DWithSoft.ScanCallback()
-    {
-        @Override
-        public void onScanComplete(int i, int length, byte[] bytes)
-        {
-            if (length < 1)
-            {
-            } else
-            {
-                String barCode = new String(bytes, 0, length);
-                if (barCode != null && barCode.length() > 0)
-                {
-                    SoundManage.PlaySound(SettingActivity.this, SoundManage.SoundType.SUCCESS);
-                    //收货弹出框
-                    tv_read1.setText(barCode);
-                }
-            }
-        }
-    };
 
-
-    //获取EPC群读数据
-    @Override
-    public void handleUi(BaseEpc baseEpc) {
-        super.handleUi(baseEpc);
-        tv_read1.setText(baseEpc._EPC);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 139 || keyCode == 280)
-        {
-            if (event.getRepeatCount() == 0)
-            {
-                readTag();
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == 139 || keyCode == 280)
-        {
-            if (event.getRepeatCount() == 0)
-            {
-                readTag();
-            }
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
-    private void readTag() {
-        if (tv_read.getText().toString().equals("开始扫描")) {
-            if (AppApplication.mReader.startInventoryTag((byte) 0, (byte) 0)) {
-                loopFlag = true;
-                tv_read.setText("停止扫描");
-                new TagThread(10).start();
-            } else {
-                AppApplication.mReader.stopInventory();
-                loopFlag = false;
-                tv_read.setText("开始扫描");
-                ToastUtil.toast("开始扫描失败");
-            }
-        } else {
-            AppApplication.mReader.stopInventory();
-            loopFlag = false;
-            tv_read.setText("开始扫描");
+    @OnClick({R.id.bt_sure, R.id.btn_cancel})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.bt_sure:
+                finish();
+                break;
+            case R.id.btn_cancel:
+                finish();
+                break;
         }
     }
 
     @Override
-    protected void initSound() {
-        // 蜂鸣器发声
-        AppApplication.getExecutorService().submit(new Runnable() {
-            @Override
-            public void run() {
-                while (IsFlushList) {
-                    synchronized (beep_Lock) {
-                        try {
-                            beep_Lock.wait();
-                        } catch (InterruptedException e) {
-                        }
-                    }
-                    if (IsFlushList) {
-                        toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP);
-                    }
-                }
-            }
-        });
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (view.getId()){
+            case R.id.sp_cangku:
+                //将选择的元素显示出来
+                String selected = parent.getItemAtPosition(position).toString();
+                break;
+            case R.id.sp_kuqu:
+                //将选择的元素显示出来
+                String selected1 = parent.getItemAtPosition(position).toString();
+                break;
 
-    }
-
-    /**
-     * 停止识别
-     */
-    public void stopInventory() {
-        if (loopFlag) {
-            loopFlag = false;
-            if (AppApplication.mReader.stopInventory()) {
-                tv_read.setText("开始扫描");
-            } else {
-                ToastUtil.toast("停止扫描失败");
-            }
         }
+
     }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
-
+    }
 }

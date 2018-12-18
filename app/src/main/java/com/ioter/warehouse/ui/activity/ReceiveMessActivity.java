@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
@@ -16,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ReceiveMessActivity extends NewBaseActivity {
+public class ReceiveMessActivity extends NewBaseActivity implements AdapterView.OnItemSelectedListener {
 
     @BindView(R.id.bt_while)
     Button btWhile;
@@ -28,7 +31,9 @@ public class ReceiveMessActivity extends NewBaseActivity {
     EditText etDanhao;
     @BindView(R.id.et_dingdan)
     EditText etDingdan;
-    private int a=1;
+    @BindView(R.id.sp_cangku)
+    Spinner spCangku;
+    private int a = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,24 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 }
             }
         });
+
+        initView();
+    }
+
+    private void initView() {
+        /*静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
+         * 第二个参数：已经编写好的数组
+         * 第三个数据：默认的样式
+         */
+        ArrayAdapter<CharSequence> adapter =
+                ArrayAdapter.createFromResource(this, R.array.number_array, android.R.layout.simple_spinner_item);
+        //设置spinner中每个条目的样式，同样是引用android提供的布局文件
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCangku.setAdapter(adapter);
+        //设置默认值
+        spCangku.setSelection(2,true);
+        //spCangku.setPrompt("测试");
+        spCangku.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -89,10 +112,10 @@ public class ReceiveMessActivity extends NewBaseActivity {
                     SoundManage.PlaySound(ReceiveMessActivity.this, SoundManage.SoundType.SUCCESS);
                     if (a == 2) {
                         etDingdan.setText(barCode);
-                        a=1;
+                        a = 1;
                     } else if (a == 1) {
                         etDanhao.setText(barCode);
-                        a=2;
+                        a = 2;
                     } else {
                         return;
                     }
@@ -105,6 +128,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_while:
+                startActivity(new Intent(ReceiveMessActivity.this, ReceiveScanActivity.class));
                 break;
             case R.id.bt_sure:
                 startActivity(new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class));
@@ -113,5 +137,15 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 this.finish();
                 break;
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selected = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

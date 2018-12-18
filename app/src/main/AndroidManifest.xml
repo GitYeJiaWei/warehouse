@@ -51,7 +51,9 @@
         <activity android:name=".ui.activity.FindActivity" />
         <activity android:name=".ui.activity.FindMessActivity" />
         <activity android:name=".ui.activity.FindDataActivity" />
-        <activity android:name=".ui.activity.GroundActivity"></activity>
+        <activity android:name=".ui.activity.GroundActivity" />
+        <activity android:name=".ui.activity.ReceiveScanActivity" />
+        <activity android:name=".ui.activity.PickActivity"></activity>
     </application>
 
 </manifest>

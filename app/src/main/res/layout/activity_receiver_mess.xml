@@ -171,12 +171,14 @@
                     android:textSize="18sp"
                     android:text="单位"/>
 
-                <EditText
+                <Spinner
+                    android:id="@+id/sp_cangku"
                     android:singleLine="true"
+                    android:gravity="center"
+                    android:background="@drawable/spinner_back"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ed_height"
-                    android:background="@drawable/back_text"
-                    android:gravity="center"/>
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"

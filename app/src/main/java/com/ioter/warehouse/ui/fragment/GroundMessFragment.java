@@ -1,5 +1,6 @@
 package com.ioter.warehouse.ui.fragment;
 
+import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,7 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.ioter.warehouse.R;
 
@@ -33,6 +37,8 @@ public class GroundMessFragment extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.et_danhao)
     EditText etDanhao;
+    @BindView(R.id.sp_cangku)
+    Spinner spCangku;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -84,7 +90,34 @@ public class GroundMessFragment extends Fragment {
             message = bundle.getString(ARG_PARAM1);
         }
         etDanhao.setText(message);
+        initView();
         return view;
+    }
+
+    private void initView() {
+        /*静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
+         * 第二个参数：已经编写好的数组
+         * 第三个数据：默认的样式
+         */
+        ArrayAdapter<CharSequence> adapter =
+                ArrayAdapter.createFromResource(getContext(), R.array.number_array, android.R.layout.simple_spinner_item);
+        //设置spinner中每个条目的样式，同样是引用android提供的布局文件
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCangku.setAdapter(adapter);
+        //设置默认值
+        spCangku.setSelection(3,true);
+        //spCangku.setPrompt("测试");
+        spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

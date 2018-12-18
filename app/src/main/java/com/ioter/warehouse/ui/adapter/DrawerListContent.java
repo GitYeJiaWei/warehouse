@@ -21,7 +21,7 @@ public class DrawerListContent {
 
     static {
 
-        addItem(new DrawerItem("1", "im_shezhi", R.drawable.dl_sett));
+        addItem(new DrawerItem("1", "设置", R.drawable.dl_sett));
         //addItem(new DrawerItem("2", "Reader列表", R.drawable.dl_rdl));
         //addItem(new DrawerItem("2", "sku转epc", R.drawable.dl_access));
         //addItem(new DrawerItem("3", "清除ScanData", R.mipmap.ic_menu_clear));
