@@ -16,7 +16,6 @@ public interface LoginContract
         Observable<BaseBean<LoginBean>> login(String phone, String pwd);
     }
 
-
     public interface LoginView extends BaseView
     {
 

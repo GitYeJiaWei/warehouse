@@ -2,6 +2,7 @@ package com.ioter.warehouse.presenter;
 
 
 import com.ioter.warehouse.AppApplication;
+import com.ioter.warehouse.bean.BaseBean;
 import com.ioter.warehouse.bean.LoginBean;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.ProgressSubcriber;
@@ -38,5 +39,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.ILoginModel, Log
                     }
                 });
     }
+
+
 
 }

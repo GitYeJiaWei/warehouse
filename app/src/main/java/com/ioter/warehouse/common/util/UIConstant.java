@@ -42,7 +42,7 @@ public class UIConstant
     public static String BASEURL = "http://59.57.151.234:30000";//外网
     public static String BASESOAPACTION = "http://tempuri.org";
 
-    public static String IP = "192.168.1.100";
+    public static String IP = "192.168.66.3";
 
 
     public static String getLoginUrl()

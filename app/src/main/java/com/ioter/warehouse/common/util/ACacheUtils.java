@@ -44,7 +44,7 @@ public class ACacheUtils
             LoginBean loginBean = AppApplication.getGson().fromJson(result, LoginBean.class);
             if (loginBean != null)
             {
-                return loginBean.getId();
+                return loginBean.getUserId();
             }
         }
         return null;
@@ -58,16 +58,16 @@ public class ACacheUtils
             LoginBean loginBean = AppApplication.getGson().fromJson(result, LoginBean.class);
             if (loginBean != null)
             {
-                List<StoresBean> listWh = loginBean.getStores();
+                List<StoresBean> listWh = loginBean.getListWarehouse();
                 if (listWh != null && listWh.size() > 0)
                 {
                     List<String> results = new ArrayList<>();
                     for (StoresBean item : listWh)
                     {
-                        String itemWhCode = item.getStoreName();
+                        String itemWhCode = item.getWhName();
                         if (whCode.equals(itemWhCode))
                         {
-                            return  item.getId();
+                            return  item.getWhId();
                         }
                     }
                 }
@@ -84,13 +84,13 @@ public class ACacheUtils
             LoginBean loginBean = AppApplication.getGson().fromJson(result, LoginBean.class);
             if (loginBean != null)
             {
-                List<StoresBean> listWh = loginBean.getStores();
+                List<StoresBean> listWh = loginBean.getListWarehouse();
                 if (listWh != null && listWh.size() > 0)
                 {
                     List<String> results = new ArrayList<>();
                     for (StoresBean item : listWh)
                     {
-                        String whCode = item.getStoreName();
+                        String whCode = item.getWhName();
                         if (whCode != null)
                         {
                             results.add(whCode);

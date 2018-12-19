@@ -24,24 +24,25 @@ public class LoginModel implements LoginContract.ILoginModel{
         this.mapiService = apiService;
     }
 
-
     @Override
     public Observable<BaseBean<LoginBean>> login(String phone, String pwd) {
 
-        Map<String,String> param = new HashMap<>();
+
         Map<String,String> params = new HashMap<>();
         params.put("userName",phone);
         params.put("password",pwd);
 
-        String data = AppApplication.getGson().toJson(params);
+
+       /* String data = AppApplication.getGson().toJson(params);
         long time = System.currentTimeMillis()/1000;//获取系统时间的10位的时间戳
         String timestamp=String.valueOf(time);
         String m5 = "timestamp" + timestamp + "secret" + "iottest" + "data" + data;
         String sign= DataUtil.md5(m5);
+        Map<String,String> param = new HashMap<>();
         param.put("data",data);
         param.put("timestamp",timestamp+"");
-        param.put("sign",sign);
+        param.put("sign",sign);*/
 
-        return mapiService.login(param);
+        return mapiService.login(params);
     }
 }

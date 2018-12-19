@@ -21,13 +21,14 @@ public interface ApiService
 {
 
     //String BASE_URL = "http://mall.ioter-e.com:8097/api/";
-    String BASE_URL = "http://192.168.1.100:8097/api/";
+    //String BASE_URL = "http://192.168.1.100:8097/api/";
     //String BASE_URL = "http://192.168.31.67:8097/api/";
+    String BASE_URL =  "http://192.168.66.3:8107/api/";
     //最后要加斜杠
 
-    @FormUrlEncoded
+   /* @FormUrlEncoded
     @POST("Center/Login")//登录
-    Observable<BaseBean<LoginBean>> login(@FieldMap Map<String, String> params);
+    Observable<BaseBean<LoginBean>> login(@FieldMap Map<String, String> params);*/
 
     @FormUrlEncoded
     @POST("Center/GetWhStockOutEpcList")//获取发货单所有标签
@@ -41,9 +42,8 @@ public interface ApiService
     @POST("Center/GetAllEpcList")//获取盘点列表
     Observable<BaseBean<List<Check>>> getStockTakeList(@FieldMap Map<String, String> params);
 
-
-
-    @FormUrlEncoded
-    @POST("EPC/InitEpc")//初始化标签
-    Observable<BaseBean> initEpc(@Field("epc") String jsonParam);
+    //----------------------------------------------------
+    //http://192.168.66.3:8107/api/user/Login?userName=admin&password=123
+    @GET("user/Login")
+    Observable<BaseBean<LoginBean>> login(@QueryMap Map<String ,String> params);
 }
