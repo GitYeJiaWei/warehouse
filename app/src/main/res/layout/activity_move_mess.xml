@@ -5,57 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
     android:focusableInTouchMode="true"
     tools:context=".ui.activity.ReceiveMessActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:textSize="18sp"
-        android:text="货主"/>
-
-    <EditText
-        android:id="@+id/et_danhao"
-        android:singleLine="true"
-        android:enabled="false"
+    <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ed_height"
-        android:background="@drawable/back_text_gray"
-        android:gravity="center"/>
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp"
-        android:text="产品"/>
+        android:orientation="horizontal"
+        >
 
-    <EditText
-        android:singleLine="true"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ed_height"
-        android:enabled="false"
-        android:background="@drawable/back_text_gray"
-        android:gravity="center"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/error"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp"
-        android:text="品名"/>
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_red_500"
+            android:text="请输入移库数量"/>
 
-    <EditText
-        android:singleLine="true"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ed_height"
-        android:enabled="false"
-        android:background="@drawable/back_text_gray"
-        android:gravity="center"/>
+    </LinearLayout>
 
     <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2"
@@ -75,14 +50,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:textSize="18sp"
-                android:text="库位"/>
+                android:text="移库数量"/>
 
             <EditText
                 android:singleLine="true"
-                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
-                android:background="@drawable/back_text_gray"
+                android:background="@drawable/back_text"
                 android:gravity="center"/>
 
             <TextView
@@ -94,9 +68,9 @@
 
             <EditText
                 android:singleLine="true"
+                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
-                android:enabled="false"
                 android:background="@drawable/back_text_gray"
                 android:gravity="center"/>
 
@@ -105,17 +79,33 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
-                android:text="分配数量"/>
+                android:text="源库位"/>
 
             <EditText
-                android:id="@+id/et_dingdan"
+                android:singleLine="true"
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text_gray"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:text="目标跟踪号"/>
+
+            <EditText
+                android:id="@+id/ed_genzonghao"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
-                android:enabled="false"
-                android:background="@drawable/back_text_gray"
+                android:background="@drawable/back_text"
                 android:gravity="center"/>
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_weight="1"
@@ -130,31 +120,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:textSize="18sp"
-                android:text="跟踪号"/>
+                android:text="单位"/>
 
-            <EditText
+            <Spinner
+                android:id="@+id/sp_cangku"
                 android:singleLine="true"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ed_height"
-                android:background="@drawable/back_text_gray"
-                android:gravity="center"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:text="包装单位"/>
-
-            <EditText
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ed_height"
-                android:enabled="false"
-                android:background="@drawable/back_text_gray"
                 android:gravity="center"
-                android:text="EA"/>
+                android:background="@drawable/spinner_back"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -165,15 +140,75 @@
 
             <EditText
                 android:singleLine="true"
+                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
-                android:enabled="false"
                 android:background="@drawable/back_text_gray"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:text="目标库位"/>
+
+            <EditText
+                android:id="@+id/ed_kuwei"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:text="原因代码"/>
+
+            <EditText
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text"
                 android:gravity="center"/>
         </LinearLayout>
 
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_sure"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_sure"/>
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_cancle"/>
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -61,8 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/ed_height"
             android:enabled="false"
-            android:background="@drawable/back_text"
-            android:hint="请输入品名"
+            android:background="@drawable/back_text_gray"
             android:gravity="center"/>
 
         <LinearLayout
@@ -93,7 +92,7 @@
                     android:enabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ed_height"
-                    android:background="@drawable/back_text"
+                    android:background="@drawable/back_text_gray"
                     android:gravity="center"/>
 
                 <TextView
@@ -108,7 +107,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ed_height"
                     android:enabled="false"
-                    android:background="@drawable/back_text"
+                    android:text="1CS/10EA"
+                    android:background="@drawable/back_text_gray"
                     android:gravity="center"/>
 
                 <TextView
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textSize="18sp"
-                    android:text="收获跟踪号"/>
+                    android:text="收货跟踪号"/>
 
                 <EditText
                     android:id="@+id/et_dingdan"
@@ -161,7 +161,7 @@
                     android:enabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ed_height"
-                    android:background="@drawable/back_text"
+                    android:background="@drawable/back_text_gray"
                     android:gravity="center"/>
 
                 <TextView
@@ -191,7 +191,6 @@
                     android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ed_height"
-                    android:enabled="false"
                     android:background="@drawable/back_text"
                     android:gravity="center"/>
             </LinearLayout>

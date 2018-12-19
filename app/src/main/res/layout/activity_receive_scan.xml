@@ -41,8 +41,8 @@
         android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
-        android:background="@drawable/back_text"
-        android:hint="请输入品名"
+        android:enabled="false"
+        android:background="@drawable/back_text_gray"
         android:gravity="center"/>
 
     <TextView
@@ -57,7 +57,6 @@
         android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
-        android:enabled="false"
         android:background="@drawable/back_text"
         android:hint="请输入序列号"
         android:gravity="center"/>

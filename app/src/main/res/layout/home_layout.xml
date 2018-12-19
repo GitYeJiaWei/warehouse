@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/im_shouhuo"
+                    android:drawableTop="@mipmap/u164"
                     android:gravity="center"
                     android:text="收货"
                     android:textColor="@color/white"/>
@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/im_shangjia"
+                    android:drawableTop="@mipmap/u166"
                     android:gravity="center"
                     android:text="上架"
                     android:textColor="@color/white"/>
@@ -84,7 +84,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/im_jianhuo"
+                    android:drawableTop="@mipmap/u174"
                     android:gravity="center"
                     android:text="拣货"
                     android:textColor="@color/white"/>
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/im_yidong"
+                    android:drawableTop="@mipmap/u166"
                     android:gravity="center"
                     android:text="库存移动"
                     android:textColor="@color/white"/>
@@ -132,7 +132,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/im_chaxun"
+                    android:drawableTop="@mipmap/u170"
                     android:gravity="center"
                     android:text="库存查询"
                     android:textColor="@color/white"/>
@@ -151,7 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/im_pandian"
+                    android:drawableTop="@mipmap/u185"
                     android:gravity="center"
                     android:text="库存盘点"
                     android:textColor="@color/white"/>
@@ -181,7 +181,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/im_shezhi"
+                    android:drawableTop="@mipmap/u176"
                     android:gravity="center"
                     android:text="系统设置"
                     android:textColor="@color/white"/>

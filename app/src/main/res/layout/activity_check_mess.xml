@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.FindMessActivity">
+
+    <FrameLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ></FrameLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_while"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_while"/>
+
+            <Button
+                android:id="@+id/bt_sure"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_sure"/>
+
+            <Button
+                android:id="@+id/bt_left"
+                android:layout_weight="0.3"
+                android:layout_width="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="←"/>
+
+            <TextView
+                android:id="@+id/tv_size"
+                android:layout_weight="0.3"
+                android:layout_width="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:text="1/3"/>
+
+            <Button
+                android:id="@+id/bt_right"
+                android:layout_weight="0.3"
+                android:layout_width="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="→"/>
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_cancle"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.common.util.SoundManage;
+import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,11 +35,14 @@ public class PickMessFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    @BindView(R.id.et_danhao)
-    EditText etDanhao;
     @BindView(R.id.sp_cangku)
     Spinner spCangku;
     Unbinder unbinder;
+    @BindView(R.id.ed_kuwei)
+    EditText edKuwei;
+    @BindView(R.id.et_chanpin)
+    EditText etChanpin;
+    private int a=1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -86,10 +93,50 @@ public class PickMessFragment extends Fragment {
         if (bundle != null) {
             message = bundle.getString(ARG_PARAM1);
         }
-        etDanhao.setText(message);
+        edKuwei.setText(message);
         initView();
         return view;
     }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == 139 || keyCode == 280) {
+            if (event.getRepeatCount() == 0) {
+                ScanBarcode();
+            }
+        }
+        return true;
+    }
+
+    //扫条码
+    private void ScanBarcode() {
+        if (AppApplication.barcode2DWithSoft != null) {
+            AppApplication.barcode2DWithSoft.scan();
+            AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
+        }
+    }
+
+    public Barcode2DWithSoft.ScanCallback
+            ScanBack = new Barcode2DWithSoft.ScanCallback() {
+        @Override
+        public void onScanComplete(int i, int length, byte[] bytes) {
+            if (length < 1) {
+            } else {
+                final String barCode = new String(bytes, 0, length);
+                if (barCode != null && barCode.length() > 0) {
+                    SoundManage.PlaySound(getContext(), SoundManage.SoundType.SUCCESS);
+                    if (a == 2) {
+                        etChanpin.setText(barCode);
+                        a = 1;
+                    } else if (a == 1) {
+                        edKuwei.setText(barCode);
+                        a = 2;
+                    } else {
+                        return;
+                    }
+                }
+            }
+        }
+    };
 
     private void initView() {
         /*静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
@@ -102,7 +149,7 @@ public class PickMessFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCangku.setAdapter(adapter);
         //设置默认值
-        spCangku.setSelection(3,true);
+        spCangku.setSelection(3, true);
         //spCangku.setPrompt("测试");
         spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -113,6 +160,27 @@ public class PickMessFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        etChanpin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    etChanpin.setFocusableInTouchMode(true);
+                    etChanpin.requestFocus();
+                    a = 2;
+                }
+            }
+        });
+        edKuwei.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edKuwei.setFocusableInTouchMode(true);
+                    edKuwei.requestFocus();
+                    a = 1;
+                }
             }
         });
     }

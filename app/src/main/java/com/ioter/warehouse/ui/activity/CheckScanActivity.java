@@ -1,6 +1,5 @@
 package com.ioter.warehouse.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,22 +15,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PickActivity extends NewBaseActivity {
+public class CheckScanActivity extends NewBaseActivity {
 
     @BindView(R.id.bt_sure)
     Button btSure;
     @BindView(R.id.btn_cancel)
     Button btnCancel;
-    @BindView(R.id.et_danhao)
-    EditText etDanhao;
+    @BindView(R.id.ed_xuliehao)
+    EditText edXuliehao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_park);
+        setContentView(R.layout.activity_check_scan);
         ButterKnife.bind(this);
 
-        setTitle("拣货");
+        setTitle("库存盘点");
     }
 
     @Override
@@ -60,8 +59,8 @@ public class PickActivity extends NewBaseActivity {
             } else {
                 final String barCode = new String(bytes, 0, length);
                 if (barCode != null && barCode.length() > 0) {
-                    SoundManage.PlaySound(PickActivity.this, SoundManage.SoundType.SUCCESS);
-                    etDanhao.setText(barCode);
+                    SoundManage.PlaySound(CheckScanActivity.this, SoundManage.SoundType.SUCCESS);
+                    edXuliehao.setText(barCode);
                 }
             }
         }
@@ -71,7 +70,7 @@ public class PickActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                startActivity(new Intent(PickActivity.this, PickMessActivity.class));
+                finish();
                 break;
             case R.id.btn_cancel:
                 finish();

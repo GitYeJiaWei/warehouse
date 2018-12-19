@@ -5,49 +5,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
     android:focusableInTouchMode="true"
     tools:context=".ui.activity.ReceiveMessActivity">
 
+    <LinearLayout
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/error"/>
+
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_red_500"
+            android:text="请输入序列号"/>
+
+    </LinearLayout>
+
     <TextView
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:textSize="18sp"
-        android:text="货主"/>
-
-    <EditText
-        android:id="@+id/et_danhao"
-        android:singleLine="true"
-        android:enabled="false"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ed_height"
-        android:background="@drawable/back_text_gray"
-        android:gravity="center"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp"
-        android:text="产品"/>
-
-    <EditText
-        android:singleLine="true"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ed_height"
-        android:enabled="false"
-        android:background="@drawable/back_text_gray"
-        android:gravity="center"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp"
         android:text="品名"/>
 
     <EditText
+        android:layout_margin="5dp"
+        android:id="@+id/et_danhao"
         android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
@@ -55,7 +47,25 @@
         android:background="@drawable/back_text_gray"
         android:gravity="center"/>
 
+    <TextView
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:textSize="18sp"
+        android:text="序列号"/>
+
+    <EditText
+        android:id="@+id/ed_xuliehao"
+        android:layout_margin="5dp"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ed_height"
+        android:background="@drawable/back_text"
+        android:gravity="center"/>
+
     <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2"
@@ -75,14 +85,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:textSize="18sp"
-                android:text="库位"/>
+                android:text="预期数量"/>
 
             <EditText
                 android:singleLine="true"
-                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
-                android:background="@drawable/back_text_gray"
+                android:background="@drawable/back_text"
                 android:gravity="center"/>
 
             <TextView
@@ -90,32 +99,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
-                android:text="库存数量"/>
+                android:text="差异数"/>
 
             <EditText
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
-                android:enabled="false"
-                android:background="@drawable/back_text_gray"
-                android:gravity="center"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:text="分配数量"/>
-
-            <EditText
-                android:id="@+id/et_dingdan"
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ed_height"
-                android:enabled="false"
-                android:background="@drawable/back_text_gray"
+                android:background="@drawable/back_text"
                 android:gravity="center"/>
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_weight="1"
@@ -130,50 +124,50 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:textSize="18sp"
-                android:text="跟踪号"/>
+                android:text="已收数量"/>
 
             <EditText
                 android:singleLine="true"
-                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
-                android:background="@drawable/back_text_gray"
+                android:background="@drawable/back_text"
                 android:gravity="center"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:text="包装单位"/>
-
-            <EditText
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ed_height"
-                android:enabled="false"
-                android:background="@drawable/back_text_gray"
-                android:gravity="center"
-                android:text="EA"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:text="可用数量"/>
-
-            <EditText
-                android:singleLine="true"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ed_height"
-                android:enabled="false"
-                android:background="@drawable/back_text_gray"
-                android:gravity="center"/>
         </LinearLayout>
 
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_sure"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_sure"/>
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_cancle"/>
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

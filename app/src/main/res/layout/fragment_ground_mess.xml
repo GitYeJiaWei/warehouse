@@ -53,10 +53,10 @@
                 android:textSize="18sp" />
 
             <EditText
+                android:id="@+id/ed_genzonghao"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
                 android:background="@drawable/back_text"
-                android:enabled="false"
                 android:gravity="center"
                 android:singleLine="true" />
 
@@ -82,7 +82,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/ed_height"
                         android:background="@drawable/back_text"
-                        android:enabled="false"
                         android:gravity="center"
                         android:singleLine="true" />
                 </LinearLayout>
@@ -123,8 +122,9 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
-                android:background="@drawable/back_text"
                 android:gravity="center"
+                android:enabled="false"
+                android:background="@drawable/back_text_gray"
                 android:singleLine="true" />
 
 
@@ -146,10 +146,10 @@
                 android:textSize="18sp" />
 
             <EditText
+                android:id="@+id/ed_chanpin"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
                 android:background="@drawable/back_text"
-                android:enabled="false"
                 android:gravity="center"
                 android:singleLine="true" />
 
@@ -174,8 +174,8 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/ed_height"
-                        android:background="@drawable/back_text"
                         android:enabled="false"
+                        android:background="@drawable/back_text_gray"
                         android:gravity="center"
                         android:singleLine="true" />
                 </LinearLayout>
@@ -196,8 +196,8 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/ed_height"
-                        android:background="@drawable/back_text"
                         android:enabled="false"
+                        android:background="@drawable/back_text_gray"
                         android:gravity="center"
                         android:singleLine="true" />
                 </LinearLayout>
@@ -212,10 +212,10 @@
                 android:textSize="18sp" />
 
             <EditText
+                android:id="@+id/ed_kuwei"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
                 android:background="@drawable/back_text"
-                android:enabled="false"
                 android:gravity="center"
                 android:singleLine="true" />
         </LinearLayout>
@@ -231,11 +231,11 @@
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/et_danhao"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
-        android:background="@drawable/back_text"
         android:gravity="center"
+        android:enabled="false"
+        android:background="@drawable/back_text_gray"
         android:singleLine="true" />
 
 
