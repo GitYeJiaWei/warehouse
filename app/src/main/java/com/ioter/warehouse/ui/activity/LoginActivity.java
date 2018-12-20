@@ -1,12 +1,10 @@
 package com.ioter.warehouse.ui.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -162,43 +160,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         ACache.get(AppApplication.getApplication()).put(ACacheUtils.USER_NAME, AppApplication.getGson().toJson(bean));
 
         startActivity(new Intent(this, MainActivity.class));
-    }
-
-    /**
-     * 隐藏键盘
-     */
-    public void hideSoftInput()
-    {
-        try
-        {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputMethodManager.isActive())
-            {
-                View v = this.getCurrentFocus();
-                if (v != null)
-                {
-                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-        } catch (Exception e)
-        {
-        }
-    }
-
-    /**
-     * 显示键盘
-     */
-    public void showSoftInput()
-    {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager.isActive())
-        {
-            View v = this.getCurrentFocus();
-            if (v != null)
-            {
-                inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED);
-            }
-        }
     }
 
     @Override

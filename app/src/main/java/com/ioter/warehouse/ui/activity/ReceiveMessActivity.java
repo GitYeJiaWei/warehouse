@@ -12,14 +12,25 @@ import android.widget.Spinner;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.StockBean;
+import com.ioter.warehouse.common.CustomProgressDialog;
+import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
+import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.DataUtil;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ReceiveMessActivity extends NewBaseActivity implements AdapterView.OnItemSelectedListener {
+public class ReceiveMessActivity extends NewBaseActivity {
 
     @BindView(R.id.bt_while)
     Button btWhile;
@@ -34,6 +45,8 @@ public class ReceiveMessActivity extends NewBaseActivity implements AdapterView.
     @BindView(R.id.sp_cangku)
     Spinner spCangku;
     private int a = 1;
+    protected CustomProgressDialog progressDialog;
+    private static ConcurrentHashMap<String,String> hashMap = new ConcurrentHashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +78,7 @@ public class ReceiveMessActivity extends NewBaseActivity implements AdapterView.
         });
 
         initView();
+        takeData();
     }
 
     private void initView() {
@@ -80,7 +94,76 @@ public class ReceiveMessActivity extends NewBaseActivity implements AdapterView.
         //设置默认值
         spCangku.setSelection(2,true);
         //spCangku.setPrompt("测试");
-        spCangku.setOnItemSelectedListener(this);
+        spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    protected void takeData() {
+        progressDialog = new CustomProgressDialog(this, "获取数据中...");
+        progressDialog.show();
+
+        Map<String,String> params = new HashMap<>();
+        params.put("stockInId","ASN201812130002");
+        params.put("orderNo","");
+
+       /* String data = AppApplication.getGson().toJson(params);
+        long time = System.currentTimeMillis()/1000;//获取系统时间的10位的时间戳
+        String timestamp=String.valueOf(time);
+        String m5 = "timestamp" + timestamp + "secret" + "iottest" + "data" + data;
+        String sign= DataUtil.md5(m5);
+        Map<String,String> param = new HashMap<>();
+        param.put("data",data);
+        param.put("timestamp",timestamp+"");
+        param.put("sign",sign);*/
+
+        AppApplication.getApplication().getAppComponent().getApiService().stock(params).compose(RxHttpReponseCompat.<List<StockBean>>compatResult())
+                .subscribe(new AdapterItemSubcriber<List<StockBean>>(AppApplication.getApplication()) {
+                    @Override
+                    public void onNext(List<StockBean> recommendWhSites) {
+                       if (recommendWhSites != null && recommendWhSites.size() > 0) {
+                            hashMap.clear();
+                            for (StockBean info : recommendWhSites) {
+                                try {
+                                    String key = info.getAsnDetailId();
+
+                                    for (int i = 0; i < info.getListLot().size(); i++) {
+                                        if (info.getListLot().get(i).getType()==1){
+                                            Map<String ,String> map = info.getListLot().get(i).getListOption();
+                                            Iterator it =map.keySet().iterator();
+                                            while (it.hasNext()){
+                                                String key1 =(String) it.next();
+                                                String value = info.getListLot().get(i).getListOption().get(key1);
+                                            }
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        super.onError(e);
+                    }
+                });
     }
 
     @Override
@@ -139,13 +222,4 @@ public class ReceiveMessActivity extends NewBaseActivity implements AdapterView.
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String selected = parent.getItemAtPosition(position).toString();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 }

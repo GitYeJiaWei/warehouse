@@ -13,6 +13,8 @@ import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.bean.BaseEpc;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 public class NewBaseActivity extends AppCompatActivity {
     protected Boolean IsFlushList = true; // 是否刷列表
     protected Object beep_Lock = new Object();
