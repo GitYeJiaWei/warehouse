@@ -13,12 +13,14 @@ import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.bean.BaseEpc;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NewBaseActivity extends AppCompatActivity {
     protected Boolean IsFlushList = true; // 是否刷列表
     protected Object beep_Lock = new Object();
     protected ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_SYSTEM, ToneGenerator.MAX_VOLUME);
+    protected static ConcurrentHashMap<String,ArrayList> hashMap = new ConcurrentHashMap<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

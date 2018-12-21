@@ -2,6 +2,7 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,15 +17,14 @@ import com.ioter.warehouse.bean.StockBean;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
-import com.ioter.warehouse.common.util.DataUtil;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,9 +44,19 @@ public class ReceiveMessActivity extends NewBaseActivity {
     EditText etDingdan;
     @BindView(R.id.sp_cangku)
     Spinner spCangku;
+    @BindView(R.id.edt_pinming)
+    EditText edtPinming;
+    @BindView(R.id.edt_yuqi)
+    EditText edtYuqi;
+    @BindView(R.id.edt_baozhuang)
+    EditText edtBaozhuang;
+    @BindView(R.id.edt_yishou)
+    EditText edtYishou;
     private int a = 1;
+    protected static int RAG = 1;
     protected CustomProgressDialog progressDialog;
-    private static ConcurrentHashMap<String,String> hashMap = new ConcurrentHashMap<>();
+    protected Map<String ,String> map = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +91,12 @@ public class ReceiveMessActivity extends NewBaseActivity {
         takeData();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        showUI();
+    }
+
     private void initView() {
         /*静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
          * 第二个参数：已经编写好的数组
@@ -92,7 +108,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCangku.setAdapter(adapter);
         //设置默认值
-        spCangku.setSelection(2,true);
+        spCangku.setSelection(2, true);
         //spCangku.setPrompt("测试");
         spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -111,9 +127,12 @@ public class ReceiveMessActivity extends NewBaseActivity {
         progressDialog = new CustomProgressDialog(this, "获取数据中...");
         progressDialog.show();
 
-        Map<String,String> params = new HashMap<>();
-        params.put("stockInId","ASN201812130002");
-        params.put("orderNo","");
+        String stockInId = getIntent().getStringExtra("num1");
+        String orderNo = getIntent().getStringExtra("num2");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("stockInId", stockInId);
+        params.put("orderNo", orderNo);
 
        /* String data = AppApplication.getGson().toJson(params);
         long time = System.currentTimeMillis()/1000;//获取系统时间的10位的时间戳
@@ -129,32 +148,41 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 .subscribe(new AdapterItemSubcriber<List<StockBean>>(AppApplication.getApplication()) {
                     @Override
                     public void onNext(List<StockBean> recommendWhSites) {
-                       if (recommendWhSites != null && recommendWhSites.size() > 0) {
+                        if (recommendWhSites != null && recommendWhSites.size() > 0) {
                             hashMap.clear();
-                            for (StockBean info : recommendWhSites) {
-                                try {
+                            try {
+                                for (StockBean info : recommendWhSites) {
                                     String key = info.getAsnDetailId();
+                                    ArrayList<StockBean> arrayList = new ArrayList<>();
+                                    arrayList.add(info);
+                                    hashMap.put(key, arrayList);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
+                                /*try {
                                     for (int i = 0; i < info.getListLot().size(); i++) {
                                         if (info.getListLot().get(i).getType()==1){
-                                            Map<String ,String> map = info.getListLot().get(i).getListOption();
+                                            Map<String,String> map = AppApplication.getGson().fromJson(info.getListLot().get(i).getListOption().toString(), Map.class);
                                             Iterator it =map.keySet().iterator();
                                             while (it.hasNext()){
                                                 String key1 =(String) it.next();
-                                                String value = info.getListLot().get(i).getListOption().get(key1);
+                                                String value = map.get(key1);
+                                                etDanhao.setText(value);
                                             }
                                         }
                                     }
-
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                            }
+                            }*/
                         }
                     }
 
                     @Override
                     public void onComplete() {
+                        showUI();
                         progressDialog.dismiss();
                     }
 
@@ -164,6 +192,26 @@ public class ReceiveMessActivity extends NewBaseActivity {
                         super.onError(e);
                     }
                 });
+    }
+
+    private void showUI() {
+        if (hashMap == null) {
+            return;
+        }
+        Iterator iterator = hashMap.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            String key1 = (String) iterator.next();
+            if (!map.containsKey(key1)){
+                ArrayList<StockBean> sb = hashMap.get(key1);
+                edtPinming.setText(sb.get(0).getProductName());
+                edtYuqi.setText(sb.get(0).getPreQty()+"");
+                edtYishou.setText(sb.get(0).getStockQty()+"");
+                map.put(key1,key1);
+                break;
+            }
+
+        }
     }
 
     @Override
@@ -207,11 +255,24 @@ public class ReceiveMessActivity extends NewBaseActivity {
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RAG) {
+            if (resultCode == RESULT_OK) {
+                showUI();
+            }else {
+
+            }
+        }
+    }
+
     @OnClick({R.id.bt_while, R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_while:
-                startActivity(new Intent(ReceiveMessActivity.this, ReceiveScanActivity.class));
+                Intent intent = new Intent(ReceiveMessActivity.this, ReceiveScanActivity.class);
+                startActivityForResult(intent,RAG);
                 break;
             case R.id.bt_sure:
                 startActivity(new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class));

@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.common.util.SoundManage;
+import com.ioter.warehouse.common.util.ToastUtil;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import butterknife.BindView;
@@ -104,7 +105,16 @@ public class ReceiveActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                startActivity(new Intent(ReceiveActivity.this, ReceiveMessActivity.class));
+                String etdan = etDanhao.getText().toString().trim();
+                String etding = etDingdan.getText().toString().trim();
+                if ((etdan==null || etdan.equals("")) && (etding ==null || etding.equals(""))){
+                    ToastUtil.toast("入库单号和客户订单号至少填一个");
+                    return;
+                }
+                Intent intent = new Intent(ReceiveActivity.this, ReceiveMessActivity.class);
+                intent.putExtra("num1",etdan);
+                intent.putExtra("num2",etding);
+                startActivity(intent);
                 break;
             case R.id.btn_cancel:
                 this.finish();

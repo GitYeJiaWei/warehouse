@@ -1,60 +1,59 @@
 package com.ioter.warehouse.bean;
 
-import java.util.Map;
 
 public class ListLotBean {
-    /**
-     * Title : 生产日期
-     * Type : 2
-     * Value :
-     * listOption : null
-     * listData : null
-     */
 
-    private String Title;
-    private int Type;
-    private String Value;
-    private Map<String, String> listOption;
-    private Object listData;
+            /**
+             * Title : 生产日期
+             * Type : 2
+             * Value :
+             * ListOption : null
+             * ListData : null
+             */
 
-    public String getTitle() {
-        return Title;
-    }
+            private String Title;
+            private int Type;
+            private String Value;
+            private Object ListOption;
+            private Object ListData;
 
-    public void setTitle(String Title) {
-        this.Title = Title;
-    }
+            public String getTitle() {
+                return Title;
+            }
 
-    public int getType() {
-        return Type;
-    }
+            public void setTitle(String Title) {
+                this.Title = Title;
+            }
 
-    public void setType(int Type) {
-        this.Type = Type;
-    }
+            public int getType() {
+                return Type;
+            }
 
-    public String getValue() {
-        return Value;
-    }
+            public void setType(int Type) {
+                this.Type = Type;
+            }
 
-    public void setValue(String Value) {
-        this.Value = Value;
-    }
+            public String getValue() {
+                return Value;
+            }
 
-    public Map<String, String> getListOption() {
-        return listOption;
-    }
+            public void setValue(String Value) {
+                this.Value = Value;
+            }
 
-    public void setListOption(Map<String, String> listOption) {
-        this.listOption = listOption;
-    }
+            public Object getListOption() {
+                return ListOption;
+            }
 
-    public Object getListData() {
-        return listData;
-    }
+            public void setListOption(Object ListOption) {
+                this.ListOption = ListOption;
+            }
 
-    public void setListData(Object listData) {
-        this.listData = listData;
-    }
+            public Object getListData() {
+                return ListData;
+            }
 
+            public void setListData(Object ListData) {
+                this.ListData = ListData;
+            }
 }
