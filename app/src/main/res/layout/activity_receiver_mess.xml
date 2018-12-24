@@ -192,6 +192,7 @@
                     android:text="收货库位"/>
 
                 <EditText
+                    android:id="@+id/ed_plan"
                     android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ed_height"

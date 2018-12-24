@@ -1,59 +1,63 @@
 package com.ioter.warehouse.bean;
 
 
-public class ListLotBean {
+import java.io.Serializable;
 
-            /**
-             * Title : 生产日期
-             * Type : 2
-             * Value :
-             * ListOption : null
-             * ListData : null
-             */
+public class ListLotBean implements Serializable{
 
-            private String Title;
-            private int Type;
-            private String Value;
-            private Object ListOption;
-            private Object ListData;
+        /**
+         * Title : 属性1
+         * Type : 1
+         * Value : 3
+         * ListOption : {"68":"平方米","86":"平方分米","87":"公顷","88":"5"}
+         * ListData : null
+         */
 
-            public String getTitle() {
-                return Title;
-            }
+        private String Title;
+        private int Type;
+        private String Value;
+        private Object ListOption;
+        private Object ListData;
 
-            public void setTitle(String Title) {
-                this.Title = Title;
-            }
+        public Object getListOption() {
+        return ListOption;
+    }
 
-            public int getType() {
-                return Type;
-            }
+        public void setListOption(Object listOption) {
+        ListOption = listOption;
+    }
 
-            public void setType(int Type) {
-                this.Type = Type;
-            }
+        public String getTitle() {
+            return Title;
+        }
 
-            public String getValue() {
-                return Value;
-            }
+        public void setTitle(String Title) {
+            this.Title = Title;
+        }
 
-            public void setValue(String Value) {
-                this.Value = Value;
-            }
+        public int getType() {
+            return Type;
+        }
 
-            public Object getListOption() {
-                return ListOption;
-            }
+        public void setType(int Type) {
+            this.Type = Type;
+        }
 
-            public void setListOption(Object ListOption) {
-                this.ListOption = ListOption;
-            }
+        public String getValue() {
+            return Value;
+        }
 
-            public Object getListData() {
-                return ListData;
-            }
+        public void setValue(String Value) {
+            this.Value = Value;
+        }
 
-            public void setListData(Object ListData) {
-                this.ListData = ListData;
-            }
+
+        public Object getListData() {
+            return ListData;
+        }
+
+        public void setListData(Object ListData) {
+            this.ListData = ListData;
+        }
+
 }

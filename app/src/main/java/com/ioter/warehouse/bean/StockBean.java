@@ -1,109 +1,112 @@
 package com.ioter.warehouse.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class StockBean {
+        /**
+         * AsnDetailId : 292ba7a9-d334-4b0e-8158-3e1f0c7cc31b
+         * ProductId : 3eb29db1-9364-4d08-83eb-72a6924f8f53
+         * ProductName : 7
+         * PreQty : 1.0
+         * StockQty : 0.0
+         * Packing : 444
+         * ListUom : [{"Uom":"EA","Qty":1,"IsDefault":true},{"Uom":"OL","Qty":1,"IsDefault":false},{"Uom":"IP","Qty":2,"IsDefault":false}]
+         * PlanLoc : 1
+         * ListLot : [{"Title":"属性1","Type":1,"Value":"3","ListOption":{"68":"平方米","86":"平方分米","87":"公顷","88":"5"},"ListData":null},{"Title":"属性2","Type":6,"Value":"4","ListOption":null,"ListData":null},{"Title":"生产日期","Type":2,"Value":"","ListOption":null,"ListData":null},{"Title":"属性3","Type":6,"Value":"5","ListOption":null,"ListData":null},{"Title":"入库日期","Type":2,"Value":"","ListOption":null,"ListData":null}]
+         * ListEpc : ["epc1","epc2"]
+         */
 
+        private String AsnDetailId;
+        private String ProductId;
+        private String ProductName;
+        private double PreQty;
+        private double StockQty;
+        private String Packing;
+        private String PlanLoc;
+        private List<PackingBean> ListUom;
+        private List<ListLotBean> ListLot;
+        private List<String> ListEpc;
 
-    /**
-     * Success : true
-     * Message :
-     * ResultObj : [{"StockInId":"ASN201812130002","LineNo":"00001","ProductId":"3eb29db1-9364-4d08-83eb-72a6924f8f53","ProductName":"7","PreQty":1,"StockQty":0,"Packing":[{"Uom":"EA","Qty":1,"IsDefault":true},{"Uom":"OL","Qty":1,"IsDefault":false},{"Uom":"IP","Qty":2,"IsDefault":false}],"PlanLoc":"1","ListLot":[{"Title":"生产日期","Type":2,"Value":"","listOption":null,"listData":null},{"Title":"属性2","Type":6,"Value":"4","listOption":null,"listData":null},{"Title":"属性1","Type":1,"Value":"3","listOption":{"68":"平方米","86":"平方分米","87":"公顷","88":"5"},"listData":null},{"Title":"生产日期","Type":2,"Value":"","listOption":null,"listData":null},{"Title":"属性3","Type":6,"Value":"5","listOption":null,"listData":null},{"Title":"入库日期","Type":2,"Value":"","listOption":null,"listData":null}],"ListEpc":["epc1","epc2"]},{"StockInId":"ASN201812130002","LineNo":"00001","ProductId":"3eb29db1-9364-4d08-83eb-72a6924f8f53","ProductName":"7","PreQty":1,"StockQty":0,"Packing":[{"Uom":"EA","Qty":1,"IsDefault":true},{"Uom":"OL","Qty":1,"IsDefault":false},{"Uom":"IP","Qty":2,"IsDefault":false}],"PlanLoc":"1","ListLot":[{"Title":"属性2","Type":6,"Value":"","listOption":null,"listData":null},{"Title":"属性1","Type":1,"Value":"","listOption":{"68":"平方米","86":"平方分米","87":"公顷","88":"5"},"listData":null},{"Title":"入库日期","Type":2,"Value":"2018-12-13","listOption":null,"listData":null},{"Title":"状态","Type":6,"Value":"","listOption":null,"listData":null},{"Title":"生产日期","Type":2,"Value":"","listOption":null,"listData":null},{"Title":"属性3","Type":6,"Value":"3","listOption":null,"listData":null}],"ListEpc":["epc1","epc2"]},{"StockInId":"ASN201812130002","LineNo":"0101","ProductId":"3eb29db1-9364-4d08-83eb-72a6924f8f53","ProductName":"7","PreQty":2,"StockQty":0,"Packing":[{"Uom":"EA","Qty":1,"IsDefault":true},{"Uom":"OL","Qty":1,"IsDefault":false},{"Uom":"IP","Qty":2,"IsDefault":false}],"PlanLoc":"1","ListLot":[{"Title":"属性3","Type":6,"Value":"3","listOption":null,"listData":null},{"Title":"属性2","Type":6,"Value":"2","listOption":null,"listData":null},{"Title":"生产日期","Type":2,"Value":"","listOption":null,"listData":null},{"Title":"状态","Type":6,"Value":"启用","listOption":null,"listData":null},{"Title":"属性1","Type":1,"Value":"111","listOption":{"68":"平方米","86":"平方分米","87":"公顷","88":"5"},"listData":null},{"Title":"入库日期","Type":2,"Value":"2018-12-12","listOption":null,"listData":null}],"ListEpc":["epc1","epc2"]},{"StockInId":"ASN201812130002","LineNo":"0102","ProductId":"3eb29db1-9364-4d08-83eb-72a6924f8f53","ProductName":"7","PreQty":1,"StockQty":0,"Packing":[{"Uom":"EA","Qty":1,"IsDefault":true},{"Uom":"OL","Qty":1,"IsDefault":false},{"Uom":"IP","Qty":2,"IsDefault":false}],"PlanLoc":"1","ListLot":[{"Title":"属性3","Type":6,"Value":"","listOption":null,"listData":null},{"Title":"状态","Type":6,"Value":"","listOption":null,"listData":null},{"Title":"属性1","Type":1,"Value":"","listOption":{"68":"平方米","86":"平方分米","87":"公顷","88":"5"},"listData":null},{"Title":"属性2","Type":6,"Value":"","listOption":null,"listData":null},{"Title":"生产日期","Type":2,"Value":"2018-12-20","listOption":null,"listData":null},{"Title":"入库日期","Type":2,"Value":"","listOption":null,"listData":null}],"ListEpc":["epc1","epc2"]}]
-     */
+        public String getAsnDetailId() {
+            return AsnDetailId;
+        }
 
-    /**
-     * StockInId : ASN201812130002
-     * LineNo : 00001
-     * ProductId : 3eb29db1-9364-4d08-83eb-72a6924f8f53
-     * ProductName : 7
-     * PreQty : 1.0
-     * StockQty : 0.0
-     * Packing : [{"Uom":"EA","Qty":1,"IsDefault":true},{"Uom":"OL","Qty":1,"IsDefault":false},{"Uom":"IP","Qty":2,"IsDefault":false}]
-     * PlanLoc : 1
-     * ListLot : [{"Title":"生产日期","Type":2,"Value":"","listOption":null,"listData":null},{"Title":"属性2","Type":6,"Value":"4","listOption":null,"listData":null},{"Title":"属性1","Type":1,"Value":"3","listOption":{"68":"平方米","86":"平方分米","87":"公顷","88":"5"},"listData":null},{"Title":"生产日期","Type":2,"Value":"","listOption":null,"listData":null},{"Title":"属性3","Type":6,"Value":"5","listOption":null,"listData":null},{"Title":"入库日期","Type":2,"Value":"","listOption":null,"listData":null}]
-     * ListEpc : ["epc1","epc2"]
-     */
+        public void setAsnDetailId(String AsnDetailId) {
+            this.AsnDetailId = AsnDetailId;
+        }
 
-    private String AsnDetailId;
-    private String ProductId;
-    private String ProductName;
-    private double PreQty;
-    private double StockQty;
-    private String PlanLoc;
-    private List<PackingBean> Packing;
-    private List<ListLotBean> ListLot;
-    private List<String> ListEpc;
+        public String getProductId() {
+            return ProductId;
+        }
 
-    public String getAsnDetailId() {
-        return AsnDetailId;
-    }
+        public void setProductId(String ProductId) {
+            this.ProductId = ProductId;
+        }
 
-    public void setAsnDetailId(String asnDetailId) {
-        AsnDetailId = asnDetailId;
-    }
+        public String getProductName() {
+            return ProductName;
+        }
 
-    public String getProductId() {
-        return ProductId;
-    }
+        public void setProductName(String ProductName) {
+            this.ProductName = ProductName;
+        }
 
-    public void setProductId(String ProductId) {
-        this.ProductId = ProductId;
-    }
+        public double getPreQty() {
+            return PreQty;
+        }
 
-    public String getProductName() {
-        return ProductName;
-    }
+        public void setPreQty(double PreQty) {
+            this.PreQty = PreQty;
+        }
 
-    public void setProductName(String ProductName) {
-        this.ProductName = ProductName;
-    }
+        public double getStockQty() {
+            return StockQty;
+        }
 
-    public double getPreQty() {
-        return PreQty;
-    }
+        public void setStockQty(double StockQty) {
+            this.StockQty = StockQty;
+        }
 
-    public void setPreQty(double PreQty) {
-        this.PreQty = PreQty;
-    }
+        public String getPacking() {
+            return Packing;
+        }
 
-    public double getStockQty() {
-        return StockQty;
-    }
+        public void setPacking(String Packing) {
+            this.Packing = Packing;
+        }
 
-    public void setStockQty(double StockQty) {
-        this.StockQty = StockQty;
-    }
+        public String getPlanLoc() {
+            return PlanLoc;
+        }
 
-    public String getPlanLoc() {
-        return PlanLoc;
-    }
+        public void setPlanLoc(String PlanLoc) {
+            this.PlanLoc = PlanLoc;
+        }
 
-    public void setPlanLoc(String PlanLoc) {
-        this.PlanLoc = PlanLoc;
-    }
+        public List<PackingBean> getListUom() {
+            return ListUom;
+        }
 
-    public List<PackingBean> getPacking() {
-        return Packing;
-    }
+        public void setListUom(List<PackingBean> ListUom) {
+            this.ListUom = ListUom;
+        }
 
-    public void setPacking(List<PackingBean> Packing) {
-        this.Packing = Packing;
-    }
+        public List<ListLotBean> getListLot() {
+            return ListLot;
+        }
 
-    public List<ListLotBean> getListLot() {
-        return ListLot;
-    }
+        public void setListLot(List<ListLotBean> ListLot) {
+            this.ListLot = ListLot;
+        }
 
-    public void setListLot(List<ListLotBean> ListLot) {
-        this.ListLot = ListLot;
-    }
+        public List<String> getListEpc() {
+            return ListEpc;
+        }
 
-    public List<String> getListEpc() {
-        return ListEpc;
-    }
-
-    public void setListEpc(List<String> ListEpc) {
-        this.ListEpc = ListEpc;
-    }
+        public void setListEpc(List<String> ListEpc) {
+            this.ListEpc = ListEpc;
+        }
 
 }

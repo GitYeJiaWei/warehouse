@@ -1,18 +1,11 @@
 package com.ioter.warehouse.ui.activity;
 
-import android.Manifest;
-import android.app.Application;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -22,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.common.ActivityCollecter;
 import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.ui.adapter.DrawerListAdapter;
 import com.ioter.warehouse.ui.adapter.DrawerListContent;
@@ -34,7 +27,7 @@ import com.ioter.warehouse.ui.fragment.HomeFragment;
 /**
  *
  */
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends NewBaseActivity{
 
     protected static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     protected Menu menu;
@@ -52,50 +45,11 @@ public class MainActivity extends AppCompatActivity{
 
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        init();
         initview();
         if (savedInstanceState == null)
         {
             selectItem(0);
         }
-    }
-
-    //初始化二维码扫描头
-    public void init()
-    {
-        if (Build.VERSION.SDK_INT > 21)
-        {
-
-            //扫条码 需要相机对应用开启相机和存储权限；
-            if (ContextCompat.checkSelfPermission(this,
-                    android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                //先判断有没有权限 ，没有就在这里进行权限的申请
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{android.Manifest.permission.CAMERA,android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
-            } else
-            {
-                //说明已经获取到摄像头权限了 想干嘛干嘛
-            }
-            //读写内存权限
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            {
-                // 请求权限
-                ActivityCompat
-                        .requestPermissions(
-                                this,
-                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                                2);
-            }
-
-        } else
-        {
-            //这个说明系统版本在6.0之下，不需要动态获取权限。
-        }
-        new AppApplication.InitBarCodeTask().execute();
     }
 
     private void initview(){
@@ -253,19 +207,9 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    protected void onDestroy() {
-        if (AppApplication.mReader != null)
-        {
-            AppApplication.mReader.free();
-        }
-        if (AppApplication.barcode2DWithSoft != null)
-        {
-            AppApplication.barcode2DWithSoft.stopScan();
-            AppApplication.barcode2DWithSoft.close();
-        }
-        super.onDestroy();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityCollecter.finishAll();
     }
 }
-
-
-

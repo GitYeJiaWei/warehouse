@@ -11,7 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FindDataActivity extends AppCompatActivity {
+public class FindDataActivity extends NewBaseActivity {
 
     @BindView(R.id.bt_sure)
     Button btSure;

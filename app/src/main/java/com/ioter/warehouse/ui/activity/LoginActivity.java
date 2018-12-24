@@ -1,7 +1,12 @@
 package com.ioter.warehouse.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -66,13 +71,44 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     public void init() {
         initview();
+
+        //初始化二维码扫描头
+        if (Build.VERSION.SDK_INT > 21) {
+
+            //扫条码 需要相机对应用开启相机和存储权限；
+            if (ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                //先判断有没有权限 ，没有就在这里进行权限的申请
+                ActivityCompat.requestPermissions(LoginActivity.this,
+                        new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+            } else {
+                //说明已经获取到摄像头权限了 想干嘛干嘛
+            }
+            //读写内存权限
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // 请求权限
+                ActivityCompat
+                        .requestPermissions(
+                                this,
+                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                2);
+            }
+
+        } else {
+            //这个说明系统版本在6.0之下，不需要动态获取权限。
+        }
+        new AppApplication.InitBarCodeTask().execute();
+
     }
 
-    private void initview(){
+    private void initview() {
         txtMobi.setText("admin");
         txtPassword.setText("123");
         String defautIp = ACache.get(AppApplication.getApplication()).getAsString("ip");
-        if (defautIp == null){
+        if (defautIp == null) {
             ACache.get(AppApplication.getApplication()).put("ip", UIConstant.IP);
         }
 
@@ -87,7 +123,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             public Boolean apply(CharSequence charSequence, CharSequence charSequence2) throws Exception {
                 return isPhoneValid(charSequence.toString()) && isPasswordValid(charSequence2.toString());
             }
-        }).subscribe(new Consumer<Boolean>(){
+        }).subscribe(new Consumer<Boolean>() {
 
             @Override
             public void accept(Boolean aBoolean) throws Exception {
@@ -106,11 +142,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             }
         });
 
-        rfid.setOnLongClickListener(new View.OnLongClickListener()
-        {
+        rfid.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view)
-            {
+            public boolean onLongClick(View view) {
                 ServerIpDialog serverIpDialog = new ServerIpDialog(LoginActivity.this);
                 serverIpDialog.show();
                 return false;
@@ -119,52 +153,55 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     }
 
-    private boolean isPhoneValid(String phone)
-    {
+    private boolean isPhoneValid(String phone) {
         return !TextUtils.isEmpty(phone);
     }
 
-    private boolean isPasswordValid(String password)
-    {
+    private boolean isPasswordValid(String password) {
         return !TextUtils.isEmpty(password);
     }
 
     @Override
-    public void showLoading()
-    {
+    public void showLoading() {
         btnLogin.showLoading();
     }
 
     @Override
-    public void showError(String msg)
-    {
+    public void showError(String msg) {
         btnLogin.showButtonText();
         Toast.makeText(LoginActivity.this, "登录失败：" + msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void dismissLoading()
-    {
+    public void dismissLoading() {
         btnLogin.showButtonText();
     }
 
     @Override
-    public void checkError()
-    {
+    public void checkError() {
         ToastUtil.toast("登录失败");
     }
 
     @Override
-    public void loginSuccess(LoginBean bean)
-    {
+    public void loginSuccess(LoginBean bean) {
         ACache.get(AppApplication.getApplication()).put(ACacheUtils.USER_NAME, AppApplication.getGson().toJson(bean));
 
         startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         return true;
+    }
+
+    protected void onDestroy() {
+        if (AppApplication.mReader != null) {
+            AppApplication.mReader.free();
+        }
+        if (AppApplication.barcode2DWithSoft != null) {
+            AppApplication.barcode2DWithSoft.stopScan();
+            AppApplication.barcode2DWithSoft.close();
+        }
+        super.onDestroy();
     }
 }

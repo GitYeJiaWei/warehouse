@@ -47,6 +47,8 @@ public class SettingActivity extends NewBaseActivity implements AdapterView.OnIt
         //设置spinner中每个条目的样式，同样是引用android提供的布局文件
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCangku.setAdapter(adapter);
+        //设置默认值
+        spCangku.setSelection(2, true);
         //spCangku.setPrompt("测试");
         spCangku.setOnItemSelectedListener(this);
 

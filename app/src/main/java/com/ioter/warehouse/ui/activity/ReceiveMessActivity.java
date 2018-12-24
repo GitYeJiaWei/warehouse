@@ -2,6 +2,7 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.Spinner;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.ListLotBean;
+import com.ioter.warehouse.bean.PackingBean;
 import com.ioter.warehouse.bean.StockBean;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
@@ -20,6 +23,7 @@ import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -52,11 +56,16 @@ public class ReceiveMessActivity extends NewBaseActivity {
     EditText edtBaozhuang;
     @BindView(R.id.edt_yishou)
     EditText edtYishou;
+    @BindView(R.id.ed_plan)
+    EditText edPlan;
     private int a = 1;
+    private boolean size = false;
     protected static int RAG = 1;
+    protected static int RAB = 2;
+    protected static String TAG = "logware";
     protected CustomProgressDialog progressDialog;
-    protected Map<String ,String> map = new HashMap<>();
-
+    protected Map<String, String> map = new HashMap<>();
+    public ArrayList<ListLotBean> listLotBeans =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,28 +96,24 @@ public class ReceiveMessActivity extends NewBaseActivity {
             }
         });
 
-        initView();
         takeData();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        showUI();
-    }
-
-    private void initView() {
-        /*静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
-         * 第二个参数：已经编写好的数组
-         * 第三个数据：默认的样式
+    private void initView(List<PackingBean> list) {
+        /*
+         * 第二个参数是显示的布局
+         * 第三个参数是在布局显示的位置id
+         * 第四个参数是将要显示的数据
          */
-        ArrayAdapter<CharSequence> adapter =
-                ArrayAdapter.createFromResource(this, R.array.number_array, android.R.layout.simple_spinner_item);
-        //设置spinner中每个条目的样式，同样是引用android提供的布局文件
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spCangku.setAdapter(adapter);
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            arrayList.add(list.get(i).getUom());
+        }
+
+        ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item, arrayList);
+        spCangku.setAdapter(adapter2);
         //设置默认值
-        spCangku.setSelection(2, true);
+        spCangku.setSelection(0, true);
         //spCangku.setPrompt("测试");
         spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -150,6 +155,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
                     public void onNext(List<StockBean> recommendWhSites) {
                         if (recommendWhSites != null && recommendWhSites.size() > 0) {
                             hashMap.clear();
+                            map.clear();
                             try {
                                 for (StockBean info : recommendWhSites) {
                                     String key = info.getAsnDetailId();
@@ -161,22 +167,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
                                 e.printStackTrace();
                             }
 
-                                /*try {
-                                    for (int i = 0; i < info.getListLot().size(); i++) {
-                                        if (info.getListLot().get(i).getType()==1){
-                                            Map<String,String> map = AppApplication.getGson().fromJson(info.getListLot().get(i).getListOption().toString(), Map.class);
-                                            Iterator it =map.keySet().iterator();
-                                            while (it.hasNext()){
-                                                String key1 =(String) it.next();
-                                                String value = map.get(key1);
-                                                etDanhao.setText(value);
-                                            }
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }*/
+
                         }
                     }
 
@@ -202,15 +193,31 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
         while (iterator.hasNext()) {
             String key1 = (String) iterator.next();
-            if (!map.containsKey(key1)){
+
+            if (!map.containsKey(key1)) {
                 ArrayList<StockBean> sb = hashMap.get(key1);
                 edtPinming.setText(sb.get(0).getProductName());
-                edtYuqi.setText(sb.get(0).getPreQty()+"");
-                edtYishou.setText(sb.get(0).getStockQty()+"");
-                map.put(key1,key1);
+                edtYuqi.setText(sb.get(0).getPreQty() + "");
+                edtYishou.setText(sb.get(0).getStockQty() + "");
+                edPlan.setText(sb.get(0).getPlanLoc()+"");
+                edtBaozhuang.setText(sb.get(0).getPacking()+"");
+                map.put(key1, key1);
+                /*
+                 * 动态添显示下拉菜单的选项，可以动态添加元素
+                 */
+                initView(sb.get(0).getListUom());
+
+                listLotBeans = new ArrayList<>();
+                listLotBeans = (ArrayList<ListLotBean>) sb.get(0).getListLot();
                 break;
             }
-
+        }
+        if (map.size() == hashMap.size()) {
+            Log.d(TAG, "showUI: map" + map.size() + " hashmap" + hashMap.size());
+            size = true;
+        } else {
+            Log.d(TAG, "showUI: map" + map.size() + " hashmap" + hashMap.size());
+            size = false;
         }
     }
 
@@ -261,9 +268,10 @@ public class ReceiveMessActivity extends NewBaseActivity {
         if (requestCode == RAG) {
             if (resultCode == RESULT_OK) {
                 showUI();
-            }else {
-
             }
+        }
+        if (requestCode == RAB){
+
         }
     }
 
@@ -272,10 +280,17 @@ public class ReceiveMessActivity extends NewBaseActivity {
         switch (view.getId()) {
             case R.id.bt_while:
                 Intent intent = new Intent(ReceiveMessActivity.this, ReceiveScanActivity.class);
-                startActivityForResult(intent,RAG);
+                startActivityForResult(intent, RAB);
                 break;
             case R.id.bt_sure:
-                startActivity(new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class));
+                if (listLotBeans ==null){
+                    showUI();
+                }else {
+                    Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
+                    intent1.putExtra("size", size);
+                    intent1.putExtra("listlost", listLotBeans);
+                    startActivityForResult(intent1, RAG);
+                }
                 break;
             case R.id.btn_cancel:
                 this.finish();

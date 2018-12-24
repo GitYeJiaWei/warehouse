@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.bean.BaseEpc;
+import com.ioter.warehouse.common.ActivityCollecter;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class NewBaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCollecter.addActivity(this);
     }
 
     private Handler handler = new Handler()
@@ -88,6 +90,12 @@ public class NewBaseActivity extends AppCompatActivity {
             beep_Lock.notifyAll();
         }
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollecter.removeActivity(this);
     }
 
     protected boolean loopFlag = false;
