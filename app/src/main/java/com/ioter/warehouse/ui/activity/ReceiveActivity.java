@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.common.util.ACache;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.ioter.warehouse.common.util.ToastUtil;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
@@ -56,6 +57,11 @@ public class ReceiveActivity extends NewBaseActivity {
                 }
             }
         });
+
+        String name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name==null){
+            ToastUtil.toast("请到系统设置中设置仓库");
+        }
     }
 
 

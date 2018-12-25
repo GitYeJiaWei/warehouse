@@ -22,6 +22,7 @@ public class ACacheUtils
         ACache.get(AppApplication.getApplication()).put(USER_NAME, loginBean);
     }
 
+    //用户名
     public static String getUserName()
     {
         String result = ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.USER_NAME);
@@ -36,6 +37,7 @@ public class ACacheUtils
         return null;
     }
 
+    //用户ID
     public static String getUserId()
     {
         String result = ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.USER_NAME);
@@ -50,6 +52,7 @@ public class ACacheUtils
         return null;
     }
 
+    //仓库id
     public static String getWareIdByWhCode(String whCode)
     {
         String result = ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.USER_NAME);

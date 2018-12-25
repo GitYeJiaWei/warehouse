@@ -7,15 +7,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.common.util.ACache;
+import com.ioter.warehouse.common.util.ACacheUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingActivity extends NewBaseActivity implements AdapterView.OnItemSelectedListener {
+public class SettingActivity extends NewBaseActivity {
 
     @BindView(R.id.bt_sure)
     Button btSure;
@@ -46,26 +49,48 @@ public class SettingActivity extends NewBaseActivity implements AdapterView.OnIt
                 ArrayAdapter.createFromResource(this, R.array.number_array, android.R.layout.simple_spinner_item);
         //设置spinner中每个条目的样式，同样是引用android提供的布局文件
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spCangku.setAdapter(adapter);
+        spKuqu.setAdapter(adapter);
         //设置默认值
-        spCangku.setSelection(2, true);
+        spKuqu.setSelection(2, true);
         //spCangku.setPrompt("测试");
-        spCangku.setOnItemSelectedListener(this);
+        spKuqu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         /*
          * 动态添显示下来菜单的选项，可以动态添加元素
          */
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("1.苹果");
-        list.add("2.橘子");
+        List<String> list = ACacheUtils.getWhCodeWithUser();
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
          * 第四个参数是将要显示的数据
          */
         ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item,list);
-        spKuqu.setAdapter(adapter2);
-        spKuqu.setOnItemSelectedListener(this);
+        spCangku.setAdapter(adapter2);
+        //设置默认值
+        spCangku.setSelection(2, true);
+        spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //将选择的元素显示出来
+                String selected = parent.getItemAtPosition(position).toString();
+                ACache.get(AppApplication.getApplication()).put("UserName", selected);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
 
@@ -81,24 +106,4 @@ public class SettingActivity extends NewBaseActivity implements AdapterView.OnIt
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (view.getId()){
-            case R.id.sp_cangku:
-                //将选择的元素显示出来
-                String selected = parent.getItemAtPosition(position).toString();
-                break;
-            case R.id.sp_kuqu:
-                //将选择的元素显示出来
-                String selected1 = parent.getItemAtPosition(position).toString();
-                break;
-
-        }
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 }

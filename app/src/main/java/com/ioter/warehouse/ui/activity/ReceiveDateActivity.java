@@ -2,6 +2,7 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,12 +14,21 @@ import android.widget.TextView;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.BaseBean;
 import com.ioter.warehouse.bean.ListLotBean;
+import com.ioter.warehouse.common.CustomProgressDialog;
+import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
+import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACache;
+import com.ioter.warehouse.common.util.ACacheUtils;
+import com.ioter.warehouse.common.util.DateUtil;
+import com.ioter.warehouse.common.util.ToastUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +36,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ReceiveDateActivity extends NewBaseActivity {
 
@@ -36,6 +48,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
     @BindView(R.id.layout_content)
     LinearLayout layoutContent;
     private int mYear,mMonth,mDay,mhourOfDay,mminute;
+    protected CustomProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +64,9 @@ public class ReceiveDateActivity extends NewBaseActivity {
     private void initView(ArrayList<ListLotBean> listLotBeans) {
         for (int i = 0; i < listLotBeans.size(); i++) {
             String title = listLotBeans.get(i).getTitle();
+            final TextView textView1 = new TextView(this);
+            textView1.setText(title);
+
             int type = listLotBeans.get(i).getType();
             String value = listLotBeans.get(i).getValue();
             if (type==1){
@@ -58,6 +74,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 Map<String, String> map = AppApplication.getGson().fromJson(listLotBeans.get(i).getListOption().toString(), Map.class);
                 Iterator it = map.keySet().iterator();
                 ArrayList<String> arrayList = new ArrayList<>();
+                arrayList.add(value);
                 while (it.hasNext()) {
                     String key1 = (String) it.next();
                     arrayList.add(map.get(key1));
@@ -99,17 +116,60 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟
                     Date date = sdf.parse(newDateStr);
-                    textView.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                    if (value!=null && !value.equals("")){
+                        textView.setText(value);
+                    }else {
+                        textView.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
+                    }
                 }catch (Exception ex)
                 {
                     ex.printStackTrace();
                 }
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DateUtil.showDatePickerDialog(ReceiveDateActivity.this,2,
+                                textView,calendar);
+                    }
+                });
+                layoutContent.addView(textView);
 
             }else if (type == 3){
                 //日期时间
+                final TextView textView = new TextView(this);
+                //初始化日期
+                final Calendar calendar=Calendar.getInstance();
+                mhourOfDay=calendar.get(Calendar.HOUR_OF_DAY);
+                mminute =calendar.get(Calendar.MINUTE);
+                String newDateStr = mhourOfDay+":" + mminute;
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");//小写的mm表示的是分钟
+                    Date date = sdf.parse(newDateStr);
+                    if (value!=null && !value.equals("")){
+                        textView.setText(value);
+                    }else {
+                        textView.setText(new SimpleDateFormat("hh:mm").format(date));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DateUtil.showTimePickerDialog(ReceiveDateActivity.this,2,
+                                textView,calendar);
+                    }
+                });
+                layoutContent.addView(textView);
 
             }else if (type == 4){
                 //数字框
+                final EditText editText = new EditText(this);
+                editText.setText(value);
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                layoutContent.addView(editText);
 
             }else if (type == 5){
                 //弹出框
@@ -117,34 +177,95 @@ public class ReceiveDateActivity extends NewBaseActivity {
             }else if (type == 6){
                 //文本框
                 final EditText editText = new EditText(this);
+                editText.setText(value);
                 layoutContent.addView(editText);
 
             }else {
                 return;
             }
         }
-
-
-
     }
 
     @OnClick({R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                if (getIntent().getBooleanExtra("size", false)) {
-                    Intent intent = new Intent(ReceiveDateActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Intent intent = new Intent();
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+                takeData();
                 break;
             case R.id.btn_cancel:
                 finish();
                 break;
         }
+    }
+
+    private void takeData(){
+        String name =ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name==null){
+            ToastUtil.toast("请到系统设置中设置仓库");
+        }
+        progressDialog = new CustomProgressDialog(this, "提交数据中...");
+        progressDialog.show();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("asnDetailId", "");
+        params.put("productId", "");
+        params.put("stockQty", "");
+        params.put("uom", "");
+        params.put("stockLoc", "");
+        params.put("trackCode", "");
+        params.put("listEpcJson", "");
+        params.put("listLotTitleJson", "");
+        params.put("listLotValueJson", "");
+        params.put("userId", ACacheUtils.getUserId());
+        params.put("whId", ACacheUtils.getWareIdByWhCode(name));
+
+
+       /* String data = AppApplication.getGson().toJson(params);
+        long time = System.currentTimeMillis()/1000;//获取系统时间的10位的时间戳
+        String timestamp=String.valueOf(time);
+        String m5 = "timestamp" + timestamp + "secret" + "iottest" + "data" + data;
+        String sign= DataUtil.md5(m5);
+        Map<String,String> param = new HashMap<>();
+        param.put("data",data);
+        param.put("timestamp",timestamp+"");
+        param.put("sign",sign);*/
+
+        AppApplication.getApplication().getAppComponent().getApiService().StockIn(params).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this)
+        {
+            @Override
+            public void onNext(BaseBean baseBean)
+            {
+                if (baseBean.success())
+                {
+                    ToastUtil.toast("提交成功");
+                    if (getIntent().getBooleanExtra("size", false)) {
+                        Intent intent = new Intent(ReceiveDateActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent();
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                } else
+                {
+                    ToastUtil.toast("提交失败：" + baseBean.getMessage());
+                }
+            }
+
+            @Override
+            public void onComplete()
+            {
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable e)
+            {
+                progressDialog.dismiss();
+                super.onError(e);
+            }
+        });
     }
 }

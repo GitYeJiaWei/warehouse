@@ -37,7 +37,7 @@
 
     <EditText
         android:layout_margin="5dp"
-        android:id="@+id/et_danhao"
+        android:id="@+id/et_pinming"
         android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
@@ -53,6 +53,7 @@
         android:text="序列号"/>
 
     <EditText
+        android:id="@+id/ed_xuliehao"
         android:layout_margin="5dp"
         android:singleLine="true"
         android:layout_width="match_parent"
@@ -125,6 +126,7 @@
                 android:text="预收数"/>
 
             <EditText
+                android:id="@+id/edt_yuqi"
                 android:singleLine="true"
                 android:enabled="false"
                 android:layout_width="match_parent"
@@ -150,6 +152,7 @@
                 android:text="扫描数"/>
 
             <EditText
+                android:id="@+id/edt_saomiao"
                 android:singleLine="true"
                 android:enabled="false"
                 android:layout_width="match_parent"
@@ -174,6 +177,7 @@
                 android:text="差异数"/>
 
             <EditText
+                android:id="@+id/edt_chayi"
                 android:singleLine="true"
                 android:enabled="false"
                 android:layout_width="match_parent"

@@ -9,8 +9,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.TrackBean;
+import com.ioter.warehouse.common.CustomProgressDialog;
+import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
+import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.ui.fragment.GroundMessFragment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +40,7 @@ public class GroundActivity extends NewBaseActivity implements GroundMessFragmen
     private GroundMessFragment groundMessFragment;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private CustomProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +55,56 @@ public class GroundActivity extends NewBaseActivity implements GroundMessFragmen
         fragmentTransaction.replace(R.id.content_layout, groundMessFragment);
         fragmentTransaction.commitAllowingStateLoss();
 
+        takeData();
+    }
+
+    protected void takeData() {
+        progressDialog = new CustomProgressDialog(this, "获取数据中...");
+        progressDialog.show();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("trackCode", "*");
+
+       /* String data = AppApplication.getGson().toJson(params);
+        long time = System.currentTimeMillis()/1000;//获取系统时间的10位的时间戳
+        String timestamp=String.valueOf(time);
+        String m5 = "timestamp" + timestamp + "secret" + "iottest" + "data" + data;
+        String sign= DataUtil.md5(m5);
+        Map<String,String> param = new HashMap<>();
+        param.put("data",data);
+        param.put("timestamp",timestamp+"");
+        param.put("sign",sign);*/
+
+        AppApplication.getApplication().getAppComponent().getApiService().GetProductByTrackCode(params).compose(RxHttpReponseCompat.<List<TrackBean>>compatResult())
+                .subscribe(new AdapterItemSubcriber<List<TrackBean>>(AppApplication.getApplication()) {
+                    @Override
+                    public void onNext(List<TrackBean> recommendWhSites) {
+                        if (recommendWhSites != null && recommendWhSites.size() > 0) {
+                            hashMap.clear();
+                            try {
+                                for (TrackBean info : recommendWhSites) {
+                                    String key = info.getTaskId();
+                                    ArrayList<TrackBean> arrayList = new ArrayList<>();
+                                    arrayList.add(info);
+                                    hashMap.put(key, arrayList);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        super.onError(e);
+                    }
+                });
     }
 
     @OnClick({R.id.bt_sure, R.id.bt_left, R.id.bt_right, R.id.btn_cancel})

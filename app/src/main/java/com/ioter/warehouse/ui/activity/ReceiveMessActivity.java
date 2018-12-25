@@ -2,7 +2,6 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.Spinner;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.EPC;
 import com.ioter.warehouse.bean.ListLotBean;
 import com.ioter.warehouse.bean.PackingBean;
 import com.ioter.warehouse.bean.StockBean;
@@ -65,7 +65,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
     protected static String TAG = "logware";
     protected CustomProgressDialog progressDialog;
     protected Map<String, String> map = new HashMap<>();
-    public ArrayList<ListLotBean> listLotBeans =null;
+    private ArrayList<ListLotBean> listLotBeans =null;
+    private ArrayList<String> listEpc =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +150,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         param.put("timestamp",timestamp+"");
         param.put("sign",sign);*/
 
-        AppApplication.getApplication().getAppComponent().getApiService().stock(params).compose(RxHttpReponseCompat.<List<StockBean>>compatResult())
+        AppApplication.getApplication().getAppComponent().getApiService().QueryAsn(params).compose(RxHttpReponseCompat.<List<StockBean>>compatResult())
                 .subscribe(new AdapterItemSubcriber<List<StockBean>>(AppApplication.getApplication()) {
                     @Override
                     public void onNext(List<StockBean> recommendWhSites) {
@@ -166,8 +167,6 @@ public class ReceiveMessActivity extends NewBaseActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-
                         }
                     }
 
@@ -209,6 +208,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
                 listLotBeans = new ArrayList<>();
                 listLotBeans = (ArrayList<ListLotBean>) sb.get(0).getListLot();
+
+                listEpc = (ArrayList<String>) sb.get(0).getListEpc();
                 break;
             }
         }
@@ -271,7 +272,15 @@ public class ReceiveMessActivity extends NewBaseActivity {
             }
         }
         if (requestCode == RAB){
-
+            if (resultCode == RESULT_OK){
+                ArrayList<EPC> epclis = (ArrayList<EPC>) data.getSerializableExtra("list");
+                if (epclis!=null){
+                    ArrayList<String> list = new ArrayList<>();
+                    for (int i = 0; i < epclis.size(); i++) {
+                        list.add(epclis.get(i).getEpc());
+                    }
+                }
+            }
         }
     }
 
@@ -280,15 +289,19 @@ public class ReceiveMessActivity extends NewBaseActivity {
         switch (view.getId()) {
             case R.id.bt_while:
                 Intent intent = new Intent(ReceiveMessActivity.this, ReceiveScanActivity.class);
+                intent.putExtra("listepc",listEpc);
+                intent.putExtra("pinming",edtPinming.getText().toString());
+                intent.putExtra("yiqishu",edtYuqi.getText().toString());
                 startActivityForResult(intent, RAB);
                 break;
             case R.id.bt_sure:
-                if (listLotBeans ==null){
+                if (listLotBeans ==null || listLotBeans.size()==0){
                     showUI();
                 }else {
                     Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
                     intent1.putExtra("size", size);
                     intent1.putExtra("listlost", listLotBeans);
+
                     startActivityForResult(intent1, RAG);
                 }
                 break;
