@@ -66,6 +66,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
             String title = listLotBeans.get(i).getTitle();
             final TextView textView1 = new TextView(this);
             textView1.setText(title);
+            layoutContent.addView(textView1);
 
             int type = listLotBeans.get(i).getType();
             String value = listLotBeans.get(i).getValue();

@@ -19,6 +19,7 @@ import com.ioter.warehouse.ui.fragment.GroundMessFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class GroundActivity extends NewBaseActivity implements GroundMessFragment.OnFragmentInteractionListener{
+public class GroundActivity extends NewBaseActivity implements GroundMessFragment.OnFragmentInteractionListener {
     @BindView(R.id.bt_sure)
     Button btSure;
     @BindView(R.id.bt_left)
@@ -41,6 +42,7 @@ public class GroundActivity extends NewBaseActivity implements GroundMessFragmen
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private CustomProgressDialog progressDialog;
+    private int current = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +50,9 @@ public class GroundActivity extends NewBaseActivity implements GroundMessFragmen
         setContentView(R.layout.activity_ground);
         ButterKnife.bind(this);
 
-        setTitle("上架");
-        groundMessFragment = GroundMessFragment.newInstance("传递来的数据1", "传递来的数据2");
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_layout, groundMessFragment);
-        fragmentTransaction.commitAllowingStateLoss();
-
         takeData();
+        setTitle("上架");
+
     }
 
     protected void takeData() {
@@ -96,6 +93,7 @@ public class GroundActivity extends NewBaseActivity implements GroundMessFragmen
 
                     @Override
                     public void onComplete() {
+                        showUI("nor");
                         progressDialog.dismiss();
                     }
 
@@ -107,6 +105,45 @@ public class GroundActivity extends NewBaseActivity implements GroundMessFragmen
                 });
     }
 
+    private void showUI(String abc) {
+        if (hashMap == null) {
+            return;
+        }
+        HashMap<Integer, String> map = new HashMap<>();
+        Iterator it = hashMap.keySet().iterator();
+        int b = 1;
+        while (it.hasNext()) {
+            String key = (String) it.next();
+            map.put(b, key);
+            b++;
+        }
+
+        if (abc.equals("nor")) {
+            current = 1;
+        } else if (abc.equals("left")) {
+            if (current == 1) {
+                return;
+            }
+            current--;
+            fragmentTransaction.remove(groundMessFragment);
+        } else if (abc.equals("right")) {
+            if (current == hashMap.size()) {
+                return;
+            }
+            current++;
+            fragmentTransaction.remove(groundMessFragment);
+        } else {
+            return;
+        }
+        groundMessFragment = GroundMessFragment.newInstance(hashMap.get(map.get(current)), "传递来的数据1");
+        fragmentManager = getSupportFragmentManager();
+        //如果transaction  commit（）过  那么我们要重新得到transaction
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.content_layout, groundMessFragment).commitAllowingStateLoss();
+        tvSize.setText(current + "/" + hashMap.size());
+
+    }
+
     @OnClick({R.id.bt_sure, R.id.bt_left, R.id.bt_right, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -114,18 +151,10 @@ public class GroundActivity extends NewBaseActivity implements GroundMessFragmen
                 finish();
                 break;
             case R.id.bt_left:
-                fragmentTransaction.remove(groundMessFragment);
-                //如果transaction  commit（）过  那么我们要重新得到transaction
-                groundMessFragment = GroundMessFragment.newInstance("传递来的数据2", "传递来的数据2");
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_layout, groundMessFragment).commitAllowingStateLoss();
+                showUI("left");
                 break;
             case R.id.bt_right:
-                fragmentTransaction.remove(groundMessFragment);
-                //如果transaction  commit（）过  那么我们要重新得到transaction
-                groundMessFragment = GroundMessFragment.newInstance("传递来的数据3", "传递来的数据2");
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_layout, groundMessFragment).commitAllowingStateLoss();
+                showUI("right");
                 break;
             case R.id.btn_cancel:
                 finish();
@@ -135,7 +164,7 @@ public class GroundActivity extends NewBaseActivity implements GroundMessFragmen
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        groundMessFragment.onKeyDown(keyCode,event);
+        groundMessFragment.onKeyDown(keyCode, event);
         return super.onKeyDown(keyCode, event);
     }
 

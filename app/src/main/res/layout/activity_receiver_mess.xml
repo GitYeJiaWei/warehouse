@@ -122,6 +122,7 @@
                     android:text="收货数量"/>
 
                 <EditText
+                    android:id="@+id/ed_shouhuo"
                     android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ed_height"

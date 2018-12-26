@@ -1,6 +1,8 @@
 package com.ioter.warehouse.bean;
 
-public class EPC {
+import java.io.Serializable;
+
+public class EPC implements Serializable{
     String epc;
 
     public String getEpc() {

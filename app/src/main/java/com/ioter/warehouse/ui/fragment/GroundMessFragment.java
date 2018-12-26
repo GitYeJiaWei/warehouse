@@ -15,8 +15,13 @@ import android.widget.Spinner;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.ListUomBean;
+import com.ioter.warehouse.bean.TrackBean;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,10 +51,20 @@ public class GroundMessFragment extends Fragment {
     EditText edChanpin;
     @BindView(R.id.ed_kuwei)
     EditText edKuwei;
+    @BindView(R.id.ef_shuliang)
+    EditText efShuliang;
+    @BindView(R.id.edt_kuwei)
+    EditText edtKuwei;
+    @BindView(R.id.edt_baozhuang)
+    EditText edtBaozhuang;
+    @BindView(R.id.ed_zongshu)
+    EditText edZongshu;
+    @BindView(R.id.edt_pinming)
+    EditText edtPinming;
     private int a = 1;
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private ArrayList<TrackBean> mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -67,10 +82,10 @@ public class GroundMessFragment extends Fragment {
      * @return A new instance of fragment GroundMessFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroundMessFragment newInstance(String param1, String param2) {
+    public static GroundMessFragment newInstance(ArrayList<TrackBean> param1, String param2) {
         GroundMessFragment fragment = new GroundMessFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putSerializable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -80,7 +95,7 @@ public class GroundMessFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = (ArrayList<TrackBean>) getArguments().getSerializable(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -93,27 +108,38 @@ public class GroundMessFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
         Bundle bundle = getArguments();
-        String message = null;
+        ArrayList<TrackBean> message = null;
         if (bundle != null) {
-            message = bundle.getString(ARG_PARAM1);
+            message = (ArrayList<TrackBean>) bundle.getSerializable(ARG_PARAM1);
         }
-        edKuwei.setText(message);
-        initView();
+        edtKuwei.setText(message.get(0).getRecommendLoc());
+        edZongshu.setText(message.get(0).getShelfQty()+"");
+        edtPinming.setText(message.get(0).getProductName());
+        edtBaozhuang.setText(message.get(0).getPacking());
+
+        initView(message.get(0).getListUom());
         return view;
     }
 
-    private void initView() {
-        /*静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
-         * 第二个参数：已经编写好的数组
-         * 第三个数据：默认的样式
+    private void initView(List<ListUomBean> list) {
+        /*
+         * 第二个参数是显示的布局
+         * 第三个参数是在布局显示的位置id
+         * 第四个参数是将要显示的数据
          */
-        ArrayAdapter<CharSequence> adapter =
-                ArrayAdapter.createFromResource(getContext(), R.array.number_array, android.R.layout.simple_spinner_item);
-        //设置spinner中每个条目的样式，同样是引用android提供的布局文件
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spCangku.setAdapter(adapter);
+        ArrayList<String> arrayList = new ArrayList<>();
+        int select=0;
+        for (int i = 0; i < list.size(); i++) {
+            arrayList.add(list.get(i).getUom());
+            if (list.get(i).isIsDefault()){
+                select=i;
+            }
+        }
+
+        ArrayAdapter adapter2 = new ArrayAdapter(getContext(), R.layout.item, R.id.text_item, arrayList);
+        spCangku.setAdapter(adapter2);
         //设置默认值
-        spCangku.setSelection(3, true);
+        spCangku.setSelection(select, true);
         //spCangku.setPrompt("测试");
         spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -191,7 +217,7 @@ public class GroundMessFragment extends Fragment {
                     } else if (a == 1) {
                         edGenzonghao.setText(barCode);
                         a = 2;
-                    } else if (a == 3){
+                    } else if (a == 3) {
                         edKuwei.setText(barCode);
                         a = 1;
                     } else {

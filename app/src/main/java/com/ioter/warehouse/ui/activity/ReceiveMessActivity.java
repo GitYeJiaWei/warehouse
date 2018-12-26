@@ -21,9 +21,9 @@ import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.common.util.SoundManage;
+import com.ioter.warehouse.common.util.ToastUtil;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,6 +58,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
     EditText edtYishou;
     @BindView(R.id.ed_plan)
     EditText edPlan;
+    @BindView(R.id.ed_shouhuo)
+    EditText edShouhuo;
     private int a = 1;
     private boolean size = false;
     protected static int RAG = 1;
@@ -65,8 +67,11 @@ public class ReceiveMessActivity extends NewBaseActivity {
     protected static String TAG = "logware";
     protected CustomProgressDialog progressDialog;
     protected Map<String, String> map = new HashMap<>();
-    private ArrayList<ListLotBean> listLotBeans =null;
-    private ArrayList<String> listEpc =null;
+    private ArrayList<StockBean> sb = null;
+    private ArrayList<ListLotBean> listLotBeans = null;
+    private ArrayList<String> listEpc = null;
+    private ArrayList<EPC> epclis = null;
+    private String selected=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,19 +112,23 @@ public class ReceiveMessActivity extends NewBaseActivity {
          * 第四个参数是将要显示的数据
          */
         ArrayList<String> arrayList = new ArrayList<>();
+        int select = 0;
         for (int i = 0; i < list.size(); i++) {
             arrayList.add(list.get(i).getUom());
+            if (list.get(i).isIsDefault()) {
+                select = i;
+            }
         }
 
         ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item, arrayList);
         spCangku.setAdapter(adapter2);
         //设置默认值
-        spCangku.setSelection(0, true);
+        spCangku.setSelection(select, true);
         //spCangku.setPrompt("测试");
         spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = parent.getItemAtPosition(position).toString();
+                selected = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -159,7 +168,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
                             map.clear();
                             try {
                                 for (StockBean info : recommendWhSites) {
-                                    String key = info.getAsnDetailId();
+                                    String key = info.getProductId();
                                     ArrayList<StockBean> arrayList = new ArrayList<>();
                                     arrayList.add(info);
                                     hashMap.put(key, arrayList);
@@ -172,7 +181,6 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
                     @Override
                     public void onComplete() {
-                        showUI();
                         progressDialog.dismiss();
                     }
 
@@ -184,35 +192,40 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 });
     }
 
-    private void showUI() {
+    private void showUI(String barCode) {
         if (hashMap == null) {
             return;
         }
-        Iterator iterator = hashMap.keySet().iterator();
-
-        while (iterator.hasNext()) {
-            String key1 = (String) iterator.next();
-
-            if (!map.containsKey(key1)) {
-                ArrayList<StockBean> sb = hashMap.get(key1);
-                edtPinming.setText(sb.get(0).getProductName());
-                edtYuqi.setText(sb.get(0).getPreQty() + "");
-                edtYishou.setText(sb.get(0).getStockQty() + "");
-                edPlan.setText(sb.get(0).getPlanLoc()+"");
-                edtBaozhuang.setText(sb.get(0).getPacking()+"");
-                map.put(key1, key1);
-                /*
-                 * 动态添显示下拉菜单的选项，可以动态添加元素
-                 */
-                initView(sb.get(0).getListUom());
-
-                listLotBeans = new ArrayList<>();
-                listLotBeans = (ArrayList<ListLotBean>) sb.get(0).getListLot();
-
-                listEpc = (ArrayList<String>) sb.get(0).getListEpc();
-                break;
-            }
+        if (!hashMap.containsKey(barCode)) {
+            ToastUtil.toast("不包含此产品，请重新扫描");
+            a = 1;
+            return;
         }
+        if (map.containsKey(barCode)) {
+            ToastUtil.toast("此产品已提交，请重新扫描");
+            a = 1;
+            return;
+        } else {
+            if (sb != null) {
+                sb.clear();
+            }
+            sb = hashMap.get(barCode);
+            edtPinming.setText(sb.get(0).getProductName());
+            edtYuqi.setText(sb.get(0).getPreQty() + "");
+            edtYishou.setText(sb.get(0).getStockQty() + "");
+            edPlan.setText(sb.get(0).getPlanLoc() + "");
+            edtBaozhuang.setText(sb.get(0).getPacking() + "");
+            map.put(barCode, barCode);
+            /*
+             * 动态添显示下拉菜单的选项，可以动态添加元素
+             */
+            initView(sb.get(0).getListUom());
+
+            listLotBeans = (ArrayList<ListLotBean>) sb.get(0).getListLot();
+
+            listEpc = (ArrayList<String>) sb.get(0).getListEpc();
+        }
+
         if (map.size() == hashMap.size()) {
             Log.d(TAG, "showUI: map" + map.size() + " hashmap" + hashMap.size());
             size = true;
@@ -255,6 +268,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
                     } else if (a == 1) {
                         etDanhao.setText(barCode);
                         a = 2;
+                        showUI(barCode);
                     } else {
                         return;
                     }
@@ -268,17 +282,14 @@ public class ReceiveMessActivity extends NewBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RAG) {
             if (resultCode == RESULT_OK) {
-                showUI();
+                //清空数据，等待下次扫描
             }
         }
-        if (requestCode == RAB){
-            if (resultCode == RESULT_OK){
-                ArrayList<EPC> epclis = (ArrayList<EPC>) data.getSerializableExtra("list");
-                if (epclis!=null){
-                    ArrayList<String> list = new ArrayList<>();
-                    for (int i = 0; i < epclis.size(); i++) {
-                        list.add(epclis.get(i).getEpc());
-                    }
+        if (requestCode == RAB) {
+            if (resultCode == RESULT_OK) {
+                epclis = (ArrayList<EPC>) data.getSerializableExtra("list");
+                if (epclis != null) {
+                    edShouhuo.setText(epclis.size() + "");
                 }
             }
         }
@@ -289,19 +300,28 @@ public class ReceiveMessActivity extends NewBaseActivity {
         switch (view.getId()) {
             case R.id.bt_while:
                 Intent intent = new Intent(ReceiveMessActivity.this, ReceiveScanActivity.class);
-                intent.putExtra("listepc",listEpc);
-                intent.putExtra("pinming",edtPinming.getText().toString());
-                intent.putExtra("yiqishu",edtYuqi.getText().toString());
+                intent.putExtra("listepc", listEpc);
+                intent.putExtra("pinming", edtPinming.getText().toString());
+                intent.putExtra("yiqishu", edtYuqi.getText().toString());
                 startActivityForResult(intent, RAB);
                 break;
             case R.id.bt_sure:
-                if (listLotBeans ==null || listLotBeans.size()==0){
-                    showUI();
-                }else {
+                if (listLotBeans == null || listLotBeans.size() == 0) {
+                    if (size){
+                        //提交数据，并退出
+                        finish();
+                    }else {
+                        //清空数据，等待下次扫描
+                    }
+                } else {
                     Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
-                    intent1.putExtra("size", size);
-                    intent1.putExtra("listlost", listLotBeans);
-
+                    intent1.putExtra("size", size);//返回界面的依据
+                    intent1.putExtra("listlost", listLotBeans);//动态数组
+                    intent1.putExtra("epclis", epclis);//扫描的EPC
+                    intent1.putExtra("sb", sb);//选中的数据
+                    intent1.putExtra("uom",selected);
+                    intent1.putExtra("stockLoc",edPlan.getText());
+                    intent1.putExtra("trackCode",etDingdan.getText());
                     startActivityForResult(intent1, RAG);
                 }
                 break;
