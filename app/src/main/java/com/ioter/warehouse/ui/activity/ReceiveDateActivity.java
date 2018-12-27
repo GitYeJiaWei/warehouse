@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.bean.BaseBean;
+import com.ioter.warehouse.bean.EPC;
 import com.ioter.warehouse.bean.ListLotBean;
+import com.ioter.warehouse.bean.StockBean;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
@@ -49,6 +51,10 @@ public class ReceiveDateActivity extends NewBaseActivity {
     LinearLayout layoutContent;
     private int mYear,mMonth,mDay,mhourOfDay,mminute;
     protected CustomProgressDialog progressDialog;
+    private Intent intent = null;
+    private ArrayList<String> listLotTitleJson = new ArrayList<>();
+    private ArrayList<String> listLotValueJson = new ArrayList<>();
+    private int select=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,29 +62,40 @@ public class ReceiveDateActivity extends NewBaseActivity {
         setContentView(R.layout.activity_receive_date);
         ButterKnife.bind(this);
         setTitle("收货");
+        intent = getIntent();
 
-        ArrayList<ListLotBean> listLotBeans = (ArrayList<ListLotBean>) getIntent().getSerializableExtra("listlost");
+        ArrayList<ListLotBean> listLotBeans = (ArrayList<ListLotBean>) intent.getSerializableExtra("listlost");
         initView(listLotBeans);
     }
 
     private void initView(ArrayList<ListLotBean> listLotBeans) {
         for (int i = 0; i < listLotBeans.size(); i++) {
+
+
             String title = listLotBeans.get(i).getTitle();
             final TextView textView1 = new TextView(this);
             textView1.setText(title);
+            listLotTitleJson.add(title);
             layoutContent.addView(textView1);
 
             int type = listLotBeans.get(i).getType();
             String value = listLotBeans.get(i).getValue();
+            listLotValueJson.add(value);
             if (type==1){
                 //下拉框
                 Map<String, String> map = AppApplication.getGson().fromJson(listLotBeans.get(i).getListOption().toString(), Map.class);
                 Iterator it = map.keySet().iterator();
                 ArrayList<String> arrayList = new ArrayList<>();
-                arrayList.add(value);
+
+                select=0;
+                int a=0;
                 while (it.hasNext()) {
                     String key1 = (String) it.next();
+                    if (value.equals(key1)){
+                        select = a;
+                    }
                     arrayList.add(map.get(key1));
+                    a++;
                 }
 
                 final Spinner spinner = new Spinner(this);
@@ -90,17 +107,17 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item, arrayList);
                 spinner.setAdapter(adapter2);
                 //设置默认值
-                spinner.setSelection(0, true);
+                spinner.setSelection(select, true);
                 //spCangku.setPrompt("测试");
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String selected = parent.getItemAtPosition(position).toString();
+
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
-
                     }
                 });
                 // 动态把控件添加到
@@ -200,6 +217,17 @@ public class ReceiveDateActivity extends NewBaseActivity {
     }
 
     private void takeData(){
+        ArrayList<StockBean> sb =(ArrayList<StockBean>)intent.getSerializableExtra("sb");
+        ArrayList<EPC> epclis=(ArrayList<EPC>)intent.getSerializableExtra("epclis");
+        String uom = intent.getStringExtra("uom");
+        String stockLoc = intent.getStringExtra("stockLoc");
+        String trackCode = intent.getStringExtra("trackCode");
+
+        ArrayList<String> listEpcJson = new ArrayList<>();
+        for (int i = 0; i < epclis.size(); i++) {
+            listEpcJson.add(epclis.get(i).getEpc());
+        }
+
         String name =ACache.get(AppApplication.getApplication()).getAsString("UserName");
         if (name==null){
             ToastUtil.toast("请到系统设置中设置仓库");
@@ -208,15 +236,15 @@ public class ReceiveDateActivity extends NewBaseActivity {
         progressDialog.show();
 
         Map<String, String> params = new HashMap<>();
-        params.put("asnDetailId", "");
-        params.put("productId", "");
-        params.put("stockQty", "");
-        params.put("uom", "");
-        params.put("stockLoc", "");
-        params.put("trackCode", "");
-        params.put("listEpcJson", "");
-        params.put("listLotTitleJson", "");
-        params.put("listLotValueJson", "");
+        params.put("asnDetailId", sb.get(0).getAsnDetailId());
+        params.put("productId", sb.get(0).getProductId());
+        params.put("stockQty", epclis.size()+"");
+        params.put("uom", uom);
+        params.put("stockLoc", stockLoc);
+        params.put("trackCode", trackCode);
+        params.put("listEpcJson", AppApplication.getGson().toJson(listEpcJson));
+        params.put("listLotTitleJson", AppApplication.getGson().toJson(listLotTitleJson));
+        params.put("listLotValueJson", AppApplication.getGson().toJson(listLotValueJson));
         params.put("userId", ACacheUtils.getUserId());
         params.put("whId", ACacheUtils.getWareIdByWhCode(name));
 
@@ -240,7 +268,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 if (baseBean.success())
                 {
                     ToastUtil.toast("提交成功");
-                    if (getIntent().getBooleanExtra("size", false)) {
+                    if (intent.getBooleanExtra("size", false)) {
                         Intent intent = new Intent(ReceiveDateActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

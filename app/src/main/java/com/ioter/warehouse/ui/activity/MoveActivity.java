@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.bumptech.glide.load.engine.Resource;
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.common.util.SoundManage;
@@ -28,7 +29,9 @@ public class MoveActivity extends NewBaseActivity {
     EditText edGenzonghao;
     @BindView(R.id.ed_chanpin)
     EditText edChanpin;
-    private int a =1;
+    @BindView(R.id.ed_pinming)
+    EditText edPinming;
+    private int a = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +85,7 @@ public class MoveActivity extends NewBaseActivity {
 
     //扫条码
     private void ScanBarcode() {
-        if (AppApplication.barcode2DWithSoft!=null){
+        if (AppApplication.barcode2DWithSoft != null) {
             AppApplication.barcode2DWithSoft.scan();
             AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
         }
@@ -99,14 +102,18 @@ public class MoveActivity extends NewBaseActivity {
                     SoundManage.PlaySound(MoveActivity.this, SoundManage.SoundType.SUCCESS);
                     if (a == 2) {
                         edGenzonghao.setText(barCode);
-                        a = 3;
+                        a = 1;
+                        edChanpin.setEnabled(false);
+                        edChanpin.setBackgroundColor(getResources().getColor(R.color.dark_grey));
                     } else if (a == 1) {
                         edKuwei.setText(barCode);
                         a = 2;
-                    } else if (a== 3){
+                    } else if (a == 3) {
                         edChanpin.setText(barCode);
                         a = 1;
-                    }  else{
+                        edGenzonghao.setEnabled(false);
+                        edGenzonghao.setBackgroundColor(getResources().getColor(R.color.dark_grey));
+                    } else {
                         return;
                     }
                 }

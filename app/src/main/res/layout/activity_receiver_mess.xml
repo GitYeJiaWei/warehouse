@@ -110,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ed_height"
                     android:enabled="false"
-                    android:text="1CS/10EA"
+                    android:text=""
                     android:background="@drawable/back_text_gray"
                     android:gravity="center"/>
 

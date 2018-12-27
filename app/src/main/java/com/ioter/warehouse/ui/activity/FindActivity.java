@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
@@ -26,7 +29,12 @@ public class FindActivity extends NewBaseActivity {
     EditText etDanhao;
     @BindView(R.id.et_dingdan)
     EditText etDingdan;
-    private int a =1;
+    @BindView(R.id.cb_islgnore)
+    CheckBox cbIslgnore;
+    @BindView(R.id.tv_tick)
+    TextView tvTick;
+    private int a = 1;
+    private boolean check = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +64,15 @@ public class FindActivity extends NewBaseActivity {
                 }
             }
         });
+
+        cbIslgnore.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    check = true;
+                }
+            }
+        });
     }
 
     @Override
@@ -70,7 +87,7 @@ public class FindActivity extends NewBaseActivity {
 
     //扫条码
     private void ScanBarcode() {
-        if (AppApplication.barcode2DWithSoft!=null){
+        if (AppApplication.barcode2DWithSoft != null) {
             AppApplication.barcode2DWithSoft.scan();
             AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
         }
@@ -87,10 +104,10 @@ public class FindActivity extends NewBaseActivity {
                     SoundManage.PlaySound(FindActivity.this, SoundManage.SoundType.SUCCESS);
                     if (a == 2) {
                         etDingdan.setText(barCode);
-                        a=1;
+                        a = 1;
                     } else if (a == 1) {
                         etDanhao.setText(barCode);
-                        a=2;
+                        a = 2;
                     } else {
                         return;
                     }
@@ -103,7 +120,17 @@ public class FindActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                startActivity(new Intent(FindActivity.this, FindMessActivity.class));
+                String locId = etDanhao.getText().toString();
+                String productId = etDingdan.getText().toString();
+                if (locId == null || productId == null) {
+                    tvTick.setText("库位和产品不能为空");
+                    return;
+                }
+                Intent intent = new Intent(FindActivity.this, FindMessActivity.class);
+                intent.putExtra("locId", locId);
+                intent.putExtra("productId", productId);
+                intent.putExtra("isIgnoreLot", check);
+                startActivity(intent);
                 break;
             case R.id.btn_cancel:
                 finish();

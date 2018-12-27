@@ -1,6 +1,8 @@
 package com.ioter.warehouse.bean;
 
-public class ListUomBean {
+import java.io.Serializable;
+
+public class ListUomBean implements Serializable{
     /**
      * Uom : EA
      * Qty : 9.0

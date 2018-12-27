@@ -13,6 +13,7 @@ import android.widget.Spinner;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.BaseBean;
 import com.ioter.warehouse.bean.EPC;
 import com.ioter.warehouse.bean.ListLotBean;
 import com.ioter.warehouse.bean.PackingBean;
@@ -20,6 +21,8 @@ import com.ioter.warehouse.bean.StockBean;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACache;
+import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.ioter.warehouse.common.util.ToastUtil;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
@@ -33,6 +36,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ReceiveMessActivity extends NewBaseActivity {
 
@@ -117,6 +122,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
             arrayList.add(list.get(i).getUom());
             if (list.get(i).isIsDefault()) {
                 select = i;
+                selected = list.get(i).getUom();
             }
         }
 
@@ -283,6 +289,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         if (requestCode == RAG) {
             if (resultCode == RESULT_OK) {
                 //清空数据，等待下次扫描
+                takeClear();
             }
         }
         if (requestCode == RAB) {
@@ -293,6 +300,82 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 }
             }
         }
+    }
+
+    private void takeClear(){
+        epclis.clear();
+        sb.clear();
+        listLotBeans.clear();
+        listEpc.clear();
+        selected = null;
+        edPlan.setText("");
+        etDingdan.setText("");
+        etDanhao.setText("");
+        edtPinming.setText("");
+        edtYuqi.setText("");
+        edtYishou.setText("");
+        edPlan.setText("");
+        edtBaozhuang.setText("");
+        edShouhuo.setText("");
+    }
+
+    private void commitData(){
+        ArrayList<String> listEpcJson = new ArrayList<>();
+        for (int i = 0; i < epclis.size(); i++) {
+            listEpcJson.add(epclis.get(i).getEpc());
+        }
+
+        String name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name==null){
+            ToastUtil.toast("请到系统设置中设置仓库");
+        }
+        progressDialog = new CustomProgressDialog(this, "提交数据中...");
+        progressDialog.show();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("asnDetailId", sb.get(0).getAsnDetailId());
+        params.put("productId", sb.get(0).getProductId());
+        params.put("stockQty", epclis.size()+"");
+        params.put("uom", selected);
+        String stockLoc = edPlan.getText().toString();
+        String trackCode =etDingdan.getText().toString();
+        params.put("stockLoc", stockLoc);
+        params.put("trackCode", trackCode);
+        params.put("listEpcJson", AppApplication.getGson().toJson(listEpcJson));
+        params.put("listLotTitleJson", "");
+        params.put("listLotValueJson", "");
+        params.put("userId", ACacheUtils.getUserId());
+        params.put("whId", ACacheUtils.getWareIdByWhCode(name));
+
+        AppApplication.getApplication().getAppComponent().getApiService().StockIn(params).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this)
+        {
+            @Override
+            public void onNext(BaseBean baseBean)
+            {
+                if (baseBean.success())
+                {
+                    ToastUtil.toast("提交成功");
+                } else
+                {
+                    ToastUtil.toast("提交失败：" + baseBean.getMessage());
+                }
+            }
+
+            @Override
+            public void onComplete()
+            {
+                takeClear();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable e)
+            {
+                progressDialog.dismiss();
+                super.onError(e);
+            }
+        });
     }
 
     @OnClick({R.id.bt_while, R.id.bt_sure, R.id.btn_cancel})
@@ -309,19 +392,23 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 if (listLotBeans == null || listLotBeans.size() == 0) {
                     if (size){
                         //提交数据，并退出
+                        commitData();
                         finish();
                     }else {
-                        //清空数据，等待下次扫描
+                        commitData();
+                        //提交数据,清空数据，等待下次扫描
                     }
                 } else {
                     Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
                     intent1.putExtra("size", size);//返回界面的依据
                     intent1.putExtra("listlost", listLotBeans);//动态数组
                     intent1.putExtra("epclis", epclis);//扫描的EPC
-                    intent1.putExtra("sb", sb);//选中的数据
+                    intent1.putExtra("sb", sb);//获取到的查询数据
                     intent1.putExtra("uom",selected);
-                    intent1.putExtra("stockLoc",edPlan.getText());
-                    intent1.putExtra("trackCode",etDingdan.getText());
+                    String stockLoc = edPlan.getText().toString();
+                    String trackCode =etDingdan.getText().toString();
+                    intent1.putExtra("stockLoc",stockLoc);
+                    intent1.putExtra("trackCode",trackCode);
                     startActivityForResult(intent1, RAG);
                 }
                 break;

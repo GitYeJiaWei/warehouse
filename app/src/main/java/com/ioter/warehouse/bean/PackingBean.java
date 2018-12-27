@@ -1,6 +1,8 @@
 package com.ioter.warehouse.bean;
 
-public class PackingBean {
+import java.io.Serializable;
+
+public class PackingBean implements Serializable{
         /**
          * Uom : EA
          * Qty : 1.0

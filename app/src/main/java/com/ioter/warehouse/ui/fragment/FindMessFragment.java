@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.GetStock;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,13 +33,28 @@ public class FindMessFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     Unbinder unbinder;
-    @BindView(R.id.et_danhao)
-    EditText etDanhao;
-    @BindView(R.id.et_dingdan)
-    EditText etDingdan;
+    @BindView(R.id.et_huozhu)
+    EditText etHuozhu;
+    @BindView(R.id.ed_chanpin)
+    EditText edChanpin;
+    @BindView(R.id.ed_pinming)
+    EditText edPinming;
+    @BindView(R.id.ed_kuwei)
+    EditText edKuwei;
+    @BindView(R.id.ed_kucun)
+    EditText edKucun;
+    @BindView(R.id.ed_fenpei)
+    EditText edFenpei;
+    @BindView(R.id.ed_genzonghao)
+    EditText edGenzonghao;
+    @BindView(R.id.edt_baozhuang)
+    EditText edtBaozhuang;
+    @BindView(R.id.ed_keyong)
+    EditText edKeyong;
+
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private ArrayList<GetStock> mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -54,10 +72,10 @@ public class FindMessFragment extends Fragment {
      * @return A new instance of fragment FindMessFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FindMessFragment newInstance(String param1, String param2) {
+    public static FindMessFragment newInstance(ArrayList<GetStock> param1, String param2) {
         FindMessFragment fragment = new FindMessFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putSerializable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -67,7 +85,7 @@ public class FindMessFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = (ArrayList<GetStock>) getArguments().getSerializable(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -80,15 +98,20 @@ public class FindMessFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
         Bundle bundle = getArguments();
-        String message = null;
-        String message1 = null;
+        ArrayList<GetStock> message = null;
         if (bundle != null) {
-            message = bundle.getString(ARG_PARAM1);
-            message1 = bundle.getString(ARG_PARAM2);
+            message = (ArrayList<GetStock>) bundle.getSerializable(ARG_PARAM1);
         }
-        etDanhao.setText(message);
-        etDingdan.setText(message1);
 
+        etHuozhu.setText(message.get(0).getOwnerName()+"");
+        edChanpin.setText(message.get(0).getProductId()+"");
+        edPinming.setText(message.get(0).getProductName()+"");
+        edKuwei.setText(message.get(0).getLocId()+"");
+        edKucun.setText(message.get(0).getStockQty()+"");
+        edFenpei.setText(message.get(0).getDistributeQty()+"");
+        edGenzonghao.setText(message.get(0).getTrackCode()+"");
+        edtBaozhuang.setText(message.get(0).getUom()+"");
+        edKeyong.setText(message.get(0).getAvailableQty()+"");
         return view;
     }
 

@@ -1,10 +1,9 @@
 package com.ioter.warehouse.bean;
 
-import com.google.gson.annotations.SerializedName;
-
+import java.io.Serializable;
 import java.util.List;
 
-public class StockBean {
+public class StockBean implements Serializable{
         /**
          * AsnDetailId : 292ba7a9-d334-4b0e-8158-3e1f0c7cc31b
          * ProductId : 3eb29db1-9364-4d08-83eb-72a6924f8f53

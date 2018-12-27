@@ -17,7 +17,7 @@
         android:text="货主"/>
 
     <EditText
-        android:id="@+id/et_danhao"
+        android:id="@+id/et_huozhu"
         android:singleLine="true"
         android:enabled="false"
         android:layout_width="match_parent"
@@ -33,6 +33,7 @@
         android:text="产品"/>
 
     <EditText
+        android:id="@+id/ed_chanpin"
         android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
@@ -48,6 +49,7 @@
         android:text="品名"/>
 
     <EditText
+        android:id="@+id/ed_pinming"
         android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
@@ -78,6 +80,7 @@
                 android:text="库位"/>
 
             <EditText
+                android:id="@+id/ed_kuwei"
                 android:singleLine="true"
                 android:enabled="false"
                 android:layout_width="match_parent"
@@ -93,6 +96,7 @@
                 android:text="库存数量"/>
 
             <EditText
+                android:id="@+id/ed_kucun"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
@@ -108,7 +112,7 @@
                 android:text="分配数量"/>
 
             <EditText
-                android:id="@+id/et_dingdan"
+                android:id="@+id/ed_fenpei"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
@@ -133,6 +137,7 @@
                 android:text="跟踪号"/>
 
             <EditText
+                android:id="@+id/ed_genzonghao"
                 android:singleLine="true"
                 android:enabled="false"
                 android:layout_width="match_parent"
@@ -148,13 +153,14 @@
                 android:text="包装单位"/>
 
             <EditText
+                android:id="@+id/edt_baozhuang"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
                 android:enabled="false"
                 android:background="@drawable/back_text_gray"
                 android:gravity="center"
-                android:text="EA"/>
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -164,6 +170,7 @@
                 android:text="可用数量"/>
 
             <EditText
+                android:id="@+id/ed_keyong"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
