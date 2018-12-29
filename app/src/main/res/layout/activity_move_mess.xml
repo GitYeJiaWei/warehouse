@@ -53,6 +53,7 @@
                 android:text="移库数量"/>
 
             <EditText
+                android:id="@+id/ed_yiku"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
@@ -67,6 +68,7 @@
                 android:text="库存数量"/>
 
             <EditText
+                android:id="@+id/ed_kucun"
                 android:singleLine="true"
                 android:enabled="false"
                 android:layout_width="match_parent"
@@ -82,6 +84,7 @@
                 android:text="源库位"/>
 
             <EditText
+                android:id="@+id/ed_yuankuwie"
                 android:singleLine="true"
                 android:enabled="false"
                 android:layout_width="match_parent"
@@ -139,6 +142,7 @@
                 android:text="可用数量"/>
 
             <EditText
+                android:id="@+id/ed_keyong"
                 android:singleLine="true"
                 android:enabled="false"
                 android:layout_width="match_parent"
@@ -154,7 +158,7 @@
                 android:text="目标库位"/>
 
             <EditText
-                android:id="@+id/ed_kuwei"
+                android:id="@+id/ed_mubiao"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
@@ -169,6 +173,7 @@
                 android:text="原因代码"/>
 
             <EditText
+                android:id="@+id/ed_yuanyin"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"

@@ -1,22 +1,41 @@
 package com.ioter.warehouse.ui.activity;
 
-import android.net.Uri;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
-import com.ioter.warehouse.ui.fragment.PickMessFragment;
+import com.ioter.warehouse.bean.BaseBean;
+import com.ioter.warehouse.bean.ListUomBean;
+import com.ioter.warehouse.bean.PickModel;
+import com.ioter.warehouse.common.CustomProgressDialog;
+import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
+import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACacheUtils;
+import com.ioter.warehouse.common.util.SoundManage;
+import com.ioter.warehouse.common.util.ToastUtil;
+import com.zebra.adc.decoder.Barcode2DWithSoft;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
-public class PickMessActivity extends NewBaseActivity implements PickMessFragment.OnFragmentInteractionListener{
+public class PickMessActivity extends NewBaseActivity {
 
     @BindView(R.id.bt_sure)
     Button btSure;
@@ -28,9 +47,31 @@ public class PickMessActivity extends NewBaseActivity implements PickMessFragmen
     Button btRight;
     @BindView(R.id.btn_cancel)
     Button btnCancel;
-    PickMessFragment pickMessFragment;
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
+    @BindView(R.id.tv_tick)
+    TextView tvTick;
+    @BindView(R.id.ed_yuanshi)
+    EditText edYuanshi;
+    @BindView(R.id.ed_kuwei)
+    EditText edKuwei;
+    @BindView(R.id.ed_pinming)
+    EditText edPinming;
+    @BindView(R.id.et_chanpin)
+    EditText etChanpin;
+    @BindView(R.id.ed_jianhuo)
+    EditText edJianhuo;
+    @BindView(R.id.edt_baozhuang)
+    EditText edtBaozhuang;
+    @BindView(R.id.ed_guige)
+    EditText edGuige;
+    @BindView(R.id.ed_shuliang)
+    EditText edShuliang;
+    @BindView(R.id.sp_cangku)
+    Spinner spCangku;
+    private CustomProgressDialog progressDialog;
+    private ConcurrentHashMap<Integer, PickModel> map = new ConcurrentHashMap<>();
+    private int current = 1;
+    private String selected =null;
+    private int a =1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,39 +79,243 @@ public class PickMessActivity extends NewBaseActivity implements PickMessFragmen
         setContentView(R.layout.activity_pick_mess);
         ButterKnife.bind(this);
         setTitle("拣货");
-        pickMessFragment = PickMessFragment.newInstance("传递来的数据1", "传递来的数据2");
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_layout, pickMessFragment);
-        fragmentTransaction.commitAllowingStateLoss();
 
+        initView();
+        edKuwei.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edKuwei.setFocusableInTouchMode(true);
+                    edKuwei.requestFocus();
+                    a = 1;
+                }
+            }
+        });
+        etChanpin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    etChanpin.setFocusableInTouchMode(true);
+                    etChanpin.requestFocus();
+                    a = 2;
+                }
+            }
+        });
+    }
+
+    protected void initView() {
+        progressDialog = new CustomProgressDialog(this, "获取数据中...");
+        progressDialog.show();
+
+        String stockOutId = getIntent().getStringExtra("stockOutId");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("stockOutId", stockOutId);
+
+        AppApplication.getApplication().getAppComponent().getApiService().GetPickTask(params).compose(RxHttpReponseCompat.<List<PickModel>>compatResult())
+                .subscribe(new AdapterItemSubcriber<List<PickModel>>(AppApplication.getApplication()) {
+                    @Override
+                    public void onNext(List<PickModel> recommendWhSites) {
+                        if (recommendWhSites != null && recommendWhSites.size() > 0) {
+                            map.clear();
+                            int key = 1;
+                            try {
+                                for (PickModel info : recommendWhSites) {
+                                    map.put(key, info);
+                                    key++;
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        showUI("nor");
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        super.onError(e);
+                    }
+                });
+    }
+
+    private void showUI(String abc) {
+        if (map == null || map.size() == 0) {
+            return;
+        }
+
+        if (abc.equals("nor")) {
+            current = 1;
+            takeUI(current);
+        } else if (abc.equals("left")) {
+            if (current == 1) {
+                return;
+            }
+            current--;
+            takeUI(current);
+        } else if (abc.equals("right")) {
+            if (current == hashMap.size()) {
+                return;
+            }
+            current++;
+            takeUI(current);
+        } else {
+            return;
+        }
+
+        tvSize.setText(current + "/" + map.size());
+        if (current == map.size()) {
+            btRight.setVisibility(View.GONE);
+        } else {
+            btRight.setVisibility(View.VISIBLE);
+        }
+        if (current == 1) {
+            btLeft.setVisibility(View.GONE);
+        } else {
+            btLeft.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void takeUI(int barcode) {
+       edYuanshi.setText(map.get(barcode).getSourceLoc());
+       edPinming.setText(map.get(barcode).getProductName());
+       etChanpin.setText(map.get(barcode).getProductId());
+       edJianhuo.setText(map.get(barcode).getPickQty()+"");
+       edGuige.setText(map.get(barcode).getPacking());
+       init(map.get(barcode).getListUom());
+    }
+
+    private void init(List<ListUomBean> list) {
+        /*
+         * 第二个参数是显示的布局
+         * 第三个参数是在布局显示的位置id
+         * 第四个参数是将要显示的数据
+         */
+        ArrayList<String> arrayList = new ArrayList<>();
+        int select = 0;
+        for (int i = 0; i < list.size(); i++) {
+            arrayList.add(list.get(i).getUom());
+            if (list.get(i).isIsDefault()) {
+                select = i;
+                selected = list.get(i).getUom();
+                edtBaozhuang.setText(selected);
+            }
+        }
+
+        ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item, arrayList);
+        spCangku.setAdapter(adapter2);
+        //设置默认值
+        spCangku.setSelection(select, true);
+        //spCangku.setPrompt("测试");
+        spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void takeData(){
+        progressDialog = new CustomProgressDialog(this, "提交数据中...");
+        progressDialog.show();
+        String locId = edKuwei.getText().toString();
+        String qty = edShuliang.getText().toString();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("taskId", map.get(current).getTaskId());
+        params.put("productId",map.get(current).getProductId());
+        params.put("locId", locId);
+        params.put("qty", qty);
+        params.put("uom", selected);
+        params.put("userId", ACacheUtils.getUserId());
+
+        AppApplication.getApplication().getAppComponent().getApiService().Pick(params).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this) {
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.success()) {
+                    ToastUtil.toast("提交成功");
+                } else {
+                    ToastUtil.toast("提交失败：" + baseBean.getMessage());
+                }
+            }
+
+            @Override
+            public void onComplete() {
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                progressDialog.dismiss();
+                super.onError(e);
+            }
+        });
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        pickMessFragment.onKeyDown(keyCode,event);
+        if (keyCode == 139 || keyCode == 280) {
+            if (event.getRepeatCount() == 0) {
+                ScanBarcode();
+            }
+        }
         return super.onKeyDown(keyCode, event);
     }
+
+    //扫条码
+    private void ScanBarcode() {
+        if (AppApplication.barcode2DWithSoft != null) {
+            AppApplication.barcode2DWithSoft.scan();
+            AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
+        }
+    }
+
+    public Barcode2DWithSoft.ScanCallback
+            ScanBack = new Barcode2DWithSoft.ScanCallback() {
+        @Override
+        public void onScanComplete(int i, int length, byte[] bytes) {
+            if (length < 1) {
+            } else {
+                final String barCode = new String(bytes, 0, length);
+                if (barCode != null && barCode.length() > 0) {
+                    SoundManage.PlaySound(PickMessActivity.this, SoundManage.SoundType.SUCCESS);
+                    if (a == 2) {
+                        etChanpin.setText(barCode);
+                        a = 1;
+                    } else if (a == 1) {
+                        edKuwei.setText(barCode);
+                        a = 2;
+                    }  else {
+                        return;
+                    }
+                }
+            }
+        }
+    };
+
 
     @OnClick({R.id.bt_sure, R.id.bt_left, R.id.bt_right, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                finish();
+                takeData();
                 break;
             case R.id.bt_left:
-                fragmentTransaction.remove(pickMessFragment);
-                //如果transaction  commit（）过  那么我们要重新得到transaction
-                pickMessFragment = PickMessFragment.newInstance("传递来的数据2", "传递来的数据2");
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_layout, pickMessFragment).commitAllowingStateLoss();
+                showUI("left");
                 break;
             case R.id.bt_right:
-                fragmentTransaction.remove(pickMessFragment);
-                //如果transaction  commit（）过  那么我们要重新得到transaction
-                pickMessFragment = PickMessFragment.newInstance("传递来的数据3", "传递来的数据2");
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_layout, pickMessFragment).commitAllowingStateLoss();
+                showUI("right");
                 break;
             case R.id.btn_cancel:
                 finish();
@@ -78,8 +323,5 @@ public class PickMessActivity extends NewBaseActivity implements PickMessFragmen
         }
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
 }

@@ -55,6 +55,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
     private ArrayList<String> listLotTitleJson = new ArrayList<>();
     private ArrayList<String> listLotValueJson = new ArrayList<>();
     private int select=0;
+    private int itemId =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +71,11 @@ public class ReceiveDateActivity extends NewBaseActivity {
 
     private void initView(ArrayList<ListLotBean> listLotBeans) {
         for (int i = 0; i < listLotBeans.size(); i++) {
-
-
             String title = listLotBeans.get(i).getTitle();
             final TextView textView1 = new TextView(this);
+            textView1.setTextSize(18);
             textView1.setText(title);
+            itemId++;
             listLotTitleJson.add(title);
             layoutContent.addView(textView1);
 
@@ -86,7 +87,6 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 Map<String, String> map = AppApplication.getGson().fromJson(listLotBeans.get(i).getListOption().toString(), Map.class);
                 Iterator it = map.keySet().iterator();
                 ArrayList<String> arrayList = new ArrayList<>();
-
                 select=0;
                 int a=0;
                 while (it.hasNext()) {
@@ -113,7 +113,6 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String selected = parent.getItemAtPosition(position).toString();
-
                     }
 
                     @Override
@@ -186,6 +185,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 //数字框
                 final EditText editText = new EditText(this);
                 editText.setText(value);
+                editText.setBackgroundResource(R.drawable.back_text);
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 layoutContent.addView(editText);
 
@@ -196,11 +196,12 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 //文本框
                 final EditText editText = new EditText(this);
                 editText.setText(value);
+                editText.setBackgroundResource(R.drawable.back_text);
                 layoutContent.addView(editText);
-
             }else {
                 return;
             }
+
         }
     }
 

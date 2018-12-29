@@ -6,12 +6,22 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.Resource;
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.StockMoveModel;
+import com.ioter.warehouse.common.CustomProgressDialog;
+import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
+import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +41,11 @@ public class MoveActivity extends NewBaseActivity {
     EditText edChanpin;
     @BindView(R.id.ed_pinming)
     EditText edPinming;
+    @BindView(R.id.tv_tick)
+    TextView tvTick;
     private int a = 1;
+    private CustomProgressDialog progressDialog= null;
+    private StockMoveModel stockMoveModel =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +87,109 @@ public class MoveActivity extends NewBaseActivity {
         setTitle("库存移动");
     }
 
+    protected void takeData(String barCode) {
+        progressDialog = new CustomProgressDialog(this, "获取数据中...");
+        progressDialog.show();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("locid", barCode);
+
+        AppApplication.getApplication().getAppComponent().getApiService().GetStockMoveInfo(params).compose(RxHttpReponseCompat.<List<StockMoveModel>>compatResult())
+                .subscribe(new AdapterItemSubcriber<List<StockMoveModel>>(AppApplication.getApplication()) {
+                    @Override
+                    public void onNext(List<StockMoveModel> recommendWhSites) {
+                        if (recommendWhSites != null && recommendWhSites.size() > 0) {
+                            hashMap.clear();
+                            try {
+                                for (StockMoveModel info : recommendWhSites) {
+                                    String key = info.getProductId()+info.getTrackCode();
+                                    ArrayList<StockMoveModel> arrayList = new ArrayList<>();
+                                    arrayList.add(info);
+                                    hashMap.put(key, arrayList);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        showUI();
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        super.onError(e);
+                    }
+                });
+    }
+
+    private void showUI(){
+        if (hashMap ==null){
+            return;
+        }
+        if (hashMap.size()==1){
+            Iterator it = hashMap.keySet().iterator();
+            while (it.hasNext()){
+                String key =(String) it.next();
+                ArrayList<StockMoveModel> list = hashMap.get(key);
+                stockMoveModel = list.get(0);
+                edGenzonghao.setText(stockMoveModel.getTrackCode());
+                edChanpin.setText(stockMoveModel.getProductId());
+                edPinming.setText(stockMoveModel.getProductName());
+            }
+        }
+        if (hashMap.size()>1){
+            tvTick.setText("请扫描跟踪号");
+            a=2;
+        }
+    }
+
+    private void showUIT(String barCode){
+        int index=0;
+        if (hashMap == null){
+            return;
+        }
+        if (hashMap.size()>1){
+            Iterator it = hashMap.keySet().iterator();
+            while (it.hasNext()){
+                String key =(String) it.next();
+                ArrayList<StockMoveModel> list = hashMap.get(key);
+                if (list.get(0).getTrackCode().equals(barCode)){
+                    index++;
+                    stockMoveModel=list.get(0);
+                }
+            }
+            if (index==1){
+                edChanpin.setText(stockMoveModel.getProductId());
+                edPinming.setText(stockMoveModel.getProductName());
+            }else {
+                tvTick.setText("请扫描产品");
+                a=3;
+            }
+        }
+    }
+
+    private void showUIY(String barCode){
+        if (hashMap ==null){
+            return;
+        }
+        if (hashMap.size()>1){
+            Iterator it = hashMap.keySet().iterator();
+            while (it.hasNext()){
+                String key =(String) it.next();
+                ArrayList<StockMoveModel> list = hashMap.get(key);
+                if (key.equals(list.get(0).getProductId()+list.get(0).getTrackCode())){
+                    stockMoveModel = list.get(0);
+                    edPinming.setText(stockMoveModel.getProductName());
+                }
+            }
+        }
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 139 || keyCode == 280) {
@@ -102,17 +219,13 @@ public class MoveActivity extends NewBaseActivity {
                     SoundManage.PlaySound(MoveActivity.this, SoundManage.SoundType.SUCCESS);
                     if (a == 2) {
                         edGenzonghao.setText(barCode);
-                        a = 1;
-                        edChanpin.setEnabled(false);
-                        edChanpin.setBackgroundColor(getResources().getColor(R.color.dark_grey));
+                        showUIT(barCode);
                     } else if (a == 1) {
                         edKuwei.setText(barCode);
-                        a = 2;
+                        takeData(barCode);
                     } else if (a == 3) {
                         edChanpin.setText(barCode);
-                        a = 1;
-                        edGenzonghao.setEnabled(false);
-                        edGenzonghao.setBackgroundColor(getResources().getColor(R.color.dark_grey));
+                        showUIY(barCode);
                     } else {
                         return;
                     }
@@ -125,7 +238,12 @@ public class MoveActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                startActivity(new Intent(MoveActivity.this, MoveMessActivity.class));
+                if (stockMoveModel==null){
+                    return;
+                }
+                Intent intent = new Intent(MoveActivity.this, MoveMessActivity.class);
+                intent.putExtra("list",stockMoveModel);
+                startActivity(intent);
                 break;
             case R.id.btn_cancel:
                 finish();

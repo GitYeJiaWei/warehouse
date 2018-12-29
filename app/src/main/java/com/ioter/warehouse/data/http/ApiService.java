@@ -6,6 +6,7 @@ import com.ioter.warehouse.bean.LoginBean;
 import com.ioter.warehouse.bean.PickModel;
 import com.ioter.warehouse.bean.StockBean;
 import com.ioter.warehouse.bean.StockMoveModel;
+import com.ioter.warehouse.bean.StockTake;
 import com.ioter.warehouse.bean.TrackBean;
 
 import java.util.List;
@@ -48,12 +49,30 @@ public interface ApiService
     @POST("shelf/Shelf")//上架
     Observable<BaseBean> Shelf(@FieldMap Map<String,String> params);
 
-    //
-    @GET("Pick/GetPickTask")//获取拣货任务列表
+    //http://192.168.66.3:8107/api/pick/GetPickTask?stockOutId=SO201812200001
+    @GET("pick/GetPickTask")//获取拣货任务列表
     Observable<BaseBean<List<PickModel>>> GetPickTask(@QueryMap Map<String,String> params);
 
-    //http://192.168.66.3:8107/api/stockmove/GetStockMoveInfo?locid=66&trackcode=*&productid=
-    @GET("stockmove/GetStockMoveInfo")//获取移库信息
-    Observable<BaseBean<StockMoveModel>> GetStockMoveInfo(@QueryMap Map<String,String> params);
+    //api/Pick/Pick
+    @FormUrlEncoded
+    @POST("Pick/Pick")//拣货
+    Observable<BaseBean> Pick(@FieldMap Map<String,String> params);
 
+    //http://192.168.66.3:8107/api/stockmove/GetStockMoveList?locid=a
+    @GET("stockmove/GetStockMoveList")//获取移库信息
+    Observable<BaseBean<List<StockMoveModel>>> GetStockMoveInfo(@QueryMap Map<String,String> params);
+
+    //api/StockMove/StockMovePostParam
+    @FormUrlEncoded
+    @POST("StockMove/StockMovePostParam")//库存移动
+    Observable<BaseBean> StockMovePostParam(@FieldMap Map<String,String> params);
+
+    //http://192.168.66.3:8107/api/stocktake/GetStockTakes?stocktakeid=PD201812200001
+    @GET("stocktake/GetStockTakes")//获取盘点任务
+    Observable<BaseBean<List<StockTake>>> GetStockTakes(@QueryMap Map<String,String> params);
+
+    //api/StockTake/StockTask
+    @FormUrlEncoded
+    @POST("StockTake/StockTask")//提交盘点任务
+    Observable<BaseBean> StockTask(@FieldMap Map<String,String> params);
 }

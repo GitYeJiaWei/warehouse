@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
@@ -24,6 +25,8 @@ public class PickActivity extends NewBaseActivity {
     Button btnCancel;
     @BindView(R.id.et_danhao)
     EditText etDanhao;
+    @BindView(R.id.tv_tick)
+    TextView tvTick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class PickActivity extends NewBaseActivity {
 
     //扫条码
     private void ScanBarcode() {
-        if (AppApplication.barcode2DWithSoft!=null){
+        if (AppApplication.barcode2DWithSoft != null) {
             AppApplication.barcode2DWithSoft.scan();
             AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
         }
@@ -71,7 +74,13 @@ public class PickActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                startActivity(new Intent(PickActivity.this, PickMessActivity.class));
+                String barCode = etDanhao.getText().toString();
+                if (barCode == null || barCode.equals("")) {
+                    return;
+                }
+                Intent intent = new Intent(PickActivity.this, PickMessActivity.class);
+                intent.putExtra("stockOutId",barCode);
+                startActivity(intent);
                 break;
             case R.id.btn_cancel:
                 finish();

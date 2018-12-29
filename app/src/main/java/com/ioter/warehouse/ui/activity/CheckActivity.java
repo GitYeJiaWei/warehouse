@@ -6,11 +6,20 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.StockTake;
+import com.ioter.warehouse.common.CustomProgressDialog;
+import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
+import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +37,11 @@ public class CheckActivity extends NewBaseActivity {
     EditText edKaishi;
     @BindView(R.id.ed_jieshu)
     EditText edJieshu;
-    private int a=1;
+    @BindView(R.id.tv_tick)
+    TextView tvTick;
+    private int a = 1;
+    private CustomProgressDialog progressDialog = null;
+    private HashMap<Integer, StockTake> map = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +83,44 @@ public class CheckActivity extends NewBaseActivity {
 
     }
 
+    protected void takeData(String barCode) {
+        progressDialog = new CustomProgressDialog(this, "获取数据中...");
+        progressDialog.show();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("stockTakeId", barCode);
+
+        AppApplication.getApplication().getAppComponent().getApiService().GetStockTakes(params).compose(RxHttpReponseCompat.<List<StockTake>>compatResult())
+                .subscribe(new AdapterItemSubcriber<List<StockTake>>(AppApplication.getApplication()) {
+                    @Override
+                    public void onNext(List<StockTake> recommendWhSites) {
+                        if (recommendWhSites != null && recommendWhSites.size() > 0) {
+                            map.clear();
+                            int key = 1;
+                            try {
+                                for (StockTake info : recommendWhSites) {
+                                    map.put(key, info);
+                                    key++;
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        super.onError(e);
+                    }
+                });
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 139 || keyCode == 280) {
@@ -82,7 +133,7 @@ public class CheckActivity extends NewBaseActivity {
 
     //扫条码
     private void ScanBarcode() {
-        if (AppApplication.barcode2DWithSoft!=null){
+        if (AppApplication.barcode2DWithSoft != null) {
             AppApplication.barcode2DWithSoft.scan();
             AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
         }
@@ -102,11 +153,12 @@ public class CheckActivity extends NewBaseActivity {
                         a = 3;
                     } else if (a == 1) {
                         etPandian.setText(barCode);
+                        takeData(barCode);
                         a = 2;
-                    } else if (a== 3){
+                    } else if (a == 3) {
                         edJieshu.setText(barCode);
                         a = 1;
-                    }  else{
+                    } else {
                         return;
                     }
                 }
@@ -118,7 +170,23 @@ public class CheckActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                startActivity(new Intent(CheckActivity.this, CheckMessActivity.class));
+                String start = edKaishi.getText().toString();
+                String end = edJieshu.getText().toString();
+                if (map == null || map.size()==0) {
+                    tvTick.setText("该盘点单不存在，请重新扫描");
+                    return;
+                }
+                if (start == null || start.equals("")) {
+                    start = "start";
+                }
+                if (end == null || end.equals("")) {
+                    end = "end";
+                }
+                Intent intent = new Intent(CheckActivity.this, CheckMessActivity.class);
+                intent.putExtra("list", map);
+                intent.putExtra("start", start);
+                intent.putExtra("end", end);
+                startActivity(intent);
                 break;
             case R.id.btn_cancel:
                 finish();

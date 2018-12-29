@@ -15,9 +15,27 @@ public class StockMoveModel implements Serializable {
 
     private String LocId;
     private String ProductId;
+    private String TrackCode;
+    private String ProductName;
     private int StockQty;
     private int AvailQty;
     private List<ListUomBean> ListUom;
+
+    public String getTrackCode() {
+        return TrackCode;
+    }
+
+    public void setTrackCode(String trackCode) {
+        TrackCode = trackCode;
+    }
+
+    public String getProductName() {
+        return ProductName;
+    }
+
+    public void setProductName(String productName) {
+        ProductName = productName;
+    }
 
     public String getLocId() {
         return LocId;

@@ -1,22 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.activity.FindMessActivity">
 
-    <FrameLayout
-        android:id="@+id/content_layout"
+    <LinearLayout
+        android:padding="5dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        ></FrameLayout>
+        android:layout_height="wrap_content">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/error" />
+
+        <TextView
+            android:id="@+id/tv_tick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="请输入库位"
+            android:textColor="@color/md_red_500" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="原始库位"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/ed_yuanshi"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text_gray"
+                android:enabled="false"
+                android:gravity="center"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="原始库位"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/ed_kuwei"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text"
+                android:gravity="center"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="品名"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/ed_pinming"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ed_height"
+        android:background="@drawable/back_text_gray"
+        android:enabled="false"
+        android:gravity="center"
+        android:singleLine="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="产品"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/et_chanpin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ed_height"
+        android:background="@drawable/back_text"
+        android:gravity="center"
+        android:singleLine="true" />
+
+    <LinearLayout
+        android:layout_marginRight="2.5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_marginRight="5dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="拣货数量"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/ed_jianhuo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text_gray"
+                android:enabled="false"
+                android:gravity="center"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="包装单位"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/edt_baozhuang"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text_gray"
+                android:enabled="false"
+                android:gravity="center"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="包装规格"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/ed_guige"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text_gray"
+                android:enabled="false"
+                android:gravity="center"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="拣货数量"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/ed_shuliang"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text"
+                android:gravity="center"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="包装单位"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/sp_cangku"
+                android:singleLine="true"
+                android:gravity="center"
+                android:background="@drawable/spinner_back"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
         >
 
         <LinearLayout
@@ -52,7 +269,7 @@
                 android:background="@color/colorPrimary"
                 android:textColor="@color/white"
                 android:gravity="center"
-                android:text="1/3"/>
+                />
 
             <Button
                 android:id="@+id/bt_right"
@@ -77,4 +294,4 @@
     </RelativeLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

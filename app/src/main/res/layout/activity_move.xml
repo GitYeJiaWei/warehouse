@@ -21,6 +21,7 @@
             android:src="@mipmap/error"/>
 
         <TextView
+            android:id="@+id/tv_tick"
             android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
