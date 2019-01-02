@@ -1,12 +1,16 @@
 package com.ioter.warehouse.ui.activity;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -56,6 +60,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
     private ArrayList<String> listLotValueJson = new ArrayList<>();
     private int select=0;
     private int itemId =0;
+    private HashMap<Integer,String> map1 = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +76,11 @@ public class ReceiveDateActivity extends NewBaseActivity {
 
     private void initView(ArrayList<ListLotBean> listLotBeans) {
         for (int i = 0; i < listLotBeans.size(); i++) {
+            itemId++;
             String title = listLotBeans.get(i).getTitle();
             final TextView textView1 = new TextView(this);
             textView1.setTextSize(18);
             textView1.setText(title);
-            itemId++;
             listLotTitleJson.add(title);
             layoutContent.addView(textView1);
 
@@ -93,9 +98,13 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     String key1 = (String) it.next();
                     if (value.equals(key1)){
                         select = a;
+                        map1.put(itemId,value);
                     }
                     arrayList.add(map.get(key1));
                     a++;
+                }
+                if (!map1.containsKey(itemId)){
+                    map1.put(itemId,value);
                 }
 
                 final Spinner spinner = new Spinner(this);
@@ -113,6 +122,10 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String selected = parent.getItemAtPosition(position).toString();
+                        if (map1.containsKey(itemId)){
+                            map1.remove(itemId);
+                            map1.put(itemId,selected);
+                        }
                     }
 
                     @Override
@@ -124,6 +137,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
             }else if (type == 2){
                 //日期框
                 final TextView textView = new TextView(this);
+                textView.setId(itemId);
                 //初始化日期
                 final Calendar calendar=Calendar.getInstance();
                 mYear =calendar.get(Calendar.YEAR);
@@ -142,11 +156,16 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 {
                     ex.printStackTrace();
                 }
+                if (!map1.containsKey(itemId)){
+                    map1.put(itemId,textView.getText().toString());
+                }
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DateUtil.showDatePickerDialog(ReceiveDateActivity.this,2,
-                                textView,calendar);
+                        if (map1.containsKey(v.getId())){
+                            map1.remove(v.getId());
+                            map1.put(v.getId(),mYear+"-"+mMonth+"-"+mDay);
+                        }
                     }
                 });
                 layoutContent.addView(textView);
@@ -154,6 +173,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
             }else if (type == 3){
                 //日期时间
                 final TextView textView = new TextView(this);
+                textView.setId(itemId);
                 //初始化日期
                 final Calendar calendar=Calendar.getInstance();
                 mhourOfDay=calendar.get(Calendar.HOUR_OF_DAY);
@@ -167,16 +187,22 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     }else {
                         textView.setText(new SimpleDateFormat("hh:mm").format(date));
                     }
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
                     ex.printStackTrace();
+                }
+                if (!map1.containsKey(itemId)){
+                    map1.put(itemId,value);
                 }
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         DateUtil.showTimePickerDialog(ReceiveDateActivity.this,2,
                                 textView,calendar);
+                        if (map1.containsKey(v.getId())){
+                            map1.remove(v.getId());
+                            map1.put(itemId,"");
+                        }
                     }
                 });
                 layoutContent.addView(textView);
@@ -185,6 +211,21 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 //数字框
                 final EditText editText = new EditText(this);
                 editText.setText(value);
+                if (!map1.containsKey(itemId)){
+                    map1.put(itemId,value);
+                }
+                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (map1.containsKey(itemId)){
+                            map1.remove(itemId);
+                            map1.put(itemId,v.getText().toString());
+                        }
+                        return false;
+                    }
+                });
+
                 editText.setBackgroundResource(R.drawable.back_text);
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 layoutContent.addView(editText);
@@ -196,14 +237,34 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 //文本框
                 final EditText editText = new EditText(this);
                 editText.setText(value);
+                if (!map1.containsKey(itemId)){
+                    map1.put(itemId,value);
+                }
+                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (map1.containsKey(itemId)){
+                            map1.remove(itemId);
+                            map1.put(itemId,v.getText().toString());
+                        }
+                        return false;
+                    }
+                });
                 editText.setBackgroundResource(R.drawable.back_text);
                 layoutContent.addView(editText);
             }else {
                 return;
             }
 
+            Iterator iterator = map1.keySet().iterator();
+            while (iterator.hasNext()){
+                int key =(int) iterator.next();
+
+            }
         }
     }
+
 
     @OnClick({R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {

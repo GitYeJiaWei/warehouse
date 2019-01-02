@@ -320,9 +320,15 @@ public class ReceiveMessActivity extends NewBaseActivity {
     }
 
     private void commitData(){
+        String stockQty ="0";
+        String stockLoc = edPlan.getText().toString();
+        String trackCode =etDingdan.getText().toString();
         ArrayList<String> listEpcJson = new ArrayList<>();
-        for (int i = 0; i < epclis.size(); i++) {
-            listEpcJson.add(epclis.get(i).getEpc());
+        if (epclis!=null){
+            stockQty = epclis.size()+"";
+            for (int i = 0; i < epclis.size(); i++) {
+                listEpcJson.add(epclis.get(i).getEpc());
+            }
         }
 
         String name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
@@ -335,10 +341,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("asnDetailId", sb.get(0).getAsnDetailId());
         params.put("productId", sb.get(0).getProductId());
-        params.put("stockQty", epclis.size()+"");
+        params.put("stockQty", stockQty);
         params.put("uom", selected);
-        String stockLoc = edPlan.getText().toString();
-        String trackCode =etDingdan.getText().toString();
         params.put("stockLoc", stockLoc);
         params.put("trackCode", trackCode);
         params.put("listEpcJson", AppApplication.getGson().toJson(listEpcJson));
