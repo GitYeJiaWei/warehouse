@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusableInTouchMode="true"
+    >
+    
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="@dimen/ed_height"
+       android:orientation="horizontal"
+       android:weightSum="7"
+       >
+       <TextView
+           android:layout_width="0dp"
+           android:layout_height="match_parent"
+           android:layout_weight="2"
+           android:gravity="center"
+           android:text="关键字"/>
+
+       <EditText
+           android:layout_width="0dp"
+           android:layout_weight="3"
+           android:layout_height="match_parent" />
+
+       <Button
+           android:layout_weight="2"
+           android:layout_width="0dp"
+           android:layout_height="match_parent"
+           android:text="查询"/>
+
+   </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ed_height"
+        android:weightSum="7"
+        android:background="@drawable/back_text"
+        android:orientation="horizontal">
+
+        <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/dark_grey"/>
+
+        <TextView
+            android:id="@+id/tv_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="1"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/dark_grey"/>
+
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="1"/>
+
+    </LinearLayout>
+    
+    <ListView
+        android:id="@+id/lv_dial"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        >
+
+    </ListView>
+
+
+    <RelativeLayout
+        android:id="@+id/blow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_sure"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_sure"/>
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:text="@string/ware_cancle"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

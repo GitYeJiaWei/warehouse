@@ -303,9 +303,13 @@ public class ReceiveMessActivity extends NewBaseActivity {
     }
 
     private void takeClear(){
-        epclis.clear();
+        if (epclis!=null){
+            epclis.clear();
+        }
         sb.clear();
-        listLotBeans.clear();
+        if (listLotBeans!=null){
+            listLotBeans.clear();
+        }
         listEpc.clear();
         selected = null;
         edPlan.setText("");
@@ -320,10 +324,10 @@ public class ReceiveMessActivity extends NewBaseActivity {
     }
 
     private void commitData(){
-        String stockQty ="0";
         String stockLoc = edPlan.getText().toString();
         String trackCode =etDingdan.getText().toString();
         ArrayList<String> listEpcJson = new ArrayList<>();
+        String stockQty ="0";
         if (epclis!=null){
             stockQty = epclis.size()+"";
             for (int i = 0; i < epclis.size(); i++) {

@@ -1,7 +1,8 @@
 package com.ioter.warehouse.ui.activity;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
@@ -22,8 +24,8 @@ import com.ioter.warehouse.bean.BaseBean;
 import com.ioter.warehouse.bean.EPC;
 import com.ioter.warehouse.bean.ListLotBean;
 import com.ioter.warehouse.bean.StockBean;
+import com.ioter.warehouse.bean.WindowsModelBean;
 import com.ioter.warehouse.common.CustomProgressDialog;
-import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.common.util.ACache;
 import com.ioter.warehouse.common.util.ACacheUtils;
@@ -60,6 +62,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
     private ArrayList<String> listLotValueJson = new ArrayList<>();
     private int select=0;
     private int itemId =0;
+    private static int RAG = 3;
     private HashMap<Integer,String> map1 = new HashMap<>();
 
     @Override
@@ -108,6 +111,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 }
 
                 final Spinner spinner = new Spinner(this);
+                spinner.setId(itemId);
                 /*
                  * 第二个参数是显示的布局
                  * 第三个参数是在布局显示的位置id
@@ -122,9 +126,9 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String selected = parent.getItemAtPosition(position).toString();
-                        if (map1.containsKey(itemId)){
-                            map1.remove(itemId);
-                            map1.put(itemId,selected);
+                        if (map1.containsKey(view.getId())){
+                            map1.remove(view.getId());
+                            map1.put(view.getId(),selected);
                         }
                     }
 
@@ -160,12 +164,26 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     map1.put(itemId,textView.getText().toString());
                 }
                 textView.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("ResourceType")
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(final View v) {
                         if (map1.containsKey(v.getId())){
                             map1.remove(v.getId());
-                            map1.put(v.getId(),mYear+"-"+mMonth+"-"+mDay);
+
                         }
+                        new DatePickerDialog(ReceiveDateActivity.this, 2, new DatePickerDialog.OnDateSetListener() {
+                            // 绑定监听器(How the parent is notified that the date is set.)
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                // 此处得到选择的时间，可以进行你想要的操作
+                                textView.setText("您选择了：" + year + "年" + (monthOfYear + 1) + "月" + dayOfMonth + "日");
+                                map1.put(v.getId(),year+"-"+(monthOfYear + 1)+"-"+dayOfMonth);
+                            }
+                        }
+                                // 设置初始日期
+                                , calendar.get(Calendar.YEAR)
+                                , calendar.get(Calendar.MONTH)
+                                , calendar.get(Calendar.DAY_OF_MONTH)).show();
                     }
                 });
                 layoutContent.addView(textView);
@@ -196,13 +214,27 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 }
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        DateUtil.showTimePickerDialog(ReceiveDateActivity.this,2,
-                                textView,calendar);
+                    public void onClick(final View v) {
+                       /* DateUtil.showTimePickerDialog(ReceiveDateActivity.this,2,
+                                textView,calendar);*/
                         if (map1.containsKey(v.getId())){
                             map1.remove(v.getId());
-                            map1.put(itemId,"");
+
                         }
+                        new TimePickerDialog(ReceiveDateActivity.this,2,
+                                // 绑定监听器
+                                new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                        textView.setText("您选择了：" + hourOfDay + "时" + minute  + "分");
+                                        map1.put(v.getId(),hourOfDay + "-" + minute);
+                                    }
+                                }
+                                // 设置初始时间
+                                , calendar.get(Calendar.HOUR_OF_DAY)
+                                , calendar.get(Calendar.MINUTE)
+                                // true表示采用24小时制
+                                ,true).show();
                     }
                 });
                 layoutContent.addView(textView);
@@ -211,6 +243,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 //数字框
                 final EditText editText = new EditText(this);
                 editText.setText(value);
+                editText.setId(itemId);
                 if (!map1.containsKey(itemId)){
                     map1.put(itemId,value);
                 }
@@ -218,9 +251,9 @@ public class ReceiveDateActivity extends NewBaseActivity {
 
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (map1.containsKey(itemId)){
-                            map1.remove(itemId);
-                            map1.put(itemId,v.getText().toString());
+                        if (map1.containsKey(v.getId())){
+                            map1.remove(v.getId());
+                            map1.put(v.getId(),v.getText().toString());
                         }
                         return false;
                     }
@@ -232,11 +265,30 @@ public class ReceiveDateActivity extends NewBaseActivity {
 
             }else if (type == 5){
                 //弹出框
+                final Button button = new Button(this);
+                button.setText("选择商品");
+                button.setId(itemId);
+                WindowsModelBean windowsModelBean =listLotBeans.get(i).getWindowsModel();
+                final int windowsType = windowsModelBean.getWindowsType();
+                final String DefaultText= windowsModelBean.getDefaultText();
+                final ArrayList<String> ListTitle =(ArrayList)windowsModelBean.getListTitle();
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent1 = new Intent(ReceiveDateActivity.this,ReceiveDiaolgActivity.class);
+                        intent1.putExtra("windowsType",windowsType);
+                        intent1.putExtra("DefaultText",DefaultText);
+                        intent1.putExtra("ListTitle",ListTitle);
+                        startActivityForResult(intent1,RAG);
+                    }
+                });
 
             }else if (type == 6){
                 //文本框
                 final EditText editText = new EditText(this);
                 editText.setText(value);
+                editText.setId(itemId);
                 if (!map1.containsKey(itemId)){
                     map1.put(itemId,value);
                 }
@@ -244,9 +296,9 @@ public class ReceiveDateActivity extends NewBaseActivity {
 
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (map1.containsKey(itemId)){
-                            map1.remove(itemId);
-                            map1.put(itemId,v.getText().toString());
+                        if (map1.containsKey(v.getId())){
+                            map1.remove(v.getId());
+                            map1.put(v.getId(),v.getText().toString());
                         }
                         return false;
                     }
@@ -257,11 +309,6 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 return;
             }
 
-            Iterator iterator = map1.keySet().iterator();
-            while (iterator.hasNext()){
-                int key =(int) iterator.next();
-
-            }
         }
     }
 
@@ -285,10 +332,16 @@ public class ReceiveDateActivity extends NewBaseActivity {
         String stockLoc = intent.getStringExtra("stockLoc");
         String trackCode = intent.getStringExtra("trackCode");
 
+
         ArrayList<String> listEpcJson = new ArrayList<>();
-        for (int i = 0; i < epclis.size(); i++) {
-            listEpcJson.add(epclis.get(i).getEpc());
+        String stockQty ="0";
+        if (epclis!=null){
+            stockQty = epclis.size()+"";
+            for (int i = 0; i < epclis.size(); i++) {
+                listEpcJson.add(epclis.get(i).getEpc());
+            }
         }
+
 
         String name =ACache.get(AppApplication.getApplication()).getAsString("UserName");
         if (name==null){
@@ -300,7 +353,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("asnDetailId", sb.get(0).getAsnDetailId());
         params.put("productId", sb.get(0).getProductId());
-        params.put("stockQty", epclis.size()+"");
+        params.put("stockQty", stockQty);
         params.put("uom", uom);
         params.put("stockLoc", stockLoc);
         params.put("trackCode", trackCode);

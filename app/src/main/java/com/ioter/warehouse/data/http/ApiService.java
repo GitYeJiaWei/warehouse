@@ -4,6 +4,7 @@ import com.ioter.warehouse.bean.BaseBean;
 import com.ioter.warehouse.bean.GetStock;
 import com.ioter.warehouse.bean.LoginBean;
 import com.ioter.warehouse.bean.PickModel;
+import com.ioter.warehouse.bean.SelectWindow;
 import com.ioter.warehouse.bean.StockBean;
 import com.ioter.warehouse.bean.StockMoveModel;
 import com.ioter.warehouse.bean.StockTake;
@@ -75,4 +76,8 @@ public interface ApiService
     @FormUrlEncoded
     @POST("StockTake/StockTask")//提交盘点任务
     Observable<BaseBean> StockTask(@FieldMap Map<String,String> params);
+
+    //http://192.168.66.3:8107/api/Select/GetData?type=1&pageIndex=1&pageSize=1&keyword=
+    @GET("Select/GetData")//获取弹出框数据
+    Observable<BaseBean<SelectWindow>> GetData(@QueryMap Map<String,String> params);
 }
