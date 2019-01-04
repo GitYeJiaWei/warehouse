@@ -1,10 +1,14 @@
 package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ioter.warehouse.AppApplication;
@@ -15,6 +19,7 @@ import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.ui.adapter.ReceiveDialogadapter;
+import com.ioter.warehouse.ui.widget.AutoListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,15 +34,25 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     TextView tvLeft;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.lv_dial)
-    ListView lvDial;
     @BindView(R.id.bt_sure)
     Button btSure;
     @BindView(R.id.btn_cancel)
     Button btnCancel;
+    @BindView(R.id.paiking_record)
+    AutoListView paikingRecord;
+    @BindView(R.id.swipe)
+    SwipeRefreshLayout swipe;
+    @BindView(R.id.top)
+    ImageView top;
+    @BindView(R.id.et_chaxun)
+    EditText etChaxun;
     private CustomProgressDialog progressDialog;
     private ReceiveDialogadapter receiveDialogadapter;
     private ArrayList<EPC> epcArrayList = new ArrayList<>();
+    private int page = 1;
+    private int windowsType = 0;
+    private String DefaultText = null;
+    private ArrayList<String> ListTitle = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,28 +61,101 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        String windowsType = intent.getStringExtra("windowsType");
-        String DefaultText = intent.getStringExtra("DefaultText");
-        ArrayList<String> ListTitle = intent.getStringArrayListExtra("ListTitle");
+        windowsType = intent.getIntExtra("windowsType", 0);
+        DefaultText = intent.getStringExtra("DefaultText");
+        ListTitle = intent.getStringArrayListExtra("ListTitle");
+        tvLeft.setText(ListTitle.get(0));
+        tvRight.setText(ListTitle.get(1));
 
         receiveDialogadapter = new ReceiveDialogadapter(this);
-        lvDial.setAdapter(receiveDialogadapter);
+        paikingRecord.setAdapter(receiveDialogadapter);
+        paikingRecord.setOnLoadListener(new AutoListView.OnLoadListener() {
+            @Override
+            public void onLoad() {
+                onRefreshfruit();
+                page++;
+            }
 
+            @Override
+            public void onAfterScroll(int firstVisibleItem) {
+                if (firstVisibleItem >= 2) {
+                    top.setVisibility(View.VISIBLE);
+                } else {
+                    top.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        swipe.setColorSchemeResources(R.color.colorPrimary);
+        swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                receiveDialogadapter.clearData();
+                onRefreshfruit();
+            }
+        });
+
+        top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= 6) {
+                    paikingRecord.smoothScrollToPosition(0);//返回顶部由滑动效果
+                } else {
+                    paikingRecord.setSelection(0);//直接返回顶部
+                }
+            }
+        });
+
+        paikingRecord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == receiveDialogadapter.getCount())
+                    return;
+                EPC epc = epcArrayList.get(position);
+                String state = epc.getData1();
+                etChaxun.setText(state);
+            }
+        });
         takeData();
+    }
+
+    /**
+     * SwipeRefreshLayout 下拉刷新
+     */
+    private void onRefreshfruit() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        takeData();//初始化数据
+                        receiveDialogadapter.updateDatas(epcArrayList);//更新adapter
+                        swipe.setRefreshing(false);//刷新结束，隐藏刷新进度条
+
+                        paikingRecord.onLoadComplete();
+                        paikingRecord.setResultSize(9);
+                    }
+                });
+            }
+        }).start();
     }
 
     private void takeData() {
         progressDialog = new CustomProgressDialog(this, "获取数据中...");
         progressDialog.show();
 
-        String stockInId = getIntent().getStringExtra("num1");
-        String orderNo = getIntent().getStringExtra("num2");
-
         Map<String, String> params = new HashMap<>();
-        params.put("type", stockInId);
-        params.put("pageIndex", orderNo);
-        params.put("pageSize", stockInId);
-        params.put("keyword", orderNo);
+        params.put("type", windowsType + "");
+        params.put("pageIndex", 1 + "");
+        params.put("pageSize", page * 10 + "");
+        params.put("keyword", "");
 
         AppApplication.getApplication().getAppComponent().getApiService().GetData(params).compose(RxHttpReponseCompat.<SelectWindow>compatResult())
                 .subscribe(new AdapterItemSubcriber<SelectWindow>(AppApplication.getApplication()) {
@@ -77,7 +165,7 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                             recommendWhSites.getTotalCount();
                             for (int i = 0; i < recommendWhSites.getListData().size(); i++) {
                                 ArrayList<String> list = (ArrayList<String>) recommendWhSites.getListData().get(i);
-                                EPC epc =new EPC();
+                                EPC epc = new EPC();
                                 epc.setData1(list.get(0));
                                 epc.setData2(list.get(1));
                                 epcArrayList.add(epc);
@@ -103,8 +191,10 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
+                finish();
                 break;
             case R.id.btn_cancel:
+                finish();
                 break;
         }
     }

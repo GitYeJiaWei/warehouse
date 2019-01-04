@@ -300,6 +300,10 @@
         <item name="android:paddingRight">5dp</item>
     </style>
 
-
-
+    <style name="customProgressBar" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:indeterminateDrawable">@drawable/custom_progress_bar</item>
+        <item name="android:layout_width">22dip</item>
+        <item name="android:layout_height">22dip</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
 </resources>

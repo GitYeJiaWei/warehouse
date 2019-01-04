@@ -266,7 +266,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
             }else if (type == 5){
                 //弹出框
                 final Button button = new Button(this);
-                button.setText("选择商品");
+                button.setText(value);
                 button.setId(itemId);
                 WindowsModelBean windowsModelBean =listLotBeans.get(i).getWindowsModel();
                 final int windowsType = windowsModelBean.getWindowsType();
@@ -283,7 +283,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                         startActivityForResult(intent1,RAG);
                     }
                 });
-
+                layoutContent.addView(button);
             }else if (type == 6){
                 //文本框
                 final EditText editText = new EditText(this);

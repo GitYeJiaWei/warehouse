@@ -8,7 +8,7 @@
     
    <LinearLayout
        android:layout_width="match_parent"
-       android:layout_height="@dimen/ed_height"
+       android:layout_height="50dp"
        android:orientation="horizontal"
        android:weightSum="7"
        >
@@ -20,9 +20,11 @@
            android:text="关键字"/>
 
        <EditText
+           android:id="@+id/et_chaxun"
            android:layout_width="0dp"
            android:layout_weight="3"
-           android:layout_height="match_parent" />
+           android:layout_height="@dimen/ed_height"
+           android:background="@drawable/back_text"/>
 
        <Button
            android:layout_weight="2"
@@ -73,14 +75,37 @@
             android:text="1"/>
 
     </LinearLayout>
-    
-    <ListView
-        android:id="@+id/lv_dial"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        >
 
-    </ListView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp">
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ioter.warehouse.ui.widget.AutoListView
+                android:id="@+id/paiking_record"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:dividerHeight="0dp"
+                android:divider="@null"
+                ></com.ioter.warehouse.ui.widget.AutoListView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <ImageView
+            android:id="@+id/top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:padding="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/back"
+            />
+    </RelativeLayout>
 
 
     <RelativeLayout

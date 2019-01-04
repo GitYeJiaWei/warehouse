@@ -6,7 +6,25 @@ import java.util.List;
 public class WindowsModelBean implements Serializable{
     private int WindowsType;
     private String DefaultText;
+    private String ValueField;
+    private String TextField;
     private List<String> ListTitle;
+
+    public String getValueField() {
+        return ValueField;
+    }
+
+    public void setValueField(String valueField) {
+        ValueField = valueField;
+    }
+
+    public String getTextField() {
+        return TextField;
+    }
+
+    public void setTextField(String textField) {
+        TextField = textField;
+    }
 
     public int getWindowsType() {
         return WindowsType;
