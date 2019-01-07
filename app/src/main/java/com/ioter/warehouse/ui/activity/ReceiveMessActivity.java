@@ -2,6 +2,7 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,7 +30,6 @@ import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +86,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
         setTitle("收货");
 
+        edShouhuo.setText("");
+
         etDanhao.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -110,7 +112,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         takeData();
     }
 
-    private void initView(List<PackingBean> list) {
+    private void initView(final List<PackingBean> list) {
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
@@ -121,6 +123,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         for (int i = 0; i < list.size(); i++) {
             arrayList.add(list.get(i).getUom());
             if (list.get(i).isIsDefault()) {
+                //默认item
                 select = i;
                 selected = list.get(i).getUom();
             }
@@ -135,11 +138,14 @@ public class ReceiveMessActivity extends NewBaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected = parent.getItemAtPosition(position).toString();
+                edShouhuo.setText("");
+                if (epclis!=null){
+                    epclis.clear();
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
@@ -154,16 +160,6 @@ public class ReceiveMessActivity extends NewBaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("stockInId", stockInId);
         params.put("orderNo", orderNo);
-
-       /* String data = AppApplication.getGson().toJson(params);
-        long time = System.currentTimeMillis()/1000;//获取系统时间的10位的时间戳
-        String timestamp=String.valueOf(time);
-        String m5 = "timestamp" + timestamp + "secret" + "iottest" + "data" + data;
-        String sign= DataUtil.md5(m5);
-        Map<String,String> param = new HashMap<>();
-        param.put("data",data);
-        param.put("timestamp",timestamp+"");
-        param.put("sign",sign);*/
 
         AppApplication.getApplication().getAppComponent().getApiService().QueryAsn(params).compose(RxHttpReponseCompat.<List<StockBean>>compatResult())
                 .subscribe(new AdapterItemSubcriber<List<StockBean>>(AppApplication.getApplication()) {
@@ -226,9 +222,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
              * 动态添显示下拉菜单的选项，可以动态添加元素
              */
             initView(sb.get(0).getListUom());
-
             listLotBeans = (ArrayList<ListLotBean>) sb.get(0).getListLot();
-
             listEpc = (ArrayList<String>) sb.get(0).getListEpc();
         }
 
@@ -324,21 +318,35 @@ public class ReceiveMessActivity extends NewBaseActivity {
     }
 
     private void commitData(){
+        String name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name==null){
+            ToastUtil.toast("请到系统设置中设置仓库");
+            return;
+        }
         String stockLoc = edPlan.getText().toString();
         String trackCode =etDingdan.getText().toString();
         ArrayList<String> listEpcJson = new ArrayList<>();
-        String stockQty ="0";
+        String stockQty ="";
+        if (TextUtils.isEmpty(stockLoc)){
+            ToastUtil.toast("请输入收货库位");
+            return;
+        }
+        if (TextUtils.isEmpty(trackCode)){
+            ToastUtil.toast("请输入收货跟踪号");
+            return;
+        }
+        if (TextUtils.isEmpty(edShouhuo.getText())){
+            ToastUtil.toast("请输入收货数量");
+            return;
+        }else {
+            stockQty = edShouhuo.getText().toString();
+        }
         if (epclis!=null){
-            stockQty = epclis.size()+"";
             for (int i = 0; i < epclis.size(); i++) {
                 listEpcJson.add(epclis.get(i).getEpc());
             }
         }
 
-        String name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
-        if (name==null){
-            ToastUtil.toast("请到系统设置中设置仓库");
-        }
         progressDialog = new CustomProgressDialog(this, "提交数据中...");
         progressDialog.show();
 

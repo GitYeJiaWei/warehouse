@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -15,9 +16,11 @@ import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.bean.EPC;
 import com.ioter.warehouse.bean.SelectWindow;
+import com.ioter.warehouse.bean.WindowsModelBean;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ToastUtil;
 import com.ioter.warehouse.ui.adapter.ReceiveDialogadapter;
 import com.ioter.warehouse.ui.widget.AutoListView;
 
@@ -46,6 +49,10 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     ImageView top;
     @BindView(R.id.et_chaxun)
     EditText etChaxun;
+    @BindView(R.id.tv_Default)
+    TextView tvDefault;
+    @BindView(R.id.tv_DefaultText)
+    TextView tvDefaultText;
     private CustomProgressDialog progressDialog;
     private ReceiveDialogadapter receiveDialogadapter;
     private ArrayList<EPC> epcArrayList = new ArrayList<>();
@@ -53,6 +60,7 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     private int windowsType = 0;
     private String DefaultText = null;
     private ArrayList<String> ListTitle = null;
+    private String value =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +69,13 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        windowsType = intent.getIntExtra("windowsType", 0);
-        DefaultText = intent.getStringExtra("DefaultText");
-        ListTitle = intent.getStringArrayListExtra("ListTitle");
+        WindowsModelBean windowsModelBean = (WindowsModelBean) intent.getSerializableExtra("windowsModelBean");
+        windowsType = windowsModelBean.getWindowsType();
+        DefaultText = windowsModelBean.getDefaultText();
+        ListTitle = (ArrayList<String>) windowsModelBean.getListTitle();
         tvLeft.setText(ListTitle.get(0));
         tvRight.setText(ListTitle.get(1));
+        tvDefault.setText(ListTitle.get(1));
 
         receiveDialogadapter = new ReceiveDialogadapter(this);
         paikingRecord.setAdapter(receiveDialogadapter);
@@ -113,8 +123,9 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                 if (position == receiveDialogadapter.getCount())
                     return;
                 EPC epc = epcArrayList.get(position);
-                String state = epc.getData1();
-                etChaxun.setText(state);
+                String state = epc.getData2();
+                tvDefaultText.setText(state);
+                value = epc.getData1();
             }
         });
         takeData();
@@ -127,11 +138,11 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
+                /*try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -191,6 +202,12 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
+                if (TextUtils.isEmpty(value)){
+                    ToastUtil.toast("请选择"+tvDefaultText.getText().toString());
+                }
+                Intent intent = new Intent();
+                intent.putExtra("value", value);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
             case R.id.btn_cancel:

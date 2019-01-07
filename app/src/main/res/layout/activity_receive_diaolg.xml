@@ -5,7 +5,33 @@
     android:orientation="vertical"
     android:focusableInTouchMode="true"
     >
-    
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:weightSum="7"
+        >
+
+        <TextView
+            android:id="@+id/tv_Default"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="1"/>
+
+        <TextView
+            android:id="@+id/tv_DefaultText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="1"/>
+
+
+    </LinearLayout>
+
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="50dp"
@@ -27,9 +53,12 @@
            android:background="@drawable/back_text"/>
 
        <Button
-           android:layout_weight="2"
+           android:layout_weight="1.5"
            android:layout_width="0dp"
-           android:layout_height="match_parent"
+           android:layout_marginLeft="15dp"
+           android:layout_height="wrap_content"
+           android:background="@color/colorPrimary"
+           android:textColor="@color/white"
            android:text="查询"/>
 
    </LinearLayout>
@@ -37,6 +66,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
+        android:layout_marginTop="10dp"
         android:weightSum="7"
         android:background="@drawable/back_text"
         android:orientation="horizontal">
@@ -79,7 +109,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="350dp">
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe"
             android:layout_width="match_parent"

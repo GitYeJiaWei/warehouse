@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -62,7 +63,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
     private ArrayList<String> listLotValueJson = new ArrayList<>();
     private int select=0;
     private int itemId =0;
-    private static int RAG = 3;
+    private int RAG =0;
     private HashMap<Integer,String> map1 = new HashMap<>();
 
     @Override
@@ -219,7 +220,6 @@ public class ReceiveDateActivity extends NewBaseActivity {
                                 textView,calendar);*/
                         if (map1.containsKey(v.getId())){
                             map1.remove(v.getId());
-
                         }
                         new TimePickerDialog(ReceiveDateActivity.this,2,
                                 // 绑定监听器
@@ -268,18 +268,23 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 final Button button = new Button(this);
                 button.setText(value);
                 button.setId(itemId);
-                WindowsModelBean windowsModelBean =listLotBeans.get(i).getWindowsModel();
-                final int windowsType = windowsModelBean.getWindowsType();
-                final String DefaultText= windowsModelBean.getDefaultText();
-                final ArrayList<String> ListTitle =(ArrayList)windowsModelBean.getListTitle();
 
+                final WindowsModelBean windowsModelBean =listLotBeans.get(i).getWindowsModel();
+               /* final int windowsType = windowsModelBean.getWindowsType();
+                final String DefaultText= windowsModelBean.getDefaultText();
+                final ArrayList<String> ListTitle =(ArrayList)windowsModelBean.getListTitle();*/
+                if (!map1.containsKey(itemId)){
+                    map1.put(itemId,windowsModelBean.getTextField());
+                }
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (map1.containsKey(v.getId())){
+                            map1.remove(v.getId());
+                            RAG =v.getId();
+                        }
                         Intent intent1 = new Intent(ReceiveDateActivity.this,ReceiveDiaolgActivity.class);
-                        intent1.putExtra("windowsType",windowsType);
-                        intent1.putExtra("DefaultText",DefaultText);
-                        intent1.putExtra("ListTitle",ListTitle);
+                        intent1.putExtra("windowsModelBean",windowsModelBean);
                         startActivityForResult(intent1,RAG);
                     }
                 });
@@ -312,6 +317,21 @@ public class ReceiveDateActivity extends NewBaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RAG) {
+            if (resultCode == RESULT_OK) {
+                //获取弹出框的数据
+                String value = data.getStringExtra("value");
+                if (!TextUtils.isEmpty(value)){
+                    map1.put(RAG,value);
+                }
+            }
+        }
+
+    }
+
 
     @OnClick({R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
@@ -342,7 +362,6 @@ public class ReceiveDateActivity extends NewBaseActivity {
             }
         }
 
-
         String name =ACache.get(AppApplication.getApplication()).getAsString("UserName");
         if (name==null){
             ToastUtil.toast("请到系统设置中设置仓库");
@@ -362,17 +381,6 @@ public class ReceiveDateActivity extends NewBaseActivity {
         params.put("listLotValueJson", AppApplication.getGson().toJson(listLotValueJson));
         params.put("userId", ACacheUtils.getUserId());
         params.put("whId", ACacheUtils.getWareIdByWhCode(name));
-
-
-       /* String data = AppApplication.getGson().toJson(params);
-        long time = System.currentTimeMillis()/1000;//获取系统时间的10位的时间戳
-        String timestamp=String.valueOf(time);
-        String m5 = "timestamp" + timestamp + "secret" + "iottest" + "data" + data;
-        String sign= DataUtil.md5(m5);
-        Map<String,String> param = new HashMap<>();
-        param.put("data",data);
-        param.put("timestamp",timestamp+"");
-        param.put("sign",sign);*/
 
         AppApplication.getApplication().getAppComponent().getApiService().StockIn(params).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this)

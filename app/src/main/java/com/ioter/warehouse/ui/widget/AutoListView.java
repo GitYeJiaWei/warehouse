@@ -12,13 +12,6 @@ import android.widget.TextView;
 
 import com.ioter.warehouse.R;
 
-/**
- * @author SunnyCoffee
- * @create 2013-10-24
- * @version 1.0
- * @desc 自定义Listview　下拉刷新,上拉加载更多
- */
-
 public class AutoListView extends ListView {
 
 
