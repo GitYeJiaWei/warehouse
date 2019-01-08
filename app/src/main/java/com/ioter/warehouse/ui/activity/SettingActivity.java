@@ -1,6 +1,7 @@
 package com.ioter.warehouse.ui.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,6 +12,8 @@ import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.common.util.ACache;
 import com.ioter.warehouse.common.util.ACacheUtils;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class SettingActivity extends NewBaseActivity {
     Spinner spCangku;
     @BindView(R.id.sp_kuqu)
     Spinner spKuqu;
+    private String selected =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,7 @@ public class SettingActivity extends NewBaseActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spKuqu.setAdapter(adapter);
         //设置默认值
-        spKuqu.setSelection(2, true);
+        spKuqu.setSelection(0, true);
         //spCangku.setPrompt("测试");
         spKuqu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -76,14 +80,26 @@ public class SettingActivity extends NewBaseActivity {
          */
         ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item,list);
         spCangku.setAdapter(adapter2);
-        //设置默认值
-        spCangku.setSelection(2, true);
+        if (list!=null){
+            String a = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+            if (a!=null){
+                for (int i = 0; i < list.size(); i++) {
+                    if (a.equals(list.get(i))){
+                        //设置默认值
+                        spCangku.setSelection(i, true);
+                    }
+                }
+            }else {
+                //设置默认值
+                spCangku.setSelection(0, true);
+            }
+
+        }
         spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //将选择的元素显示出来
-                String selected = parent.getItemAtPosition(position).toString();
-                ACache.get(AppApplication.getApplication()).put("UserName", selected);
+                selected = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -98,6 +114,7 @@ public class SettingActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
+                ACache.get(AppApplication.getApplication()).put("UserName", selected);
                 finish();
                 break;
             case R.id.btn_cancel:

@@ -79,11 +79,13 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
 
         receiveDialogadapter = new ReceiveDialogadapter(this);
         paikingRecord.setAdapter(receiveDialogadapter);
+
+        //上拉加载
         paikingRecord.setOnLoadListener(new AutoListView.OnLoadListener() {
             @Override
             public void onLoad() {
-                onRefreshfruit();
                 page++;
+                onRefreshfruit();
             }
 
             @Override
@@ -96,11 +98,11 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
             }
         });
 
+        //下拉刷新监听
         swipe.setColorSchemeResources(R.color.colorPrimary);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                page = 1;
                 receiveDialogadapter.clearData();
                 onRefreshfruit();
             }

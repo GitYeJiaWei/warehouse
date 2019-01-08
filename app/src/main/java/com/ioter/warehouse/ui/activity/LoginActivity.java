@@ -4,15 +4,15 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.design.widget.TextInputLayout;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ioter.warehouse.AppApplication;
@@ -34,28 +34,26 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.LoginView {
 
-    @BindView(R.id.rfid)
-    TextView rfid;
+
     @BindView(R.id.txt_mobi)
     EditText txtMobi;
-    @BindView(R.id.view_mobi_wrapper)
-    TextInputLayout viewMobiWrapper;
     @BindView(R.id.txt_password)
     EditText txtPassword;
-    @BindView(R.id.view_password_wrapper)
-    TextInputLayout viewPasswordWrapper;
     @BindView(R.id.btn_login)
     LoadingButton btnLogin;
     @BindView(R.id.activity_login)
     LinearLayout activityLogin;
-
+    @BindView(R.id.rfid)
+    ImageView rfid;
     public static final String USER_NAME = "username";
+
 
     @Override
     public int setLayout() {
@@ -77,11 +75,11 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
             //扫条码 需要相机对应用开启相机和存储权限；
             if (ContextCompat.checkSelfPermission(this,
-                    android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 //先判断有没有权限 ，没有就在这里进行权限的申请
                 ActivityCompat.requestPermissions(LoginActivity.this,
-                        new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                        new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
             } else {
                 //说明已经获取到摄像头权限了 想干嘛干嘛
@@ -203,5 +201,12 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             AppApplication.barcode2DWithSoft.close();
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

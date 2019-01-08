@@ -5,8 +5,10 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +37,7 @@ import com.ioter.warehouse.common.util.ToastUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -90,7 +93,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
 
             int type = listLotBeans.get(i).getType();
             String value = listLotBeans.get(i).getValue();
-            listLotValueJson.add(value);
+
             if (type==1){
                 //下拉框
                 Map<String, String> map = AppApplication.getGson().fromJson(listLotBeans.get(i).getListOption().toString(), Map.class);
@@ -266,6 +269,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
             }else if (type == 5){
                 //弹出框
                 final Button button = new Button(this);
+
                 button.setText(value);
                 button.setId(itemId);
 
@@ -297,17 +301,24 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 if (!map1.containsKey(itemId)){
                     map1.put(itemId,value);
                 }
-                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
                     @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (map1.containsKey(v.getId())){
-                            map1.remove(v.getId());
-                            map1.put(v.getId(),v.getText().toString());
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (map1.containsKey(editText.getId())){
+                            map1.remove(editText.getId());
+                            map1.put(editText.getId(),s.toString());
                         }
-                        return false;
                     }
                 });
+
                 editText.setBackgroundResource(R.drawable.back_text);
                 layoutContent.addView(editText);
             }else {
@@ -326,6 +337,8 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 String value = data.getStringExtra("value");
                 if (!TextUtils.isEmpty(value)){
                     map1.put(RAG,value);
+                    Button v = findViewById(RAG);
+                    v.setText(value);
                 }
             }
         }
@@ -346,17 +359,27 @@ public class ReceiveDateActivity extends NewBaseActivity {
     }
 
     private void takeData(){
+        if (listLotValueJson!=null){
+            listLotValueJson.clear();
+        }
+
+        Object[] key_arr = map1.keySet().toArray();
+        Arrays.sort(key_arr);
+        for (Object key2 : key_arr) {
+            int kk = (int) key2;
+            String va = map1.get(kk);
+            listLotValueJson.add(va);
+        }
+
         ArrayList<StockBean> sb =(ArrayList<StockBean>)intent.getSerializableExtra("sb");
         ArrayList<EPC> epclis=(ArrayList<EPC>)intent.getSerializableExtra("epclis");
         String uom = intent.getStringExtra("uom");
         String stockLoc = intent.getStringExtra("stockLoc");
         String trackCode = intent.getStringExtra("trackCode");
-
+        String stockQty =intent.getStringExtra("stockQty");
 
         ArrayList<String> listEpcJson = new ArrayList<>();
-        String stockQty ="0";
         if (epclis!=null){
-            stockQty = epclis.size()+"";
             for (int i = 0; i < epclis.size(); i++) {
                 listEpcJson.add(epclis.get(i).getEpc());
             }

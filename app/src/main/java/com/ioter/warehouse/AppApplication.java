@@ -1,10 +1,8 @@
 package com.ioter.warehouse;
 
 import android.app.Application;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ioter.warehouse.common.AppCaughtException;
@@ -12,11 +10,9 @@ import com.ioter.warehouse.common.util.ToastUtil;
 import com.ioter.warehouse.di.component.AppComponent;
 import com.ioter.warehouse.di.component.DaggerAppComponent;
 import com.ioter.warehouse.di.module.AppModule;
-import com.ioter.warehouse.ui.activity.MainActivity;
 import com.rscja.deviceapi.RFIDWithUHF;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 
 

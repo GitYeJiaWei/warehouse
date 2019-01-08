@@ -326,7 +326,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         String stockLoc = edPlan.getText().toString();
         String trackCode =etDingdan.getText().toString();
         ArrayList<String> listEpcJson = new ArrayList<>();
-        String stockQty ="";
+        String stockQty =edShouhuo.getText().toString();
         if (TextUtils.isEmpty(stockLoc)){
             ToastUtil.toast("请输入收货库位");
             return;
@@ -335,11 +335,9 @@ public class ReceiveMessActivity extends NewBaseActivity {
             ToastUtil.toast("请输入收货跟踪号");
             return;
         }
-        if (TextUtils.isEmpty(edShouhuo.getText())){
+        if (TextUtils.isEmpty(stockQty)){
             ToastUtil.toast("请输入收货数量");
             return;
-        }else {
-            stockQty = edShouhuo.getText().toString();
         }
         if (epclis!=null){
             for (int i = 0; i < epclis.size(); i++) {
@@ -415,14 +413,17 @@ public class ReceiveMessActivity extends NewBaseActivity {
                         //提交数据,清空数据，等待下次扫描
                     }
                 } else {
+                    String stockQty =edShouhuo.getText().toString();
+                    String stockLoc = edPlan.getText().toString();
+                    String trackCode =etDingdan.getText().toString();
+
                     Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
                     intent1.putExtra("size", size);//返回界面的依据
                     intent1.putExtra("listlost", listLotBeans);//动态数组
                     intent1.putExtra("epclis", epclis);//扫描的EPC
+                    intent1.putExtra("stockQty",stockQty);//收货数量
                     intent1.putExtra("sb", sb);//获取到的查询数据
                     intent1.putExtra("uom",selected);
-                    String stockLoc = edPlan.getText().toString();
-                    String trackCode =etDingdan.getText().toString();
                     intent1.putExtra("stockLoc",stockLoc);
                     intent1.putExtra("trackCode",trackCode);
                     startActivityForResult(intent1, RAG);

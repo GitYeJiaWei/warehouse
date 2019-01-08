@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:paddingBottom="6dp"
               android:paddingLeft="6dp"
               android:paddingRight="6dp"
@@ -19,8 +19,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/group3"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:weightSum="2"
+            android:layout_marginTop="10dp"
+            android:weightSum="4"
             >
 
             <RelativeLayout
@@ -29,17 +43,17 @@
                 android:layout_weight="1"
                 android:layout_marginRight="4dp"
                 android:onClick="isReceiving"
-                android:background="@drawable/btn_back">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/u164"
+                    android:drawableTop="@mipmap/main01"
                     android:gravity="center"
                     android:text="收货"
-                    android:textColor="@color/white"/>
+                    />
             </RelativeLayout>
 
             <RelativeLayout
@@ -48,27 +62,18 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/btn_back">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/u166"
+                    android:drawableTop="@mipmap/main05"
                     android:gravity="center"
                     android:text="上架"
-                    android:textColor="@color/white"/>
+                    />
             </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="4dp"
-            android:weightSum="2"
-            >
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -76,7 +81,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_back">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -84,10 +89,10 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/u174"
+                    android:drawableTop="@mipmap/main06"
                     android:gravity="center"
                     android:text="拣货"
-                    android:textColor="@color/white"/>
+                    />
             </RelativeLayout>
 
             <RelativeLayout
@@ -96,17 +101,17 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/btn_back">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/u166"
+                    android:drawableTop="@mipmap/main04"
                     android:gravity="center"
                     android:text="库存移动"
-                    android:textColor="@color/white"/>
+                    />
             </RelativeLayout>
         </LinearLayout>
 
@@ -114,8 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="4dp"
-            android:weightSum="2"
+            android:weightSum="4"
             >
 
             <RelativeLayout
@@ -124,7 +128,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/btn_back">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -132,10 +136,10 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/u170"
+                    android:drawableTop="@mipmap/main07"
                     android:gravity="center"
                     android:text="库存查询"
-                    android:textColor="@color/white"/>
+                    />
             </RelativeLayout>
 
             <RelativeLayout
@@ -144,27 +148,18 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/btn_back">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/u185"
+                    android:drawableTop="@mipmap/main08"
                     android:gravity="center"
                     android:text="库存盘点"
-                    android:textColor="@color/white"/>
+                    />
             </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="4dp"
-            android:weightSum="2"
-            >
 
             <RelativeLayout
                 android:id="@+id/find_rlyt"
@@ -173,7 +168,7 @@
                 android:layout_marginRight="4dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/btn_back">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -181,13 +176,12 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:drawablePadding="4dp"
-                    android:drawableTop="@mipmap/u176"
+                    android:drawableTop="@mipmap/main10"
                     android:gravity="center"
                     android:text="系统设置"
-                    android:textColor="@color/white"/>
+                    />
             </RelativeLayout>
         </LinearLayout>
-
 
     </LinearLayout>
 </LinearLayout>
