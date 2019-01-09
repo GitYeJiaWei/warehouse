@@ -59,7 +59,7 @@ public class LoadingButton extends RelativeLayout
 
 
     private void init(Context context, AttributeSet attrs) {
-        mDefaultTextSize = getResources().getDimensionPixelSize(R.dimen.text_default_size);
+        mDefaultTextSize = getResources().getDimensionPixelSize(R.dimen.text_size);
         mIsLoadingShowing = false;
         LayoutInflater.from(getContext()).inflate(R.layout.view_loading_button, this, true);
 

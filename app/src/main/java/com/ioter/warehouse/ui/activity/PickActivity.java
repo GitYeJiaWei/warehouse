@@ -2,6 +2,7 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -75,7 +76,7 @@ public class PickActivity extends NewBaseActivity {
         switch (view.getId()) {
             case R.id.bt_sure:
                 String barCode = etDanhao.getText().toString();
-                if (barCode == null || barCode.equals("")) {
+                if (TextUtils.isEmpty(barCode)) {
                     return;
                 }
                 Intent intent = new Intent(PickActivity.this, PickMessActivity.class);

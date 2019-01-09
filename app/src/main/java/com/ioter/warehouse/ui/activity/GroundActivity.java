@@ -1,6 +1,7 @@
 package com.ioter.warehouse.ui.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -65,7 +66,7 @@ public class GroundActivity extends NewBaseActivity {
     private CustomProgressDialog progressDialog;
     private int a = 1;
     private HashMap<String, String> map = new HashMap<>();
-    private String selected =null;
+    private String selected = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class GroundActivity extends NewBaseActivity {
                     public void onNext(List<TrackBean> recommendWhSites) {
                         if (recommendWhSites != null && recommendWhSites.size() > 0) {
                             hashMap.clear();
+                            map.clear();
                             try {
                                 for (TrackBean info : recommendWhSites) {
                                     String key = info.getProductId();
@@ -121,11 +123,12 @@ public class GroundActivity extends NewBaseActivity {
             return;
         }
         if (hashMap.size() > 1) {
-            tvTick.setText("多个产品请扫描确认");
+            tvTick.setText("该跟踪号有多个产品，请扫描确认");
             a = 2;
             return;
         } else {
             a = 3;
+            tvTick.setText("请扫描/输入目标库位");
             Iterator it = hashMap.keySet().iterator();
             while (it.hasNext()) {
                 String key = (String) it.next();
@@ -147,26 +150,25 @@ public class GroundActivity extends NewBaseActivity {
         if (hashMap == null) {
             return;
         }
-        if(map.containsKey(barCode)){
+        if (!hashMap.containsKey(barCode)) {
+            ToastUtil.toast("该跟踪号不包含此产品");
+            return;
+        }
+        if (map.containsKey(barCode)) {
             tvTick.setText("该产品已经提交请重新扫描");
             a = 2;
             return;
         }
-        Iterator it = hashMap.keySet().iterator();
-        while (it.hasNext()) {
-            String key = (String) it.next();
-            if (barCode.equals(key)){
-                ArrayList<TrackBean> trackBean = hashMap.get(key);
-                efShuliang.setText(trackBean.get(0).getShelfQty() + "");
-                edtBaozhuang.setText(trackBean.get(0).getPacking());
-                edZongshu.setText(trackBean.get(0).getAlreadyQty() + "");
-                edtKuwei.setText(trackBean.get(0).getRecommendLoc());
-                edtPinming.setText(trackBean.get(0).getProductName());
-                init(trackBean.get(0).getListUom());
-                a = 3;
-                tvSize.setText(map.size()+1+"/"+hashMap.size());
-            }
-        }
+        ArrayList<TrackBean> trackBean = hashMap.get(barCode);
+        efShuliang.setText(trackBean.get(0).getShelfQty() + "");
+        edtBaozhuang.setText(trackBean.get(0).getPacking());
+        edZongshu.setText(trackBean.get(0).getAlreadyQty() + "");
+        edtKuwei.setText(trackBean.get(0).getRecommendLoc());
+        edtPinming.setText(trackBean.get(0).getProductName());
+        init(trackBean.get(0).getListUom());
+        a = 3;
+        tvSize.setText(map.size() + 1 + "/" + hashMap.size());
+        tvTick.setText("请扫描/输入目标库位");
     }
 
     private void init(List<ListUomBean> list) {
@@ -198,7 +200,6 @@ public class GroundActivity extends NewBaseActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
@@ -238,7 +239,6 @@ public class GroundActivity extends NewBaseActivity {
                         takeData(barCode);
                     } else if (a == 3) {
                         edKuwei.setText(barCode);
-                        a = 1;
                     } else {
                         return;
                     }
@@ -247,15 +247,30 @@ public class GroundActivity extends NewBaseActivity {
         }
     };
 
-    private void takeData(){
+    //清除数据
+    private void takeclear(){
+        tvTick.setText("请扫描/输入跟踪号");
+        edGenzonghao.setText("");
+        edChanpin.setText("");
+        efShuliang.setText("");
+        edtBaozhuang.setText("");
+        edZongshu.setText("");
+        edKuwei.setText("");
+        edtKuwei.setText("");
+        edtPinming.setText("");
+        selected = null;
+        a=1;
+    }
+
+    private void takeData() {
         String trackCode = edGenzonghao.getText().toString();
         String qty = efShuliang.getText().toString();
         String loc = edKuwei.getText().toString();
-        String chan=edChanpin.getText().toString();
+        String chan = edChanpin.getText().toString();
 
-        TrackBean trackBean=null;
-        if (hashMap!=null && !edChanpin.getText().equals("") ){
-            trackBean =(TrackBean)hashMap.get(chan).get(0);
+        TrackBean trackBean = null;
+        if (hashMap != null && !edChanpin.getText().equals("")) {
+            trackBean = (TrackBean) hashMap.get(chan).get(0);
         }
 
         progressDialog = new CustomProgressDialog(this, "提交数据中...");
@@ -272,29 +287,33 @@ public class GroundActivity extends NewBaseActivity {
 
 
         AppApplication.getApplication().getAppComponent().getApiService().Shelf(params).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this)
-        {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this) {
             @Override
-            public void onNext(BaseBean baseBean)
-            {
-                if (baseBean.success())
-                {
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
-                } else
-                {
+                    String bar = edChanpin.getText().toString();
+                    if (!TextUtils.isEmpty(bar)){
+                        map.put(bar,bar);
+                        /*if (map.size()==hashMap.size()){
+                            finish();
+                        }else {
+                            takeclear();
+                        }*/
+                        takeclear();
+                    }
+                } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());
                 }
             }
 
             @Override
-            public void onComplete()
-            {
+            public void onComplete() {
                 progressDialog.dismiss();
             }
 
             @Override
-            public void onError(Throwable e)
-            {
+            public void onError(Throwable e) {
                 progressDialog.dismiss();
                 super.onError(e);
             }

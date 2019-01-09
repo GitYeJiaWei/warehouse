@@ -176,8 +176,7 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
         progressDialog.show();
 
         Map<String, String> params = new HashMap<>();
-        //params.put("type", windowsType + "");
-        params.put("type", 1 + "");
+        params.put("type", windowsType + "");
         params.put("pageIndex", page + "");
         params.put("pageSize", 10 + "");
         params.put("keyword", keyword);

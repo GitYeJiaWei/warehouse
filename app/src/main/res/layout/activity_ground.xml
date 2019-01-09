@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="请输入跟踪号"
+            android:text="请扫描/输入跟踪号"
             android:textColor="@color/md_red_500" />
 
     </LinearLayout>

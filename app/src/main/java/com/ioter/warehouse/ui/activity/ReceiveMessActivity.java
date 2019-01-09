@@ -227,15 +227,6 @@ public class ReceiveMessActivity extends NewBaseActivity {
             listLotBeans = (ArrayList<ListLotBean>) sb.get(0).getListLot();
             listEpc = (ArrayList<String>) sb.get(0).getListEpc();
             tvTick.setText("请扫描/输入收货跟踪号，并选择/输入相关信息");
-
-        }
-
-        if (map.size() == hashMap.size()) {
-            Log.d(TAG, "showUI: map" + map.size() + " hashmap" + hashMap.size());
-            size = true;
-        } else {
-            Log.d(TAG, "showUI: map" + map.size() + " hashmap" + hashMap.size());
-            size = false;
         }
     }
 
@@ -289,7 +280,11 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 String bar = etDanhao.getText().toString();
                 if (!TextUtils.isEmpty(bar)){
                     map.put(bar, bar);
-                    takeClear();
+                    if (map.size()==hashMap.size()){
+                        finish();
+                    }else {
+                        takeClear();
+                    }
                 }
             }
         }
@@ -380,6 +375,16 @@ public class ReceiveMessActivity extends NewBaseActivity {
             public void onNext(BaseBean baseBean) {
                 if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
+                    String bar = etDanhao.getText().toString();
+                    if (!TextUtils.isEmpty(bar)){
+                        map.put(bar,bar);
+                        if (map.size()==hashMap.size()){
+                            finish();
+                        }else {
+                            takeClear();
+                        }
+                    }
+
                 } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());
                 }
@@ -387,7 +392,6 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
             @Override
             public void onComplete() {
-                takeClear();
                 progressDialog.dismiss();
             }
 
@@ -411,21 +415,13 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 break;
             case R.id.bt_sure:
                 if (listLotBeans == null || listLotBeans.size() == 0) {
-                    if (size) {
-                        //提交数据，并退出
-                        commitData();
-                        finish();
-                    } else {
-                        commitData();
-                        //提交数据,清空数据，等待下次扫描
-                    }
+                    commitData();
                 } else {
                     String stockQty = edShouhuo.getText().toString();
                     String stockLoc = edPlan.getText().toString();
                     String trackCode = etDingdan.getText().toString();
 
                     Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
-                    intent1.putExtra("size", size);//返回界面的依据
                     intent1.putExtra("listlost", listLotBeans);//动态数组
                     intent1.putExtra("epclis", epclis);//扫描的EPC
                     intent1.putExtra("stockQty", stockQty);//收货数量

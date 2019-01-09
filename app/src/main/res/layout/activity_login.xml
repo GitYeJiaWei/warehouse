@@ -57,7 +57,7 @@
         <EditText
             android:id="@+id/txt_mobi"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/back_text"
             android:gravity="center"
@@ -75,7 +75,7 @@
         <EditText
             android:id="@+id/txt_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:background="@drawable/back_text"
             android:gravity="center"
             android:layout_marginTop="15dp"
@@ -94,12 +94,12 @@
         <com.ioter.warehouse.ui.widget.LoadingButton
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/bg_btn"
-            app:loadingText="正在登录"
+            app:loadingText="正 在 登 录"
             app:progressColor="@color/colorAccent"
             app:text="@string/login"
             app:textColor="@color/white" />

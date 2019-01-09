@@ -11,6 +11,7 @@
     <dimen name="common_margin_size">26dp</dimen>
     <dimen name="common_title_text_size">18sp</dimen>
     <dimen name="text_default_size">14sp</dimen>
+    <dimen name="text_size">24sp</dimen>
 
     <!-- 弹框内容字体大小 -->
     <dimen name="dialog_hint_text_size">16sp</dimen>

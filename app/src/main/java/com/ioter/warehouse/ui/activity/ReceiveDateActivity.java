@@ -59,15 +59,15 @@ public class ReceiveDateActivity extends NewBaseActivity {
     Button btnCancel;
     @BindView(R.id.layout_content)
     LinearLayout layoutContent;
-    private int mYear,mMonth,mDay,mhourOfDay,mminute;
+    private int mYear, mMonth, mDay, mhourOfDay, mminute;
     protected CustomProgressDialog progressDialog;
     private Intent intent = null;
     private ArrayList<String> listLotTitleJson = new ArrayList<>();
     private ArrayList<String> listLotValueJson = new ArrayList<>();
-    private int select=0;
-    private int itemId =0;
-    private int RAG =0;
-    private HashMap<Integer,String> map1 = new HashMap<>();
+    private int select = 0;
+    private int itemId = 0;
+    private int RAG = 0;
+    private HashMap<Integer, String> map1 = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,24 +94,24 @@ public class ReceiveDateActivity extends NewBaseActivity {
             int type = listLotBeans.get(i).getType();
             String value = listLotBeans.get(i).getValue();
 
-            if (type==1){
+            if (type == 1) {
                 //下拉框
                 Map<String, String> map = AppApplication.getGson().fromJson(listLotBeans.get(i).getListOption().toString(), Map.class);
                 Iterator it = map.keySet().iterator();
                 ArrayList<String> arrayList = new ArrayList<>();
-                select=0;
-                int a=0;
+                select = 0;
+                int a = 0;
                 while (it.hasNext()) {
                     String key1 = (String) it.next();
-                    if (value.equals(key1)){
+                    if (value.equals(key1)) {
                         select = a;
-                        map1.put(itemId,value);
+                        map1.put(itemId, value);
                     }
                     arrayList.add(map.get(key1));
                     a++;
                 }
-                if (!map1.containsKey(itemId)){
-                    map1.put(itemId,value);
+                if (!map1.containsKey(itemId)) {
+                    map1.put(itemId, value);
                 }
 
                 final Spinner spinner = new Spinner(this);
@@ -130,9 +130,9 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String selected = parent.getItemAtPosition(position).toString();
-                        if (map1.containsKey(view.getId())){
+                        if (map1.containsKey(view.getId())) {
                             map1.remove(view.getId());
-                            map1.put(view.getId(),selected);
+                            map1.put(view.getId(), selected);
                         }
                     }
 
@@ -142,36 +142,35 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 });
                 // 动态把控件添加到
                 layoutContent.addView(spinner);
-            }else if (type == 2){
+            } else if (type == 2) {
                 //日期框
                 final TextView textView = new TextView(this);
                 textView.setId(itemId);
                 //初始化日期
-                final Calendar calendar=Calendar.getInstance();
-                mYear =calendar.get(Calendar.YEAR);
-                mMonth =calendar.get(Calendar.MONTH);
-                mDay =calendar.get(Calendar.DAY_OF_MONTH);
-                String newDateStr = mYear+"-" + (mMonth + 1)+"-"+mDay;
+                final Calendar calendar = Calendar.getInstance();
+                mYear = calendar.get(Calendar.YEAR);
+                mMonth = calendar.get(Calendar.MONTH);
+                mDay = calendar.get(Calendar.DAY_OF_MONTH);
+                String newDateStr = mYear + "-" + (mMonth + 1) + "-" + mDay;
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟
                     Date date = sdf.parse(newDateStr);
-                    if (value!=null && !value.equals("")){
+                    if (value != null && !value.equals("")) {
                         textView.setText(value);
-                    }else {
+                    } else {
                         textView.setText(new SimpleDateFormat("yyyy-MM-dd").format(date));
                     }
-                }catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                if (!map1.containsKey(itemId)){
-                    map1.put(itemId,textView.getText().toString());
+                if (!map1.containsKey(itemId)) {
+                    map1.put(itemId, textView.getText().toString());
                 }
                 textView.setOnClickListener(new View.OnClickListener() {
                     @SuppressLint("ResourceType")
                     @Override
                     public void onClick(final View v) {
-                        if (map1.containsKey(v.getId())){
+                        if (map1.containsKey(v.getId())) {
                             map1.remove(v.getId());
 
                         }
@@ -181,7 +180,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 // 此处得到选择的时间，可以进行你想要的操作
                                 textView.setText("您选择了：" + year + "年" + (monthOfYear + 1) + "月" + dayOfMonth + "日");
-                                map1.put(v.getId(),year+"-"+(monthOfYear + 1)+"-"+dayOfMonth);
+                                map1.put(v.getId(), year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                             }
                         }
                                 // 设置初始日期
@@ -192,71 +191,70 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 });
                 layoutContent.addView(textView);
 
-            }else if (type == 3){
+            } else if (type == 3) {
                 //日期时间
                 final TextView textView = new TextView(this);
                 textView.setId(itemId);
                 //初始化日期
-                final Calendar calendar=Calendar.getInstance();
-                mhourOfDay=calendar.get(Calendar.HOUR_OF_DAY);
-                mminute =calendar.get(Calendar.MINUTE);
-                String newDateStr = mhourOfDay+":" + mminute;
+                final Calendar calendar = Calendar.getInstance();
+                mhourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+                mminute = calendar.get(Calendar.MINUTE);
+                String newDateStr = mhourOfDay + ":" + mminute;
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");//小写的mm表示的是分钟
                     Date date = sdf.parse(newDateStr);
-                    if (value!=null && !value.equals("")){
+                    if (value != null && !value.equals("")) {
                         textView.setText(value);
-                    }else {
+                    } else {
                         textView.setText(new SimpleDateFormat("hh:mm").format(date));
                     }
-                } catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                if (!map1.containsKey(itemId)){
-                    map1.put(itemId,value);
+                if (!map1.containsKey(itemId)) {
+                    map1.put(itemId, value);
                 }
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
                        /* DateUtil.showTimePickerDialog(ReceiveDateActivity.this,2,
                                 textView,calendar);*/
-                        if (map1.containsKey(v.getId())){
+                        if (map1.containsKey(v.getId())) {
                             map1.remove(v.getId());
                         }
-                        new TimePickerDialog(ReceiveDateActivity.this,2,
+                        new TimePickerDialog(ReceiveDateActivity.this, 2,
                                 // 绑定监听器
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        textView.setText("您选择了：" + hourOfDay + "时" + minute  + "分");
-                                        map1.put(v.getId(),hourOfDay + "-" + minute);
+                                        textView.setText("您选择了：" + hourOfDay + "时" + minute + "分");
+                                        map1.put(v.getId(), hourOfDay + "-" + minute);
                                     }
                                 }
                                 // 设置初始时间
                                 , calendar.get(Calendar.HOUR_OF_DAY)
                                 , calendar.get(Calendar.MINUTE)
                                 // true表示采用24小时制
-                                ,true).show();
+                                , true).show();
                     }
                 });
                 layoutContent.addView(textView);
 
-            }else if (type == 4){
+            } else if (type == 4) {
                 //数字框
                 final EditText editText = new EditText(this);
                 editText.setText(value);
                 editText.setId(itemId);
-                if (!map1.containsKey(itemId)){
-                    map1.put(itemId,value);
+                if (!map1.containsKey(itemId)) {
+                    map1.put(itemId, value);
                 }
                 editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (map1.containsKey(v.getId())){
+                        if (map1.containsKey(v.getId())) {
                             map1.remove(v.getId());
-                            map1.put(v.getId(),v.getText().toString());
+                            map1.put(v.getId(), v.getText().toString());
                         }
                         return false;
                     }
@@ -266,40 +264,37 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 layoutContent.addView(editText);
 
-            }else if (type == 5){
+            } else if (type == 5) {
                 //弹出框
                 final Button button = new Button(this);
 
                 button.setText(value);
                 button.setId(itemId);
 
-                final WindowsModelBean windowsModelBean =listLotBeans.get(i).getWindowsModel();
-               /* final int windowsType = windowsModelBean.getWindowsType();
-                final String DefaultText= windowsModelBean.getDefaultText();
-                final ArrayList<String> ListTitle =(ArrayList)windowsModelBean.getListTitle();*/
-                if (!map1.containsKey(itemId)){
-                    map1.put(itemId,windowsModelBean.getTextField());
+                final WindowsModelBean windowsModelBean = listLotBeans.get(i).getWindowsModel();
+                if (!map1.containsKey(itemId)) {
+                    map1.put(itemId, windowsModelBean.getTextField());
                 }
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (map1.containsKey(v.getId())){
+                        if (map1.containsKey(v.getId())) {
                             map1.remove(v.getId());
-                            RAG =v.getId();
+                            RAG = v.getId();
                         }
-                        Intent intent1 = new Intent(ReceiveDateActivity.this,ReceiveDiaolgActivity.class);
-                        intent1.putExtra("windowsModelBean",windowsModelBean);
-                        startActivityForResult(intent1,RAG);
+                        Intent intent1 = new Intent(ReceiveDateActivity.this, ReceiveDiaolgActivity.class);
+                        intent1.putExtra("windowsModelBean", windowsModelBean);
+                        startActivityForResult(intent1, RAG);
                     }
                 });
                 layoutContent.addView(button);
-            }else if (type == 6){
+            } else if (type == 6) {
                 //文本框
                 final EditText editText = new EditText(this);
                 editText.setText(value);
                 editText.setId(itemId);
-                if (!map1.containsKey(itemId)){
-                    map1.put(itemId,value);
+                if (!map1.containsKey(itemId)) {
+                    map1.put(itemId, value);
                 }
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -312,16 +307,16 @@ public class ReceiveDateActivity extends NewBaseActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (map1.containsKey(editText.getId())){
+                        if (map1.containsKey(editText.getId())) {
                             map1.remove(editText.getId());
-                            map1.put(editText.getId(),s.toString());
+                            map1.put(editText.getId(), s.toString());
                         }
                     }
                 });
 
                 editText.setBackgroundResource(R.drawable.back_text);
                 layoutContent.addView(editText);
-            }else {
+            } else {
                 return;
             }
 
@@ -335,8 +330,8 @@ public class ReceiveDateActivity extends NewBaseActivity {
             if (resultCode == RESULT_OK) {
                 //获取弹出框的数据
                 String value = data.getStringExtra("value");
-                if (!TextUtils.isEmpty(value)){
-                    map1.put(RAG,value);
+                if (!TextUtils.isEmpty(value)) {
+                    map1.put(RAG, value);
                     Button v = findViewById(RAG);
                     v.setText(value);
                 }
@@ -358,8 +353,8 @@ public class ReceiveDateActivity extends NewBaseActivity {
         }
     }
 
-    private void takeData(){
-        if (listLotValueJson!=null){
+    private void takeData() {
+        if (listLotValueJson != null) {
             listLotValueJson.clear();
         }
 
@@ -371,22 +366,22 @@ public class ReceiveDateActivity extends NewBaseActivity {
             listLotValueJson.add(va);
         }
 
-        ArrayList<StockBean> sb =(ArrayList<StockBean>)intent.getSerializableExtra("sb");
-        ArrayList<EPC> epclis=(ArrayList<EPC>)intent.getSerializableExtra("epclis");
+        ArrayList<StockBean> sb = (ArrayList<StockBean>) intent.getSerializableExtra("sb");
+        ArrayList<EPC> epclis = (ArrayList<EPC>) intent.getSerializableExtra("epclis");
         String uom = intent.getStringExtra("uom");
         String stockLoc = intent.getStringExtra("stockLoc");
         String trackCode = intent.getStringExtra("trackCode");
-        String stockQty =intent.getStringExtra("stockQty");
+        String stockQty = intent.getStringExtra("stockQty");
 
         ArrayList<String> listEpcJson = new ArrayList<>();
-        if (epclis!=null){
+        if (epclis != null) {
             for (int i = 0; i < epclis.size(); i++) {
                 listEpcJson.add(epclis.get(i).getEpc());
             }
         }
 
-        String name =ACache.get(AppApplication.getApplication()).getAsString("UserName");
-        if (name==null){
+        String name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name == null) {
             ToastUtil.toast("请到系统设置中设置仓库");
         }
         progressDialog = new CustomProgressDialog(this, "提交数据中...");
@@ -406,38 +401,26 @@ public class ReceiveDateActivity extends NewBaseActivity {
         params.put("whId", ACacheUtils.getWareIdByWhCode(name));
 
         AppApplication.getApplication().getAppComponent().getApiService().StockIn(params).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this)
-        {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this) {
             @Override
-            public void onNext(BaseBean baseBean)
-            {
-                if (baseBean.success())
-                {
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
-                    if (intent.getBooleanExtra("size", false)) {
-                        Intent intent = new Intent(ReceiveDateActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Intent intent = new Intent();
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                } else
-                {
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());
                 }
             }
 
             @Override
-            public void onComplete()
-            {
+            public void onComplete() {
                 progressDialog.dismiss();
             }
 
             @Override
-            public void onError(Throwable e)
-            {
+            public void onError(Throwable e) {
                 progressDialog.dismiss();
                 super.onError(e);
             }
