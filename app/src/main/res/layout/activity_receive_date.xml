@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/md_red_500"
-            android:text="请输入生产日期"/>
+            android:text="请选择/输入相关信息"/>
 
     </LinearLayout>
 

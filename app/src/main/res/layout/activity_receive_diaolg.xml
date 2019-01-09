@@ -7,6 +7,28 @@
     >
 
     <LinearLayout
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/error"/>
+
+        <TextView
+            android:id="@+id/tv_tick"
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_red_500"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
@@ -24,10 +46,11 @@
         <TextView
             android:id="@+id/tv_DefaultText"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/ed_height"
             android:layout_weight="3"
             android:gravity="center"
-            android:text=""/>
+            android:background="@drawable/back_text"
+            />
 
 
     </LinearLayout>
@@ -53,6 +76,7 @@
            android:background="@drawable/back_text"/>
 
        <Button
+           android:id="@+id/btn_chaxun"
            android:layout_weight="1.5"
            android:layout_width="0dp"
            android:layout_marginLeft="15dp"
@@ -109,7 +133,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp">
+        android:layout_height="330dp">
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe"
             android:layout_width="match_parent"
@@ -130,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:padding="30dp"
+            android:padding="10dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/back"

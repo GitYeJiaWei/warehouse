@@ -2,10 +2,12 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
@@ -59,11 +61,10 @@ public class ReceiveActivity extends NewBaseActivity {
         });
 
         String name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
-        if (name==null){
+        if (name == null) {
             ToastUtil.toast("请到系统设置中设置仓库");
         }
     }
-
 
 
     @Override
@@ -78,7 +79,7 @@ public class ReceiveActivity extends NewBaseActivity {
 
     //扫条码
     private void ScanBarcode() {
-        if (AppApplication.barcode2DWithSoft!=null){
+        if (AppApplication.barcode2DWithSoft != null) {
             AppApplication.barcode2DWithSoft.scan();
             AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
         }
@@ -95,10 +96,10 @@ public class ReceiveActivity extends NewBaseActivity {
                     SoundManage.PlaySound(ReceiveActivity.this, SoundManage.SoundType.SUCCESS);
                     if (a == 2) {
                         etDingdan.setText(barCode);
-                        a=1;
+                        takeData();
                     } else if (a == 1) {
                         etDanhao.setText(barCode);
-                        a=2;
+                        takeData();
                     } else {
                         return;
                     }
@@ -107,20 +108,24 @@ public class ReceiveActivity extends NewBaseActivity {
         }
     };
 
+    private void takeData() {
+        String etdan = etDanhao.getText().toString().trim();
+        String etding = etDingdan.getText().toString().trim();
+        if (TextUtils.isEmpty(etdan) && TextUtils.isEmpty(etding)) {
+            ToastUtil.toast("入库单号和客户订单号至少填一个");
+            return;
+        }
+        Intent intent = new Intent(ReceiveActivity.this, ReceiveMessActivity.class);
+        intent.putExtra("num1", etdan);
+        intent.putExtra("num2", etding);
+        startActivity(intent);
+    }
+
     @OnClick({R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                String etdan = etDanhao.getText().toString().trim();
-                String etding = etDingdan.getText().toString().trim();
-                if ((etdan==null || etdan.equals("")) && (etding ==null || etding.equals(""))){
-                    ToastUtil.toast("入库单号和客户订单号至少填一个");
-                    return;
-                }
-                Intent intent = new Intent(ReceiveActivity.this, ReceiveMessActivity.class);
-                intent.putExtra("num1",etdan);
-                intent.putExtra("num2",etding);
-                startActivity(intent);
+                takeData();
                 break;
             case R.id.btn_cancel:
                 this.finish();

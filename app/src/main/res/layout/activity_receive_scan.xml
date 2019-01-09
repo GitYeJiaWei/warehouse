@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/md_red_500"
-            android:text="请输入序列号"/>
+            android:text="请扫描/输入序列号"/>
 
     </LinearLayout>
 

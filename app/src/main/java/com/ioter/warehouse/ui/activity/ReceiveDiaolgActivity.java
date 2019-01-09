@@ -53,6 +53,10 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     TextView tvDefault;
     @BindView(R.id.tv_DefaultText)
     TextView tvDefaultText;
+    @BindView(R.id.btn_chaxun)
+    Button btnChaxun;
+    @BindView(R.id.tv_tick)
+    TextView tvTick;
     private CustomProgressDialog progressDialog;
     private ReceiveDialogadapter receiveDialogadapter;
     private ArrayList<EPC> epcArrayList = new ArrayList<>();
@@ -60,7 +64,7 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     private int windowsType = 0;
     private String DefaultText = null;
     private ArrayList<String> ListTitle = null;
-    private String value =null;
+    private String value = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,7 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
         tvLeft.setText(ListTitle.get(0));
         tvRight.setText(ListTitle.get(1));
         tvDefault.setText(ListTitle.get(1));
+        tvTick.setText("请通过关键字查询,点击选取"+ListTitle.get(1));
 
         receiveDialogadapter = new ReceiveDialogadapter(this);
         paikingRecord.setAdapter(receiveDialogadapter);
@@ -103,11 +108,15 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                receiveDialogadapter.clearData();
+                page = 1;
+                if (epcArrayList != null) {
+                    epcArrayList.clear();
+                }
                 onRefreshfruit();
             }
         });
 
+        //返回顶部
         top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,11 +158,11 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                     @Override
                     public void run() {
                         takeData();//初始化数据
-                        receiveDialogadapter.updateDatas(epcArrayList);//更新adapter
+                        //receiveDialogadapter.updateDatas(epcArrayList);//更新adapter
                         swipe.setRefreshing(false);//刷新结束，隐藏刷新进度条
 
                         paikingRecord.onLoadComplete();
-                        paikingRecord.setResultSize(9);
+                        //paikingRecord.setResultSize(9);
                     }
                 });
             }
@@ -161,21 +170,23 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     }
 
     private void takeData() {
+        String keyword = etChaxun.getText().toString();
+
         progressDialog = new CustomProgressDialog(this, "获取数据中...");
         progressDialog.show();
 
         Map<String, String> params = new HashMap<>();
-        params.put("type", windowsType + "");
-        params.put("pageIndex", 1 + "");
-        params.put("pageSize", page * 10 + "");
-        params.put("keyword", "");
+        //params.put("type", windowsType + "");
+        params.put("type", 1 + "");
+        params.put("pageIndex", page + "");
+        params.put("pageSize", 10 + "");
+        params.put("keyword", keyword);
 
         AppApplication.getApplication().getAppComponent().getApiService().GetData(params).compose(RxHttpReponseCompat.<SelectWindow>compatResult())
                 .subscribe(new AdapterItemSubcriber<SelectWindow>(AppApplication.getApplication()) {
                     @Override
                     public void onNext(SelectWindow recommendWhSites) {
                         if (recommendWhSites != null) {
-                            recommendWhSites.getTotalCount();
                             for (int i = 0; i < recommendWhSites.getListData().size(); i++) {
                                 ArrayList<String> list = (ArrayList<String>) recommendWhSites.getListData().get(i);
                                 EPC epc = new EPC();
@@ -183,7 +194,17 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                                 epc.setData2(list.get(1));
                                 epcArrayList.add(epc);
                             }
-                            receiveDialogadapter.updateDatas(epcArrayList);
+                            if (epcArrayList != null) {
+                                int count = recommendWhSites.getTotalCount();
+                                if (count == epcArrayList.size()) {
+                                    paikingRecord.setResultSize(9);
+                                } else if (epcArrayList.size() == 0) {
+                                    paikingRecord.setResultSize(0);
+                                } else {
+                                    paikingRecord.setResultSize(10);
+                                }
+                            }
+                            receiveDialogadapter.updateDatas(epcArrayList);//更新adapter
                         }
                     }
 
@@ -200,12 +221,13 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                 });
     }
 
-    @OnClick({R.id.bt_sure, R.id.btn_cancel})
+    @OnClick({R.id.btn_chaxun, R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                if (TextUtils.isEmpty(value)){
-                    ToastUtil.toast("请选择"+tvDefaultText.getText().toString());
+                if (TextUtils.isEmpty(value)) {
+                    ToastUtil.toast("请选择" + ListTitle.get(1));
+                    return;
                 }
                 Intent intent = new Intent();
                 intent.putExtra("value", value);
@@ -214,6 +236,13 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                 break;
             case R.id.btn_cancel:
                 finish();
+                break;
+            case R.id.btn_chaxun:
+                page = 1;
+                if (epcArrayList != null) {
+                    epcArrayList.clear();
+                }
+                takeData();
                 break;
         }
     }

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
@@ -40,7 +41,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class ReceiveMessActivity extends NewBaseActivity {
-
     @BindView(R.id.bt_while)
     Button btWhile;
     @BindView(R.id.bt_sure)
@@ -65,6 +65,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
     EditText edPlan;
     @BindView(R.id.ed_shouhuo)
     EditText edShouhuo;
+    @BindView(R.id.tv_tick)
+    TextView tvTick;
     private int a = 1;
     private boolean size = false;
     protected static int RAG = 1;
@@ -76,7 +78,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
     private ArrayList<ListLotBean> listLotBeans = null;
     private ArrayList<String> listEpc = null;
     private ArrayList<EPC> epclis = null;
-    private String selected=null;
+    private String selected = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +141,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected = parent.getItemAtPosition(position).toString();
                 edShouhuo.setText("");
-                if (epclis!=null){
+                if (epclis != null) {
                     epclis.clear();
                 }
             }
@@ -194,6 +196,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 });
     }
 
+    //根据产品展示数据
     private void showUI(String barCode) {
         if (hashMap == null) {
             return;
@@ -217,13 +220,14 @@ public class ReceiveMessActivity extends NewBaseActivity {
             edtYishou.setText(sb.get(0).getStockQty() + "");
             edPlan.setText(sb.get(0).getPlanLoc() + "");
             edtBaozhuang.setText(sb.get(0).getPacking() + "");
-            map.put(barCode, barCode);
             /*
              * 动态添显示下拉菜单的选项，可以动态添加元素
              */
             initView(sb.get(0).getListUom());
             listLotBeans = (ArrayList<ListLotBean>) sb.get(0).getListLot();
             listEpc = (ArrayList<String>) sb.get(0).getListEpc();
+            tvTick.setText("请扫描/输入收货跟踪号，并选择/输入相关信息");
+
         }
 
         if (map.size() == hashMap.size()) {
@@ -264,7 +268,6 @@ public class ReceiveMessActivity extends NewBaseActivity {
                     SoundManage.PlaySound(ReceiveMessActivity.this, SoundManage.SoundType.SUCCESS);
                     if (a == 2) {
                         etDingdan.setText(barCode);
-                        a = 1;
                     } else if (a == 1) {
                         etDanhao.setText(barCode);
                         a = 2;
@@ -282,8 +285,12 @@ public class ReceiveMessActivity extends NewBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RAG) {
             if (resultCode == RESULT_OK) {
-                //清空数据，等待下次扫描
-                takeClear();
+                //清空数据，保存已提交数据，等待下次扫描
+                String bar = etDanhao.getText().toString();
+                if (!TextUtils.isEmpty(bar)){
+                    map.put(bar, bar);
+                    takeClear();
+                }
             }
         }
         if (requestCode == RAB) {
@@ -296,16 +303,22 @@ public class ReceiveMessActivity extends NewBaseActivity {
         }
     }
 
-    private void takeClear(){
-        if (epclis!=null){
+    private void takeClear() {
+        if (epclis != null) {
             epclis.clear();
         }
-        sb.clear();
-        if (listLotBeans!=null){
+        if (sb!=null){
+            sb.clear();
+        }
+        if (listLotBeans != null) {
             listLotBeans.clear();
         }
-        listEpc.clear();
+        if (listEpc!=null){
+            listEpc.clear();
+        }
+        a=1;
         selected = null;
+        tvTick.setText("请扫描/输入产品");
         edPlan.setText("");
         etDingdan.setText("");
         etDanhao.setText("");
@@ -317,29 +330,29 @@ public class ReceiveMessActivity extends NewBaseActivity {
         edShouhuo.setText("");
     }
 
-    private void commitData(){
+    private void commitData() {
         String name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
-        if (name==null){
+        if (TextUtils.isEmpty(name)) {
             ToastUtil.toast("请到系统设置中设置仓库");
             return;
         }
         String stockLoc = edPlan.getText().toString();
-        String trackCode =etDingdan.getText().toString();
+        String trackCode = etDingdan.getText().toString();
         ArrayList<String> listEpcJson = new ArrayList<>();
-        String stockQty =edShouhuo.getText().toString();
-        if (TextUtils.isEmpty(stockLoc)){
+        String stockQty = edShouhuo.getText().toString();
+        if (TextUtils.isEmpty(stockLoc)) {
             ToastUtil.toast("请输入收货库位");
             return;
         }
-        if (TextUtils.isEmpty(trackCode)){
+        if (TextUtils.isEmpty(trackCode)) {
             ToastUtil.toast("请输入收货跟踪号");
             return;
         }
-        if (TextUtils.isEmpty(stockQty)){
+        if (TextUtils.isEmpty(stockQty)) {
             ToastUtil.toast("请输入收货数量");
             return;
         }
-        if (epclis!=null){
+        if (epclis != null) {
             for (int i = 0; i < epclis.size(); i++) {
                 listEpcJson.add(epclis.get(i).getEpc());
             }
@@ -362,30 +375,24 @@ public class ReceiveMessActivity extends NewBaseActivity {
         params.put("whId", ACacheUtils.getWareIdByWhCode(name));
 
         AppApplication.getApplication().getAppComponent().getApiService().StockIn(params).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this)
-        {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this) {
             @Override
-            public void onNext(BaseBean baseBean)
-            {
-                if (baseBean.success())
-                {
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
-                } else
-                {
+                } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());
                 }
             }
 
             @Override
-            public void onComplete()
-            {
+            public void onComplete() {
                 takeClear();
                 progressDialog.dismiss();
             }
 
             @Override
-            public void onError(Throwable e)
-            {
+            public void onError(Throwable e) {
                 progressDialog.dismiss();
                 super.onError(e);
             }
@@ -404,28 +411,28 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 break;
             case R.id.bt_sure:
                 if (listLotBeans == null || listLotBeans.size() == 0) {
-                    if (size){
+                    if (size) {
                         //提交数据，并退出
                         commitData();
                         finish();
-                    }else {
+                    } else {
                         commitData();
                         //提交数据,清空数据，等待下次扫描
                     }
                 } else {
-                    String stockQty =edShouhuo.getText().toString();
+                    String stockQty = edShouhuo.getText().toString();
                     String stockLoc = edPlan.getText().toString();
-                    String trackCode =etDingdan.getText().toString();
+                    String trackCode = etDingdan.getText().toString();
 
                     Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
                     intent1.putExtra("size", size);//返回界面的依据
                     intent1.putExtra("listlost", listLotBeans);//动态数组
                     intent1.putExtra("epclis", epclis);//扫描的EPC
-                    intent1.putExtra("stockQty",stockQty);//收货数量
+                    intent1.putExtra("stockQty", stockQty);//收货数量
                     intent1.putExtra("sb", sb);//获取到的查询数据
-                    intent1.putExtra("uom",selected);
-                    intent1.putExtra("stockLoc",stockLoc);
-                    intent1.putExtra("trackCode",trackCode);
+                    intent1.putExtra("uom", selected);
+                    intent1.putExtra("stockLoc", stockLoc);
+                    intent1.putExtra("trackCode", trackCode);
                     startActivityForResult(intent1, RAG);
                 }
                 break;

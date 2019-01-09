@@ -14,7 +14,6 @@ import com.ioter.warehouse.R;
 
 public class AutoListView extends ListView {
 
-
 	private LayoutInflater inflater;
 	private View footer;
 	private TextView noData;
@@ -24,9 +23,13 @@ public class AutoListView extends ListView {
 
 	private boolean isLoading;// 判断是否正在加载
 	private boolean isLoadFull;
-	private int pageSize = 30;
+	private int pageSize = 10;
 
 	private OnLoadListener onLoadListener;
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
 	public AutoListView(Context context) {
 		super(context);
@@ -42,14 +45,7 @@ public class AutoListView extends ListView {
 		super(context, attrs, defStyle);
 		initView(context);
 	}
-	// 加载更多监听
-	public void setOnLoadListener(OnLoadListener onLoadListener) {
-		this.onLoadListener = onLoadListener;
-	}
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
 
 	// 初始化组件
 	private void initView(Context context) {
@@ -62,11 +58,23 @@ public class AutoListView extends ListView {
 
 		this.addFooterView(footer);
 		this.setOnScrollListener(new OnScrollListener() {
+            /**
+             *监听着ListView的滑动状态改变。
+             * 官方的有三种状态SCROLL_STATE_TOUCH_SCROLL、SCROLL_STATE_FLING、SCROLL_STATE_IDLE：
+             * SCROLL_STATE_TOUCH_SCROLL：手指正拖着ListView滑动
+             * SCROLL_STATE_FLING：ListView正自由滑动
+             * SCROLL_STATE_IDLE：ListView滑动后静止
+             * */
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				ifNeedLoad(view, scrollState);
 			}
 
+            /**
+             * firstVisibleItem: 表示在屏幕中第一条显示的数据在adapter中的位置
+             * visibleItemCount：则表示屏幕中最后一条数据在adapter中的数据，
+             * totalItemCount则是在adapter中的总条数
+             * */
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				if (onLoadListener != null) {
@@ -131,6 +139,12 @@ public class AutoListView extends ListView {
 		}
 
 	}
+
+    // 加载更多监听
+    public void setOnLoadListener(OnLoadListener onLoadListener) {
+        this.onLoadListener = onLoadListener;
+    }
+
 	/*
 	 * 定义加载更多接口
 	 */
