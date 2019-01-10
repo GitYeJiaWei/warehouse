@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".ui.activity.FindMessActivity">
 
     <LinearLayout
@@ -30,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="请输入库位"
+            android:text="请扫描/输入原始库位"
             android:textColor="@color/md_red_500" />
 
     </LinearLayout>
@@ -205,6 +207,7 @@
                 android:id="@+id/ed_shuliang"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
+                android:inputType="number"
                 android:background="@drawable/back_text"
                 android:gravity="center"
                 android:singleLine="true" />

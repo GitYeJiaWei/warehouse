@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
-        android:hint="请输入出库单号"
+        android:hint="请扫描/输入出库单号"
         android:gravity="center"/>
 
 

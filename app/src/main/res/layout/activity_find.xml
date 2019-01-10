@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/md_red_500"
-            android:text="请输入库位和产品"/>
+            android:text="请扫描/输入库位和产品"/>
 
     </LinearLayout>
 
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
-        android:hint="请输入库位"
+        android:hint="请扫描/输入库位"
         android:gravity="center"/>
 
     <TextView
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
         android:background="@drawable/back_text"
-        android:hint="请输入产品"
+        android:hint="请扫描/输入产品"
         android:gravity="center"/>
 
     <CheckBox

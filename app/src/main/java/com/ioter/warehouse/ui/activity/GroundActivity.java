@@ -75,6 +75,26 @@ public class GroundActivity extends NewBaseActivity {
         ButterKnife.bind(this);
 
         setTitle("上架");
+        edKuwei.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edKuwei.setFocusableInTouchMode(true);
+                    edKuwei.requestFocus();
+                    a = 2;
+                }
+            }
+        });
+        edGenzonghao.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edGenzonghao.setFocusableInTouchMode(true);
+                    edGenzonghao.requestFocus();
+                    a = 1;
+                }
+            }
+        });
     }
 
     protected void takeData(String barCode) {
@@ -83,14 +103,14 @@ public class GroundActivity extends NewBaseActivity {
 
         Map<String, String> params = new HashMap<>();
         params.put("trackCode", barCode);
+        hashMap.clear();
+        map.clear();
 
         AppApplication.getApplication().getAppComponent().getApiService().GetProductByTrackCode(params).compose(RxHttpReponseCompat.<List<TrackBean>>compatResult())
                 .subscribe(new AdapterItemSubcriber<List<TrackBean>>(AppApplication.getApplication()) {
                     @Override
                     public void onNext(List<TrackBean> recommendWhSites) {
                         if (recommendWhSites != null && recommendWhSites.size() > 0) {
-                            hashMap.clear();
-                            map.clear();
                             try {
                                 for (TrackBean info : recommendWhSites) {
                                     String key = info.getProductId();
@@ -119,7 +139,8 @@ public class GroundActivity extends NewBaseActivity {
     }
 
     private void showUI() {
-        if (hashMap == null) {
+        if (hashMap == null || hashMap.size()==0) {
+            ToastUtil.toast("不存在该跟踪号，请重新扫描");
             return;
         }
         if (hashMap.size() > 1) {
@@ -295,12 +316,11 @@ public class GroundActivity extends NewBaseActivity {
                     String bar = edChanpin.getText().toString();
                     if (!TextUtils.isEmpty(bar)){
                         map.put(bar,bar);
-                        /*if (map.size()==hashMap.size()){
+                        if (map.size()==hashMap.size()){
                             finish();
                         }else {
                             takeclear();
-                        }*/
-                        takeclear();
+                        }
                     }
                 } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());

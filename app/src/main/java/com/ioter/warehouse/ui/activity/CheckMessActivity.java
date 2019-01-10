@@ -174,12 +174,6 @@ public class CheckMessActivity extends NewBaseActivity {
     }
 
     private void takeData() {
-
-       /* ArrayList<String> listEpcJson = new ArrayList<>();
-        for (int i = 0; i < epclis.size(); i++) {
-            listEpcJson.add(epclis.get(i).getEpc());
-        }*/
-
         progressDialog = new CustomProgressDialog(this, "提交数据中...");
         progressDialog.show();
         String loc = edMubiao.getText().toString();

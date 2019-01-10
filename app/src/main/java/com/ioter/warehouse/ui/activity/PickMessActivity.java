@@ -1,6 +1,7 @@
 package com.ioter.warehouse.ui.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.ioter.warehouse.common.util.ToastUtil;
+import com.ioter.warehouse.ui.dialog.BaseDialog;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
@@ -69,6 +71,7 @@ public class PickMessActivity extends NewBaseActivity {
     Spinner spCangku;
     private CustomProgressDialog progressDialog;
     private ConcurrentHashMap<Integer, PickModel> map = new ConcurrentHashMap<>();
+    private HashMap<Integer,Integer> map1 = new HashMap<>();
     private int current = 1;
     private String selected =null;
     private int a =1;
@@ -117,6 +120,7 @@ public class PickMessActivity extends NewBaseActivity {
                     @Override
                     public void onNext(List<PickModel> recommendWhSites) {
                         if (recommendWhSites != null && recommendWhSites.size() > 0) {
+                            map1.clear();
                             map.clear();
                             int key = 1;
                             try {
@@ -146,6 +150,7 @@ public class PickMessActivity extends NewBaseActivity {
 
     private void showUI(String abc) {
         if (map == null || map.size() == 0) {
+            ToastUtil.toast("出库单号不存在");
             return;
         }
 
@@ -157,12 +162,14 @@ public class PickMessActivity extends NewBaseActivity {
                 return;
             }
             current--;
+            takeclear();
             takeUI(current);
         } else if (abc.equals("right")) {
             if (current == hashMap.size()) {
                 return;
             }
             current++;
+            takeclear();
             takeUI(current);
         } else {
             return;
@@ -181,10 +188,22 @@ public class PickMessActivity extends NewBaseActivity {
         }
     }
 
+    private void takeclear(){
+        edYuanshi.setText("");
+        edPinming.setText("");
+        edJianhuo.setText("");
+        edGuige.setText("");
+        edtBaozhuang.setText("");
+        edKuwei.setText("");
+        edShuliang.setText("");
+        etChanpin.setText("");
+        selected = null;
+        tvTick.setText("请扫描/输入原始库位");
+    }
+
     private void takeUI(int barcode) {
        edYuanshi.setText(map.get(barcode).getSourceLoc());
        edPinming.setText(map.get(barcode).getProductName());
-       etChanpin.setText(map.get(barcode).getProductId());
        edJianhuo.setText(map.get(barcode).getPickQty()+"");
        edGuige.setText(map.get(barcode).getPacking());
        init(map.get(barcode).getListUom());
@@ -216,24 +235,46 @@ public class PickMessActivity extends NewBaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected = parent.getItemAtPosition(position).toString();
+                edShuliang.setText("");
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
 
     private void takeData(){
-        progressDialog = new CustomProgressDialog(this, "提交数据中...");
-        progressDialog.show();
         String locId = edKuwei.getText().toString();
         String qty = edShuliang.getText().toString();
+        String productId = etChanpin.getText().toString();
+        if (!locId.equals(map.get(current).getSourceLoc())){
+            ToastUtil.toast("原始库位不一致，请重新扫描");
+            a = 1;
+            tvTick.setText("请扫描/输入原始库位");
+            return;
+        }
+        if (!productId.equals(map.get(current).getProductId())){
+            ToastUtil.toast("产品编码不一致，请重新扫描");
+            a = 2;
+            tvTick.setText("请扫描/输入产品");
+            return;
+        }
+        if (TextUtils.isEmpty(qty)){
+            ToastUtil.toast("拣货数量不能为空");
+            return;
+        }
+        if (Integer.valueOf(qty)>map.get(current).getPickQty()){
+            ToastUtil.toast("拣货数量超出标准，请重新输入");
+            return;
+        }
+
+        progressDialog = new CustomProgressDialog(this, "提交数据中...");
+        progressDialog.show();
 
         Map<String, String> params = new HashMap<>();
         params.put("taskId", map.get(current).getTaskId());
-        params.put("productId",map.get(current).getProductId());
+        params.put("productId",productId);
         params.put("locId", locId);
         params.put("qty", qty);
         params.put("uom", selected);
@@ -245,6 +286,12 @@ public class PickMessActivity extends NewBaseActivity {
             public void onNext(BaseBean baseBean) {
                 if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
+                    map1.put(current,current);
+                    if (map1.size()==map.size()){
+                        finish();
+                    }else {
+                        tvTick.setText("提交成功");
+                    }
                 } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());
                 }
@@ -292,10 +339,22 @@ public class PickMessActivity extends NewBaseActivity {
                     SoundManage.PlaySound(PickMessActivity.this, SoundManage.SoundType.SUCCESS);
                     if (a == 2) {
                         etChanpin.setText(barCode);
-                        a = 1;
+                        if (!barCode.equals(map.get(current).getProductId())){
+                            ToastUtil.toast("产品编码不一致，请重新扫描");
+                            a = 2;
+                        }else {
+                            tvTick.setText("请输入拣货数量，并提交");
+                        }
                     } else if (a == 1) {
                         edKuwei.setText(barCode);
-                        a = 2;
+                        if (barCode.equals(map.get(current).getSourceLoc())){
+                            a = 2;
+                            tvTick.setText("请扫描/输入产品");
+                        }else{
+                            ToastUtil.toast("原始库位不一致，请重新扫描");
+                            a = 1;
+                            tvTick.setText("请扫描/输入原始库位");
+                        }
                     }  else {
                         return;
                     }
@@ -305,20 +364,54 @@ public class PickMessActivity extends NewBaseActivity {
     };
 
 
+    private void getPressDialog(String content)
+    {
+        final BaseDialog baseDialog = new BaseDialog(this, 1);
+        baseDialog.setHintTvValue(content);
+        baseDialog.setConfrimBtnOnclick(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                baseDialog.dismiss();
+                finish();
+            }
+        });
+        baseDialog.setCancelBtnOnclick(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                baseDialog.dismiss();
+            }
+        });
+    }
+
     @OnClick({R.id.bt_sure, R.id.bt_left, R.id.bt_right, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                takeData();
+                if (map == null || map.size() == 0) {
+                    finish();
+                }else {
+                    takeData();
+                }
                 break;
             case R.id.bt_left:
                 showUI("left");
+                a = 1;
                 break;
             case R.id.bt_right:
                 showUI("right");
+                a = 1;
                 break;
             case R.id.btn_cancel:
-                finish();
+                if (map == null || map.size() == 0) {
+                    finish();
+                }
+                if (map.size()>map1.size()){
+                    getPressDialog("还有产品没有拣货，是否退出？");
+                }
                 break;
         }
     }

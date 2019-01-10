@@ -66,22 +66,27 @@ public class PickActivity extends NewBaseActivity {
                 if (barCode != null && barCode.length() > 0) {
                     SoundManage.PlaySound(PickActivity.this, SoundManage.SoundType.SUCCESS);
                     etDanhao.setText(barCode);
+                    takeData();
                 }
             }
         }
     };
 
+    private void takeData(){
+        String barCode = etDanhao.getText().toString();
+        if (TextUtils.isEmpty(barCode)) {
+            return;
+        }
+        Intent intent = new Intent(PickActivity.this, PickMessActivity.class);
+        intent.putExtra("stockOutId",barCode);
+        startActivity(intent);
+    }
+
     @OnClick({R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                String barCode = etDanhao.getText().toString();
-                if (TextUtils.isEmpty(barCode)) {
-                    return;
-                }
-                Intent intent = new Intent(PickActivity.this, PickMessActivity.class);
-                intent.putExtra("stockOutId",barCode);
-                startActivity(intent);
+                takeData();
                 break;
             case R.id.btn_cancel:
                 finish();

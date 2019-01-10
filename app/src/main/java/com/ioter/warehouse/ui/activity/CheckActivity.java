@@ -89,13 +89,13 @@ public class CheckActivity extends NewBaseActivity {
 
         Map<String, String> params = new HashMap<>();
         params.put("stockTakeId", barCode);
+        map.clear();
 
         AppApplication.getApplication().getAppComponent().getApiService().GetStockTakes(params).compose(RxHttpReponseCompat.<List<StockTake>>compatResult())
                 .subscribe(new AdapterItemSubcriber<List<StockTake>>(AppApplication.getApplication()) {
                     @Override
                     public void onNext(List<StockTake> recommendWhSites) {
                         if (recommendWhSites != null && recommendWhSites.size() > 0) {
-                            map.clear();
                             int key = 1;
                             try {
                                 for (StockTake info : recommendWhSites) {

@@ -1,5 +1,6 @@
 package com.ioter.warehouse.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -209,6 +210,9 @@ public class MoveMessActivity extends NewBaseActivity {
                 if (baseBean.success())
                 {
                     ToastUtil.toast("提交成功");
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
                 } else
                 {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());
@@ -235,7 +239,6 @@ public class MoveMessActivity extends NewBaseActivity {
         switch (view.getId()) {
             case R.id.bt_sure:
                 takeData();
-                finish();
                 break;
             case R.id.btn_cancel:
                 finish();

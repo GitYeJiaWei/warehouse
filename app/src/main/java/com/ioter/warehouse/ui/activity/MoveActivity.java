@@ -15,6 +15,7 @@ import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.common.util.SoundManage;
+import com.ioter.warehouse.common.util.ToastUtil;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class MoveActivity extends NewBaseActivity {
     private int a = 1;
     private CustomProgressDialog progressDialog= null;
     private StockMoveModel stockMoveModel =null;
+    private int RAD =1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +95,12 @@ public class MoveActivity extends NewBaseActivity {
 
         Map<String, String> params = new HashMap<>();
         params.put("locid", barCode);
-
+        hashMap.clear();
         AppApplication.getApplication().getAppComponent().getApiService().GetStockMoveInfo(params).compose(RxHttpReponseCompat.<List<StockMoveModel>>compatResult())
                 .subscribe(new AdapterItemSubcriber<List<StockMoveModel>>(AppApplication.getApplication()) {
                     @Override
                     public void onNext(List<StockMoveModel> recommendWhSites) {
                         if (recommendWhSites != null && recommendWhSites.size() > 0) {
-                            hashMap.clear();
                             try {
                                 for (StockMoveModel info : recommendWhSites) {
                                     String key = info.getProductId()+info.getTrackCode();
@@ -143,7 +144,7 @@ public class MoveActivity extends NewBaseActivity {
             }
         }
         if (hashMap.size()>1){
-            tvTick.setText("请扫描跟踪号");
+            tvTick.setText("请扫描/输入原始跟踪号");
             a=2;
         }
     }
@@ -167,7 +168,7 @@ public class MoveActivity extends NewBaseActivity {
                 edChanpin.setText(stockMoveModel.getProductId());
                 edPinming.setText(stockMoveModel.getProductName());
             }else {
-                tvTick.setText("请扫描产品");
+                tvTick.setText("请扫描/输入产品");
                 a=3;
             }
         }
@@ -234,16 +235,34 @@ public class MoveActivity extends NewBaseActivity {
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==RAD){
+            if (resultCode==RESULT_OK){
+                a=1;
+                edKuwei.setText("");
+                edGenzonghao.setText("");
+                edChanpin.setText("");
+                edPinming.setText("");
+                if (stockMoveModel!=null){
+                    stockMoveModel=null;
+                }
+            }
+        }
+    }
+
     @OnClick({R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
                 if (stockMoveModel==null){
+                    ToastUtil.toast("请输入正确信息");
                     return;
                 }
                 Intent intent = new Intent(MoveActivity.this, MoveMessActivity.class);
                 intent.putExtra("list",stockMoveModel);
-                startActivity(intent);
+                startActivityForResult(intent,RAD);
                 break;
             case R.id.btn_cancel:
                 finish();
