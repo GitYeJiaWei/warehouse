@@ -1,5 +1,6 @@
 package com.ioter.warehouse.ui.activity;
 
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -140,11 +141,11 @@ public class GroundActivity extends NewBaseActivity {
 
     private void showUI() {
         if (hashMap == null || hashMap.size()==0) {
-            ToastUtil.toast("不存在该跟踪号，请重新扫描");
+            ToastUtil.toast("不存在该跟踪号，请重新扫描/输入");
             return;
         }
         if (hashMap.size() > 1) {
-            tvTick.setText("该跟踪号有多个产品，请扫描确认");
+            tvTick.setText("该跟踪号有多个产品，请扫描/输入确认");
             a = 2;
             return;
         } else {
@@ -233,6 +234,24 @@ public class GroundActivity extends NewBaseActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN){
+            switch (event.getKeyCode()){
+                case 66:
+                    if (a == 2) {
+                        String bar = edChanpin.getText().toString();
+                        showUIT(bar);
+                    } else if (a == 1) {
+                        String bar = edGenzonghao.getText().toString();
+                        takeData(bar);
+                    }
+                    break;
+            }
+        }
+        return super.dispatchKeyEvent(event);
     }
 
     //扫条码

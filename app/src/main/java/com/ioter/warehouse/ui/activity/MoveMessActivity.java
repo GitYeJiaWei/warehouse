@@ -173,7 +173,6 @@ public class MoveMessActivity extends NewBaseActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -75,6 +76,19 @@ public class ReceiveActivity extends NewBaseActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    //点击edittext重载了onkeydown，所以需要用dispatchKeyEvent获取按键值66
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getAction()== KeyEvent.ACTION_DOWN){
+            switch (event.getKeyCode()){
+                case 66:
+                    takeData();
+                    break;
+            }
+        }
+        return super.dispatchKeyEvent(event);
     }
 
     //扫条码

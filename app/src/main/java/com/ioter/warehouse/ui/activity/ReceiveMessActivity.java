@@ -31,6 +31,7 @@ import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +80,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
     private ArrayList<String> listEpc = null;
     private ArrayList<EPC> epclis = null;
     private String selected = null;
+    private HashMap<String,Double> doubMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +117,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
     }
 
     private void initView(final List<PackingBean> list) {
+        doubMap.clear();
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
@@ -123,6 +126,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         ArrayList<String> arrayList = new ArrayList<>();
         int select = 0;
         for (int i = 0; i < list.size(); i++) {
+            doubMap.put(list.get(i).getUom(),list.get(i).getQty());
             arrayList.add(list.get(i).getUom());
             if (list.get(i).isIsDefault()) {
                 //默认item
@@ -240,6 +244,24 @@ public class ReceiveMessActivity extends NewBaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN){
+            switch (event.getKeyCode()){
+                case 66:
+                    if (a == 2) {
+                        commit();
+                    } else if (a == 1) {
+                        a = 2;
+                        String bar = etDanhao.getText().toString();
+                        showUI(bar);
+                    }
+                    break;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
     //扫条码
     private void ScanBarcode() {
         if (AppApplication.barcode2DWithSoft != null) {
@@ -331,6 +353,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
             ToastUtil.toast("请到系统设置中设置仓库");
             return;
         }
+
         String stockLoc = edPlan.getText().toString();
         String trackCode = etDingdan.getText().toString();
         ArrayList<String> listEpcJson = new ArrayList<>();
@@ -347,6 +370,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
             ToastUtil.toast("请输入收货数量");
             return;
         }
+        checkData();
+
         if (epclis != null) {
             for (int i = 0; i < epclis.size(); i++) {
                 listEpcJson.add(epclis.get(i).getEpc());
@@ -403,6 +428,57 @@ public class ReceiveMessActivity extends NewBaseActivity {
         });
     }
 
+    private void checkData(){
+        Iterator it = doubMap.keySet().iterator();
+        while (it.hasNext()){
+            String key = (String) it.next();
+            if (key.equals(selected)){
+                double t = doubMap.get(key);
+                double l = doubMap.get("EA");
+                double yuqi =Double.valueOf(edtYuqi.getText().toString());
+                double yihou =Double.valueOf(edtYishou.getText().toString());
+                int shouhuo = Integer.valueOf(edShouhuo.getText().toString());
+                if (shouhuo/t*l>(yuqi-yihou)){
+                    ToastUtil.toast("收货数大于预期数-已收数");
+                    return;
+                }
+            }
+        }
+    }
+
+    private void commit(){
+        if (listLotBeans == null || listLotBeans.size() == 0) {
+            commitData();
+        } else {
+            String stockQty = edShouhuo.getText().toString();
+            String stockLoc = edPlan.getText().toString();
+            String trackCode = etDingdan.getText().toString();
+            if (TextUtils.isEmpty(trackCode)){
+                ToastUtil.toast("收货跟踪号不能为空");
+                return;
+            }
+            if (TextUtils.isEmpty(stockQty)){
+                ToastUtil.toast("收货数量不能为空");
+                return;
+            }
+            if (TextUtils.isEmpty(stockLoc)){
+                ToastUtil.toast("收货库位不能为空");
+                return;
+            }
+
+            checkData();
+            Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
+            intent1.putExtra("listlost", listLotBeans);//动态数组
+            intent1.putExtra("epclis", epclis);//扫描的EPC
+            intent1.putExtra("stockQty", stockQty);//收货数量
+            intent1.putExtra("sb", sb);//获取到的查询数据
+            intent1.putExtra("uom", selected);
+            intent1.putExtra("stockLoc", stockLoc);
+            intent1.putExtra("trackCode", trackCode);
+            startActivityForResult(intent1, RAG);
+        }
+    }
+
     @OnClick({R.id.bt_while, R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -414,23 +490,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 startActivityForResult(intent, RAB);
                 break;
             case R.id.bt_sure:
-                if (listLotBeans == null || listLotBeans.size() == 0) {
-                    commitData();
-                } else {
-                    String stockQty = edShouhuo.getText().toString();
-                    String stockLoc = edPlan.getText().toString();
-                    String trackCode = etDingdan.getText().toString();
-
-                    Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
-                    intent1.putExtra("listlost", listLotBeans);//动态数组
-                    intent1.putExtra("epclis", epclis);//扫描的EPC
-                    intent1.putExtra("stockQty", stockQty);//收货数量
-                    intent1.putExtra("sb", sb);//获取到的查询数据
-                    intent1.putExtra("uom", selected);
-                    intent1.putExtra("stockLoc", stockLoc);
-                    intent1.putExtra("trackCode", trackCode);
-                    startActivityForResult(intent1, RAG);
-                }
+                commit();
                 break;
             case R.id.btn_cancel:
                 this.finish();
