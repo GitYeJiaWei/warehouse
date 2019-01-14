@@ -428,7 +428,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
         });
     }
 
-    private void checkData(){
+    //判断收货数据大小是否合理
+    private boolean checkData(){
         Iterator it = doubMap.keySet().iterator();
         while (it.hasNext()){
             String key = (String) it.next();
@@ -438,12 +439,13 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 double yuqi =Double.valueOf(edtYuqi.getText().toString());
                 double yihou =Double.valueOf(edtYishou.getText().toString());
                 int shouhuo = Integer.valueOf(edShouhuo.getText().toString());
-                if (shouhuo/t*l>(yuqi-yihou)){
+                if (shouhuo*t/l>(yuqi-yihou)){
                     ToastUtil.toast("收货数大于预期数-已收数");
-                    return;
+                    return false;
                 }
             }
         }
+        return true;
     }
 
     private void commit(){
@@ -465,17 +467,17 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 ToastUtil.toast("收货库位不能为空");
                 return;
             }
-
-            checkData();
-            Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
-            intent1.putExtra("listlost", listLotBeans);//动态数组
-            intent1.putExtra("epclis", epclis);//扫描的EPC
-            intent1.putExtra("stockQty", stockQty);//收货数量
-            intent1.putExtra("sb", sb);//获取到的查询数据
-            intent1.putExtra("uom", selected);
-            intent1.putExtra("stockLoc", stockLoc);
-            intent1.putExtra("trackCode", trackCode);
-            startActivityForResult(intent1, RAG);
+            if (checkData()){
+                Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
+                intent1.putExtra("listlost", listLotBeans);//动态数组
+                intent1.putExtra("epclis", epclis);//扫描的EPC
+                intent1.putExtra("stockQty", stockQty);//收货数量
+                intent1.putExtra("sb", sb);//获取到的查询数据
+                intent1.putExtra("uom", selected);
+                intent1.putExtra("stockLoc", stockLoc);
+                intent1.putExtra("trackCode", trackCode);
+                startActivityForResult(intent1, RAG);
+            }
         }
     }
 
@@ -497,5 +499,4 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 break;
         }
     }
-
 }

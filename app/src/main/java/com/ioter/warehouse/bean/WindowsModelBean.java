@@ -9,6 +9,15 @@ public class WindowsModelBean implements Serializable{
     private String ValueField;
     private String TextField;
     private List<String> ListTitle;
+    private List<String> ListField;
+
+    public List<String> getListField() {
+        return ListField;
+    }
+
+    public void setListField(List<String> listField) {
+        ListField = listField;
+    }
 
     public String getValueField() {
         return ValueField;

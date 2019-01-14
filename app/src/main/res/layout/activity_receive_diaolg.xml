@@ -91,7 +91,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ed_height"
         android:layout_marginTop="10dp"
-        android:weightSum="7"
         android:background="@drawable/back_text"
         android:orientation="horizontal">
 

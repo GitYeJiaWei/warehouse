@@ -19,11 +19,14 @@ public class ReceiveDialogadapter extends BaseAdapter {
     private Context context=null;
     //视图容器
     private LayoutInflater layoutInflater;
+    //类型
+    private int type;
 
-    public ReceiveDialogadapter(Context _context){
+    public ReceiveDialogadapter(Context _context,int _type){
         this.context=_context;
         //创建视图容器并设置上下文
         this.layoutInflater= LayoutInflater.from(_context);
+        this.type = _type;
     }
 
     public void updateDatas(List<EPC> datalist){
@@ -72,12 +75,20 @@ public class ReceiveDialogadapter extends BaseAdapter {
         ListItemView listItemView =null;
         if (convertView ==null){
             //获取list_item布局文件的视图
+
             convertView = layoutInflater.inflate(R.layout.dialog_list_item,null);
             //获取控件对象
             listItemView =new ListItemView();
-            listItemView.total  = (TextView) convertView.findViewById(R.id.tv_num);
-            listItemView.left = (TextView) convertView.findViewById(R.id.tv_left);
-            listItemView.right = (TextView) convertView.findViewById(R.id.tv_right);
+            if (type==4){
+                listItemView.total  = (TextView) convertView.findViewById(R.id.tv_num);
+                listItemView.left = (TextView) convertView.findViewById(R.id.tv_left);
+                listItemView.right = (TextView) convertView.findViewById(R.id.tv_right);
+                listItemView.right.setVisibility(View.GONE);
+            }else {
+                listItemView.total  = (TextView) convertView.findViewById(R.id.tv_num);
+                listItemView.left = (TextView) convertView.findViewById(R.id.tv_left);
+                listItemView.right = (TextView) convertView.findViewById(R.id.tv_right);
+            }
             //设置控件集到convertView
             convertView.setTag(listItemView);
         }
@@ -86,10 +97,14 @@ public class ReceiveDialogadapter extends BaseAdapter {
         }
 
         final EPC m1=(EPC) this.getItem(position);
-        listItemView.total.setText(position+1+"");
-        listItemView.left.setText(m1.getData1());
-        listItemView.right.setText(m1.getData2());
-
+        if (type==4){
+            listItemView.total.setText(position+1+"");
+            listItemView.left.setText(m1.getData1());
+        }else {
+            listItemView.total.setText(position+1+"");
+            listItemView.left.setText(m1.getData1());
+            listItemView.right.setText(m1.getData2());
+        }
         return convertView;
     }
 
