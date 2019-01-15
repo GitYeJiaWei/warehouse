@@ -330,10 +330,11 @@ public class ReceiveDateActivity extends NewBaseActivity {
             if (resultCode == RESULT_OK) {
                 //获取弹出框的数据
                 String value = data.getStringExtra("value");
-                if (!TextUtils.isEmpty(value)) {
+                String text = data.getStringExtra("text");
+                if (!TextUtils.isEmpty(value) && !TextUtils.isEmpty(text)) {
                     map1.put(RAG, value);
                     Button v = findViewById(RAG);
-                    v.setText(value);
+                    v.setText(text);
                 }
             }
         }
@@ -372,6 +373,8 @@ public class ReceiveDateActivity extends NewBaseActivity {
         String stockLoc = intent.getStringExtra("stockLoc");
         String trackCode = intent.getStringExtra("trackCode");
         String stockQty = intent.getStringExtra("stockQty");
+        String orderNo = intent.getStringExtra("orderNo");
+        String stockInId = intent.getStringExtra("stockInId");
 
         ArrayList<String> listEpcJson = new ArrayList<>();
         if (epclis != null) {
@@ -388,7 +391,8 @@ public class ReceiveDateActivity extends NewBaseActivity {
         progressDialog.show();
 
         Map<String, String> params = new HashMap<>();
-        params.put("asnDetailId", sb.get(0).getAsnDetailId());
+        params.put("stockInId", stockInId);
+        params.put("orderNo",orderNo);
         params.put("productId", sb.get(0).getProductId());
         params.put("stockQty", stockQty);
         params.put("uom", uom);

@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:textSize="18sp"
-                    android:text="预期数量"/>
+                    android:text="预期数量(EA)"/>
 
                 <EditText
                     android:id="@+id/edt_yuqi"
@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:textSize="18sp"
-                    android:text="已收数量"/>
+                    android:text="已收数量(EA)"/>
 
                 <EditText
                     android:id="@+id/edt_yishou"

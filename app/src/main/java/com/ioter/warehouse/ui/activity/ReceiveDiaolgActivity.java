@@ -49,10 +49,6 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     ImageView top;
     @BindView(R.id.et_chaxun)
     EditText etChaxun;
-    @BindView(R.id.tv_Default)
-    TextView tvDefault;
-    @BindView(R.id.tv_DefaultText)
-    TextView tvDefaultText;
     @BindView(R.id.btn_chaxun)
     Button btnChaxun;
     @BindView(R.id.tv_tick)
@@ -64,8 +60,11 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     private int windowsType = 0;
     private String DefaultText = null;
     private ArrayList<String> ListTitle = null;
+    private ArrayList<String> ListField = null;
     private String value = null;
-    private String showText;
+    private String text = null;
+    private String TextField,ValueField;
+    private int name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,18 +79,24 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
         }
         windowsType = windowsModelBean.getWindowsType();
         DefaultText = windowsModelBean.getDefaultText();
-        showText =windowsModelBean.getTextField();
+        TextField =windowsModelBean.getTextField();
+        ValueField =windowsModelBean.getValueField();
         ListTitle = (ArrayList<String>) windowsModelBean.getListTitle();
+        ListField=(ArrayList<String>)windowsModelBean.getListField();
+        for (int i = 0; i < ListField.size(); i++) {
+            if (TextField.equals(ListField.get(i))){
+                name = i;
+            }
+        }
+
         if (windowsType==4){
             tvLeft.setText(ListTitle.get(0));
             tvRight.setVisibility(View.GONE);
-            tvDefault.setText(ListTitle.get(0));
-            tvTick.setText("请通过关键字查询,点击选取"+showText);
+            tvTick.setText("请通过关键字查询,点击选取"+TextField);
         }else{
             tvLeft.setText(ListTitle.get(0));
             tvRight.setText(ListTitle.get(1));
-            tvDefault.setText(ListTitle.get(1));
-            tvTick.setText("请通过关键字查询,点击选取"+showText);
+            tvTick.setText("请通过关键字查询,点击选取"+TextField);
         }
 
         receiveDialogadapter = new ReceiveDialogadapter(this,windowsType);
@@ -146,9 +151,19 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                 if (position == receiveDialogadapter.getCount())
                     return;
                 EPC epc = epcArrayList.get(position);
-                String state = epc.getData1();
-                tvDefaultText.setText(state);
-                value = epc.getData1();
+                if (windowsType==4){
+                    value = epc.getData1();
+                    text = epc.getData1();
+                }else {
+                    if (name==2){
+                        value = epc.getData1();
+                        text = epc.getData2();
+                    }else {
+                        value = epc.getData2();
+                        text = epc.getData1();
+                    }
+                }
+
             }
         });
         takeData();
@@ -240,11 +255,12 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
         switch (view.getId()) {
             case R.id.bt_sure:
                 if (TextUtils.isEmpty(value)) {
-                    ToastUtil.toast("请选择" + showText);
+                    ToastUtil.toast("请选择" + TextField);
                     return;
                 }
                 Intent intent = new Intent();
                 intent.putExtra("value", value);
+                intent.putExtra("text",text);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;

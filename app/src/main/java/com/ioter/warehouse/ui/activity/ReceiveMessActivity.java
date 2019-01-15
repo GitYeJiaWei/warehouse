@@ -3,7 +3,6 @@ package com.ioter.warehouse.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -69,7 +68,6 @@ public class ReceiveMessActivity extends NewBaseActivity {
     @BindView(R.id.tv_tick)
     TextView tvTick;
     private int a = 1;
-    private boolean size = false;
     protected static int RAG = 1;
     protected static int RAB = 2;
     protected static String TAG = "logware";
@@ -81,6 +79,9 @@ public class ReceiveMessActivity extends NewBaseActivity {
     private ArrayList<EPC> epclis = null;
     private String selected = null;
     private HashMap<String,Double> doubMap = new HashMap<>();
+    private double result =0;
+    private String stockInId;
+    private String orderNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,20 +161,21 @@ public class ReceiveMessActivity extends NewBaseActivity {
         progressDialog = new CustomProgressDialog(this, "获取数据中...");
         progressDialog.show();
 
-        String stockInId = getIntent().getStringExtra("num1");
-        String orderNo = getIntent().getStringExtra("num2");
+        stockInId = getIntent().getStringExtra("num1");
+        orderNo = getIntent().getStringExtra("num2");
 
         Map<String, String> params = new HashMap<>();
         params.put("stockInId", stockInId);
         params.put("orderNo", orderNo);
+
+        hashMap.clear();
+        map.clear();
 
         AppApplication.getApplication().getAppComponent().getApiService().QueryAsn(params).compose(RxHttpReponseCompat.<List<StockBean>>compatResult())
                 .subscribe(new AdapterItemSubcriber<List<StockBean>>(AppApplication.getApplication()) {
                     @Override
                     public void onNext(List<StockBean> recommendWhSites) {
                         if (recommendWhSites != null && recommendWhSites.size() > 0) {
-                            hashMap.clear();
-                            map.clear();
                             try {
                                 for (StockBean info : recommendWhSites) {
                                     String key = info.getProductId();
@@ -215,8 +217,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
             a = 1;
             return;
         } else {
-            if (sb != null) {
-                sb.clear();
+            if (sb!=null){
+                sb=null;
             }
             sb = hashMap.get(barCode);
             edtPinming.setText(sb.get(0).getProductName());
@@ -301,10 +303,16 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 //清空数据，保存已提交数据，等待下次扫描
                 String bar = etDanhao.getText().toString();
                 if (!TextUtils.isEmpty(bar)){
-                    map.put(bar, bar);
-                    if (map.size()==hashMap.size()){
-                        finish();
-                    }else {
+                    if (checkData()==2){
+                        map.put(bar,bar);
+                        if (map.size()==hashMap.size()){
+                            finish();
+                        }else {
+                            takeClear();
+                        }
+                    }else if (checkData()==1){
+                        ArrayList<StockBean> s = hashMap.get(bar);
+                        s.get(0).setStockQty(result);
                         takeClear();
                     }
                 }
@@ -322,19 +330,20 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
     private void takeClear() {
         if (epclis != null) {
-            epclis.clear();
+            epclis=null;
         }
         if (sb!=null){
-            sb.clear();
+            sb=null;
         }
         if (listLotBeans != null) {
-            listLotBeans.clear();
+            listLotBeans=null;
         }
         if (listEpc!=null){
-            listEpc.clear();
+            listEpc=null;
         }
         a=1;
         selected = null;
+        result = 0;
         tvTick.setText("请扫描/输入产品");
         edPlan.setText("");
         etDingdan.setText("");
@@ -382,7 +391,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
         progressDialog.show();
 
         Map<String, String> params = new HashMap<>();
-        params.put("asnDetailId", sb.get(0).getAsnDetailId());
+        params.put("stockInId", stockInId);
+        params.put("orderNo",orderNo);
         params.put("productId", sb.get(0).getProductId());
         params.put("stockQty", stockQty);
         params.put("uom", selected);
@@ -402,10 +412,16 @@ public class ReceiveMessActivity extends NewBaseActivity {
                     ToastUtil.toast("提交成功");
                     String bar = etDanhao.getText().toString();
                     if (!TextUtils.isEmpty(bar)){
-                        map.put(bar,bar);
-                        if (map.size()==hashMap.size()){
-                            finish();
-                        }else {
+                        if (checkData()==2){
+                            map.put(bar,bar);
+                            if (map.size()==hashMap.size()){
+                                finish();
+                            }else {
+                                takeClear();
+                            }
+                        }else if (checkData()==1){
+                            ArrayList<StockBean> s = hashMap.get(bar);
+                            s.get(0).setStockQty(result);
                             takeClear();
                         }
                     }
@@ -429,7 +445,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
     }
 
     //判断收货数据大小是否合理
-    private boolean checkData(){
+    private int checkData(){
         Iterator it = doubMap.keySet().iterator();
         while (it.hasNext()){
             String key = (String) it.next();
@@ -439,13 +455,16 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 double yuqi =Double.valueOf(edtYuqi.getText().toString());
                 double yihou =Double.valueOf(edtYishou.getText().toString());
                 int shouhuo = Integer.valueOf(edShouhuo.getText().toString());
-                if (shouhuo*t/l>(yuqi-yihou)){
+                result = yihou+shouhuo*t/l;
+                if (yuqi-result<0){
                     ToastUtil.toast("收货数大于预期数-已收数");
-                    return false;
+                    return 0;
+                }else if (yuqi-result>0){
+                    return 1;
                 }
             }
         }
-        return true;
+        return 2;
     }
 
     private void commit(){
@@ -467,7 +486,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 ToastUtil.toast("收货库位不能为空");
                 return;
             }
-            if (checkData()){
+            if (checkData()!=0){
                 Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
                 intent1.putExtra("listlost", listLotBeans);//动态数组
                 intent1.putExtra("epclis", epclis);//扫描的EPC
@@ -476,6 +495,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 intent1.putExtra("uom", selected);
                 intent1.putExtra("stockLoc", stockLoc);
                 intent1.putExtra("trackCode", trackCode);
+                intent1.putExtra("stockInId",stockInId);
+                intent1.putExtra("orderNo",orderNo);
                 startActivityForResult(intent1, RAG);
             }
         }

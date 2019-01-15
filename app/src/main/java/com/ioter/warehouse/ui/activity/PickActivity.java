@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
 import com.ioter.warehouse.common.util.SoundManage;
+import com.ioter.warehouse.common.util.ToastUtil;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import butterknife.BindView;
@@ -48,6 +49,18 @@ public class PickActivity extends NewBaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN){
+            switch (event.getKeyCode()){
+                case 66:
+                    takeData();
+                    break;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
     //扫条码
     private void ScanBarcode() {
         if (AppApplication.barcode2DWithSoft != null) {
@@ -75,6 +88,7 @@ public class PickActivity extends NewBaseActivity {
     private void takeData(){
         String barCode = etDanhao.getText().toString();
         if (TextUtils.isEmpty(barCode)) {
+            ToastUtil.toast("出库单号不能为空，请扫描/输入出库单号");
             return;
         }
         Intent intent = new Intent(PickActivity.this, PickMessActivity.class);
