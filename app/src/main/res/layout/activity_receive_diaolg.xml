@@ -142,7 +142,9 @@
                 android:id="@+id/paiking_record"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:listSelector="#00000000"
                 android:dividerHeight="0dp"
+                android:scrollbars="none"
                 android:divider="@null"
                 ></com.ioter.warehouse.ui.widget.AutoListView>
 

@@ -155,7 +155,7 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                     value = epc.getData1();
                     text = epc.getData1();
                 }else {
-                    if (name==2){
+                    if (name==1){
                         value = epc.getData1();
                         text = epc.getData2();
                     }else {
@@ -163,7 +163,8 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                         text = epc.getData1();
                     }
                 }
-
+               receiveDialogadapter.setSelectedPosition(position);
+                receiveDialogadapter.notifyDataSetInvalidated();
             }
         });
         takeData();

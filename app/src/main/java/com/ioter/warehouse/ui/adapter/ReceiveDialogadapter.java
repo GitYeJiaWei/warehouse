@@ -1,10 +1,12 @@
 package com.ioter.warehouse.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ioter.warehouse.R;
@@ -21,6 +23,10 @@ public class ReceiveDialogadapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     //类型
     private int type;
+    private int selectedPosition = -1;// 选中的位置
+    public void setSelectedPosition(int position) {
+        selectedPosition = position;
+    }
 
     public ReceiveDialogadapter(Context _context,int _type){
         this.context=_context;
@@ -75,10 +81,10 @@ public class ReceiveDialogadapter extends BaseAdapter {
         ListItemView listItemView =null;
         if (convertView ==null){
             //获取list_item布局文件的视图
-
             convertView = layoutInflater.inflate(R.layout.dialog_list_item,null);
             //获取控件对象
             listItemView =new ListItemView();
+            listItemView.lin_item = convertView.findViewById(R.id.lin_item);
             if (type==4){
                 listItemView.total  = (TextView) convertView.findViewById(R.id.tv_num);
                 listItemView.left = (TextView) convertView.findViewById(R.id.tv_left);
@@ -95,6 +101,13 @@ public class ReceiveDialogadapter extends BaseAdapter {
         else{
             listItemView = (ReceiveDialogadapter.ListItemView)convertView.getTag();
         }
+
+        if (selectedPosition == position) {
+            listItemView.lin_item.setBackgroundColor(Color.BLUE);
+        } else {
+            listItemView.lin_item.setBackgroundColor(Color.TRANSPARENT);
+        }
+
 
         final EPC m1=(EPC) this.getItem(position);
         if (type==4){
@@ -114,5 +127,6 @@ public class ReceiveDialogadapter extends BaseAdapter {
      */
     public final class ListItemView{
         TextView total,left,right;
+        LinearLayout lin_item;
     }
 }

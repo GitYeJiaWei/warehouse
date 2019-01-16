@@ -5,6 +5,7 @@
     android:layout_height="36dp">
 
         <LinearLayout
+            android:id="@+id/lin_item"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="@dimen/ed_height">
