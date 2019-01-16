@@ -8,10 +8,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.bean.BaseEpc;
 import com.ioter.warehouse.common.ActivityCollecter;
+import com.ioter.warehouse.common.ScreenUtils;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
@@ -96,6 +99,21 @@ public class NewBaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ActivityCollecter.removeActivity(this);
+    }
+
+    //隐藏软键盘
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                View view = getCurrentFocus();
+                ScreenUtils.hideKeyboard(ev, view, NewBaseActivity.this);//调用方法判断是否需要隐藏键盘
+                break;
+
+            default:
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     protected boolean loopFlag = false;

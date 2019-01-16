@@ -1,6 +1,7 @@
 package com.ioter.warehouse.ui.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,9 +104,25 @@ public class ReceiveDialogadapter extends BaseAdapter {
         }
 
         if (selectedPosition == position) {
-            listItemView.lin_item.setBackgroundColor(Color.BLUE);
+            listItemView.lin_item.setBackgroundResource(R.color.colorPrimary);
+            if (type==4){
+                listItemView.total.setTextColor(Color.WHITE);
+                listItemView.left.setTextColor(Color.WHITE);
+            }else {
+                listItemView.total.setTextColor(Color.WHITE);
+                listItemView.left.setTextColor(Color.WHITE);
+                listItemView.right.setTextColor(Color.WHITE);
+            }
         } else {
             listItemView.lin_item.setBackgroundColor(Color.TRANSPARENT);
+            if (type==4){
+                listItemView.total.setTextColor(Color.GRAY);
+                listItemView.left.setTextColor(Color.GRAY);
+            }else {
+                listItemView.total.setTextColor(Color.GRAY);
+                listItemView.left.setTextColor(Color.GRAY);
+                listItemView.right.setTextColor(Color.GRAY);
+            }
         }
 
 

@@ -93,7 +93,6 @@ public class ReceiveDateActivity extends NewBaseActivity {
 
             int type = listLotBeans.get(i).getType();
             String value = listLotBeans.get(i).getValue();
-
             if (type == 1) {
                 //下拉框
                 Map<String, String> map = AppApplication.getGson().fromJson(listLotBeans.get(i).getListOption().toString(), Map.class);
@@ -140,6 +139,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 });
+                spinner.setBackgroundResource(R.drawable.back_text_white);
                 // 动态把控件添加到
                 layoutContent.addView(spinner);
             } else if (type == 2) {
@@ -179,7 +179,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 // 此处得到选择的时间，可以进行你想要的操作
-                                textView.setText("您选择了：" + year + "年" + (monthOfYear + 1) + "月" + dayOfMonth + "日");
+                                textView.setText("您选择了：" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                                 map1.put(v.getId(), year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                             }
                         }
@@ -189,6 +189,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                                 , calendar.get(Calendar.DAY_OF_MONTH)).show();
                     }
                 });
+                textView.setBackgroundResource(R.drawable.back_text_white);
                 layoutContent.addView(textView);
 
             } else if (type == 3) {
@@ -227,8 +228,8 @@ public class ReceiveDateActivity extends NewBaseActivity {
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        textView.setText("您选择了：" + hourOfDay + "时" + minute + "分");
-                                        map1.put(v.getId(), hourOfDay + "-" + minute);
+                                        textView.setText("您选择了：" + hourOfDay + ":" + minute);
+                                        map1.put(v.getId(), hourOfDay + ":" + minute);
                                     }
                                 }
                                 // 设置初始时间
@@ -238,6 +239,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                                 , true).show();
                     }
                 });
+                textView.setBackgroundResource(R.drawable.back_text_white);
                 layoutContent.addView(textView);
 
             } else if (type == 4) {
@@ -260,17 +262,15 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     }
                 });
 
-                editText.setBackgroundResource(R.drawable.back_text);
+                editText.setBackgroundResource(R.drawable.back_text_white);
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 layoutContent.addView(editText);
 
             } else if (type == 5) {
                 //弹出框
                 final Button button = new Button(this);
-
                 button.setText(value);
                 button.setId(itemId);
-
                 final WindowsModelBean windowsModelBean = listLotBeans.get(i).getWindowsModel();
                 if (!map1.containsKey(itemId)) {
                     map1.put(itemId, windowsModelBean.getTextField());
@@ -287,6 +287,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                         startActivityForResult(intent1, RAG);
                     }
                 });
+                button.setBackgroundResource(R.drawable.back_text_white);
                 layoutContent.addView(button);
             } else if (type == 6) {
                 //文本框
@@ -314,7 +315,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                     }
                 });
 
-                editText.setBackgroundResource(R.drawable.back_text);
+                editText.setBackgroundResource(R.drawable.back_text_white);
                 layoutContent.addView(editText);
             } else {
                 return;
