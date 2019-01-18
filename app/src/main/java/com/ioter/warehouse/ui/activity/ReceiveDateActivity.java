@@ -278,10 +278,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (map1.containsKey(v.getId())) {
-                            map1.remove(v.getId());
-                            RAG = v.getId();
-                        }
+                        RAG = v.getId();
                         Intent intent1 = new Intent(ReceiveDateActivity.this, ReceiveDiaolgActivity.class);
                         intent1.putExtra("windowsModelBean", windowsModelBean);
                         startActivityForResult(intent1, RAG);
@@ -333,6 +330,9 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 String value = data.getStringExtra("value");
                 String text = data.getStringExtra("text");
                 if (!TextUtils.isEmpty(value) && !TextUtils.isEmpty(text)) {
+                    if (map1.containsKey(RAG)) {
+                        map1.remove(RAG);
+                    }
                     map1.put(RAG, value);
                     Button v = findViewById(RAG);
                     v.setText(text);

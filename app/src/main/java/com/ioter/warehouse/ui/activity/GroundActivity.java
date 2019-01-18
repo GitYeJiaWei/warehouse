@@ -1,6 +1,5 @@
 package com.ioter.warehouse.ui.activity;
 
-import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -64,6 +63,10 @@ public class GroundActivity extends NewBaseActivity {
     Button btnCancel;
     @BindView(R.id.tv_tick)
     TextView tvTick;
+    @BindView(R.id.edt_yishangjia)
+    EditText edtYishangjia;
+    @BindView(R.id.edt_genzonghao)
+    EditText edtGenzonghao;
     private CustomProgressDialog progressDialog;
     private int a = 1;
     private HashMap<String, String> map = new HashMap<>();
@@ -76,12 +79,12 @@ public class GroundActivity extends NewBaseActivity {
         ButterKnife.bind(this);
 
         setTitle("上架");
-        edKuwei.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        edChanpin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    edKuwei.setFocusableInTouchMode(true);
-                    edKuwei.requestFocus();
+                    edChanpin.setFocusableInTouchMode(true);
+                    edChanpin.requestFocus();
                     a = 2;
                 }
             }
@@ -93,6 +96,16 @@ public class GroundActivity extends NewBaseActivity {
                     edGenzonghao.setFocusableInTouchMode(true);
                     edGenzonghao.requestFocus();
                     a = 1;
+                }
+            }
+        });
+        edKuwei.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edKuwei.setFocusableInTouchMode(true);
+                    edKuwei.requestFocus();
+                    a = 3;
                 }
             }
         });
@@ -140,7 +153,7 @@ public class GroundActivity extends NewBaseActivity {
     }
 
     private void showUI() {
-        if (hashMap == null || hashMap.size()==0) {
+        if (hashMap == null || hashMap.size() == 0) {
             ToastUtil.toast("不存在该跟踪号，请重新扫描/输入");
             return;
         }
@@ -150,12 +163,12 @@ public class GroundActivity extends NewBaseActivity {
             return;
         } else {
             a = 3;
-            tvTick.setText("请扫描/输入目标库位");
+            tvTick.setText("请扫描/输入目标库位，并选择/填写相关信息");
             Iterator it = hashMap.keySet().iterator();
             while (it.hasNext()) {
                 String key = (String) it.next();
                 ArrayList<TrackBean> trackBean = hashMap.get(key);
-                efShuliang.setText(trackBean.get(0).getShelfQty() + "");
+                edtYishangjia.setText(trackBean.get(0).getShelfQty() + "");
                 edtBaozhuang.setText(trackBean.get(0).getPacking());
                 edZongshu.setText(trackBean.get(0).getAlreadyQty() + "");
                 edtKuwei.setText(trackBean.get(0).getRecommendLoc());
@@ -182,7 +195,7 @@ public class GroundActivity extends NewBaseActivity {
             return;
         }
         ArrayList<TrackBean> trackBean = hashMap.get(barCode);
-        efShuliang.setText(trackBean.get(0).getShelfQty() + "");
+        edtYishangjia.setText(trackBean.get(0).getShelfQty() + "");
         edtBaozhuang.setText(trackBean.get(0).getPacking());
         edZongshu.setText(trackBean.get(0).getAlreadyQty() + "");
         edtKuwei.setText(trackBean.get(0).getRecommendLoc());
@@ -190,7 +203,7 @@ public class GroundActivity extends NewBaseActivity {
         init(trackBean.get(0).getListUom());
         a = 3;
         tvSize.setText(map.size() + 1 + "/" + hashMap.size());
-        tvTick.setText("请扫描/输入目标库位");
+        tvTick.setText("请扫描/输入目标库位,并选择/填写相关信息");
     }
 
     private void init(List<ListUomBean> list) {
@@ -238,15 +251,18 @@ public class GroundActivity extends NewBaseActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN){
-            switch (event.getKeyCode()){
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (event.getKeyCode()) {
                 case 66:
                     if (a == 2) {
                         String bar = edChanpin.getText().toString();
                         showUIT(bar);
                     } else if (a == 1) {
                         String bar = edGenzonghao.getText().toString();
+                        edtGenzonghao.setText(bar);
                         takeData(bar);
+                    }else if (a==3){
+                        takeData();
                     }
                     break;
             }
@@ -276,6 +292,7 @@ public class GroundActivity extends NewBaseActivity {
                         showUIT(barCode);
                     } else if (a == 1) {
                         edGenzonghao.setText(barCode);
+                        edtGenzonghao.setText(barCode);
                         takeData(barCode);
                     } else if (a == 3) {
                         edKuwei.setText(barCode);
@@ -288,29 +305,69 @@ public class GroundActivity extends NewBaseActivity {
     };
 
     //清除数据
-    private void takeclear(){
-        tvTick.setText("请扫描/输入跟踪号");
-        edGenzonghao.setText("");
-        edChanpin.setText("");
-        efShuliang.setText("");
-        edtBaozhuang.setText("");
-        edZongshu.setText("");
-        edKuwei.setText("");
-        edtKuwei.setText("");
-        edtPinming.setText("");
-        selected = null;
-        a=1;
+    private void takeclear(int b) {
+        if (b == 1){
+            tvTick.setText("请扫描/输入跟踪号");
+            edGenzonghao.setText("");
+            edtGenzonghao.setText("");
+            edChanpin.setText("");
+            efShuliang.setText("");
+            edtBaozhuang.setText("");
+            edZongshu.setText("");
+            edKuwei.setText("");
+            edtKuwei.setText("");
+            edtPinming.setText("");
+            edtYishangjia.setText("");
+            selected = null;
+            a = 1;
+            tvSize.setText("");
+        }{
+            tvTick.setText("请扫描/输入产品");
+            edChanpin.setText("");
+            efShuliang.setText("");
+            edtBaozhuang.setText("");
+            edZongshu.setText("");
+            edKuwei.setText("");
+            edtKuwei.setText("");
+            edtPinming.setText("");
+            edtYishangjia.setText("");
+            selected = null;
+            a = 2;
+        }
+
     }
 
     private void takeData() {
-        String trackCode = edGenzonghao.getText().toString();
+        String trackCode = edtGenzonghao.getText().toString();
         String qty = efShuliang.getText().toString();
         String loc = edKuwei.getText().toString();
         String chan = edChanpin.getText().toString();
 
+        if (TextUtils.isEmpty(chan)){
+            ToastUtil.toast("产品不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(qty)){
+            ToastUtil.toast("上架数量不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(loc)){
+            ToastUtil.toast("目标库位不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(trackCode)){
+            ToastUtil.toast("目标跟踪号不能为空");
+            return;
+        }
+
         TrackBean trackBean = null;
         if (hashMap != null && !edChanpin.getText().equals("")) {
             trackBean = (TrackBean) hashMap.get(chan).get(0);
+        }
+
+        if (trackBean==null){
+            ToastUtil.toast("产品与相关数据不符");
+            return;
         }
 
         progressDialog = new CustomProgressDialog(this, "提交数据中...");
@@ -325,7 +382,6 @@ public class GroundActivity extends NewBaseActivity {
         params.put("loc", loc);
         params.put("userId", ACacheUtils.getUserId());
 
-
         AppApplication.getApplication().getAppComponent().getApiService().Shelf(params).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this) {
             @Override
@@ -333,12 +389,12 @@ public class GroundActivity extends NewBaseActivity {
                 if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
                     String bar = edChanpin.getText().toString();
-                    if (!TextUtils.isEmpty(bar)){
-                        map.put(bar,bar);
-                        if (map.size()==hashMap.size()){
-                            finish();
-                        }else {
-                            takeclear();
+                    if (!TextUtils.isEmpty(bar)) {
+                        map.put(bar, bar);
+                        if (map.size() == hashMap.size()) {
+                            takeclear(1);
+                        } else {
+                            takeclear(2);
                         }
                     }
                 } else {

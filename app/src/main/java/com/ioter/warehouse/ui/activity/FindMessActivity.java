@@ -15,6 +15,7 @@ import com.ioter.warehouse.bean.GetStock;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ToastUtil;
 import com.ioter.warehouse.ui.fragment.FindMessFragment;
 
 import java.util.ArrayList;
@@ -106,6 +107,7 @@ public class FindMessActivity extends NewBaseActivity implements FindMessFragmen
 
     private void showUI(String abc) {
         if (map == null) {
+            ToastUtil.toast("库存查询失败，请返回重新查询");
             return;
         }
 

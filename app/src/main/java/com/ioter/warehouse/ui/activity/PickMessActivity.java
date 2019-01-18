@@ -27,6 +27,7 @@ import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,6 +73,7 @@ public class PickMessActivity extends NewBaseActivity {
     private CustomProgressDialog progressDialog;
     private ConcurrentHashMap<Integer, PickModel> map = new ConcurrentHashMap<>();
     private HashMap<Integer,Integer> map1 = new HashMap<>();
+    private HashMap<String,Double> doubMap = new HashMap<>();
     private int current = 1;
     private String selected =null;
     private int a =1;
@@ -210,6 +212,7 @@ public class PickMessActivity extends NewBaseActivity {
     }
 
     private void init(List<ListUomBean> list) {
+        doubMap.clear();
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
@@ -218,6 +221,7 @@ public class PickMessActivity extends NewBaseActivity {
         ArrayList<String> arrayList = new ArrayList<>();
         int select = 0;
         for (int i = 0; i < list.size(); i++) {
+            doubMap.put(list.get(i).getUom(),list.get(i).getQty());
             arrayList.add(list.get(i).getUom());
             if (list.get(i).isIsDefault()) {
                 select = i;
@@ -244,6 +248,27 @@ public class PickMessActivity extends NewBaseActivity {
         });
     }
 
+    //判断收货数据大小是否合理
+    private int checkData(){
+        Iterator it = doubMap.keySet().iterator();
+        while (it.hasNext()){
+            String key = (String) it.next();
+            if (key.equals(selected)){
+                double t = doubMap.get(key);
+                double l = doubMap.get("EA");
+                double yuqi =Double.valueOf(edJianhuo.getText().toString());
+                int shouhuo = Integer.valueOf(edShuliang.getText().toString());
+                if (yuqi-shouhuo*t/l<0){
+                    //ToastUtil.toast("盘点数量超出标准，请重新输入");
+                    return 0;
+                }else if (yuqi-shouhuo*t/l>0){
+                    return 1;
+                }
+            }
+        }
+        return 2;
+    }
+
     private void takeData(){
         String locId = edKuwei.getText().toString();
         String qty = edShuliang.getText().toString();
@@ -264,7 +289,7 @@ public class PickMessActivity extends NewBaseActivity {
             ToastUtil.toast("拣货数量不能为空");
             return;
         }
-        if (Integer.valueOf(qty)>map.get(current).getPickQty()){
+        if (checkData()==0){
             ToastUtil.toast("拣货数量超出标准，请重新输入");
             return;
         }

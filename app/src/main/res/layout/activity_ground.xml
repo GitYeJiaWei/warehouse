@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     >
@@ -50,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
-                android:text="跟踪号"
+                android:text="源跟踪号"
                 android:textSize="18sp" />
 
             <EditText
@@ -131,6 +132,21 @@
                 android:singleLine="true" />
 
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="包装规格"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/edt_baozhuang"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:enabled="false"
+                android:background="@drawable/back_text_gray"
+                android:gravity="center"
+                android:singleLine="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -171,11 +187,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="包装规格"
+                        android:text="已上架EA"
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/edt_baozhuang"
+                        android:id="@+id/edt_yishangjia"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/ed_height"
                         android:enabled="false"
@@ -194,7 +210,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="上架总数"
+                        android:text="上架数EA"
                         android:textSize="18sp" />
 
                     <EditText
@@ -218,6 +234,21 @@
 
             <EditText
                 android:id="@+id/ed_kuwei"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ed_height"
+                android:background="@drawable/back_text"
+                android:gravity="center"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="目标跟踪号"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/edt_genzonghao"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ed_height"
                 android:background="@drawable/back_text"

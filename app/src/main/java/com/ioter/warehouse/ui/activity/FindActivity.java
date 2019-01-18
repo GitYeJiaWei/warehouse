@@ -2,6 +2,7 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -122,7 +123,7 @@ public class FindActivity extends NewBaseActivity {
             case R.id.bt_sure:
                 String locId = etDanhao.getText().toString();
                 String productId = etDingdan.getText().toString();
-                if (locId == null || productId == null) {
+                if (TextUtils.isEmpty(locId) || TextUtils.isEmpty(productId)) {
                     tvTick.setText("库位和产品不能为空");
                     return;
                 }

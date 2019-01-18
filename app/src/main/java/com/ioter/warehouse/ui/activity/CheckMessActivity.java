@@ -2,6 +2,8 @@ package com.ioter.warehouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,7 +20,9 @@ import com.ioter.warehouse.bean.StockTake;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
 import com.ioter.warehouse.common.util.ACacheUtils;
+import com.ioter.warehouse.common.util.SoundManage;
 import com.ioter.warehouse.common.util.ToastUtil;
+import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,10 +69,16 @@ public class CheckMessActivity extends NewBaseActivity {
     Spinner spCangku;
     @BindView(R.id.ed_danwei)
     EditText edDanwei;
+    @BindView(R.id.tv_tick)
+    TextView tvTick;
     private int current = 1;
     private HashMap<Integer, StockTake> map1 = new HashMap<>();
+    private HashMap<Integer,Integer> intmap1= new HashMap<>();
+    private HashMap<String,Double> doubMap = new HashMap<>();
     private String selected = null;
     private CustomProgressDialog progressDialog;
+    private int a = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +89,26 @@ public class CheckMessActivity extends NewBaseActivity {
         setTitle("库存盘点");
 
         initView();
+        edKuwei.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edKuwei.setFocusableInTouchMode(true);
+                    edKuwei.requestFocus();
+                    a = 1;
+                }
+            }
+        });
+        etShangpin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    etShangpin.setFocusableInTouchMode(true);
+                    etShangpin.requestFocus();
+                    a = 2;
+                }
+            }
+        });
     }
 
     private void initView() {
@@ -129,16 +159,80 @@ public class CheckMessActivity extends NewBaseActivity {
         showUI("nor");
     }
 
-    private void takeUI(int a) {
-        edMubiao.setText(map1.get(a).getLoc());
-        edPinming.setText(map1.get(a).getProductName());
-        etShangpin.setText(map1.get(a).getProductId());
-        edKucun.setText(map1.get(a).getQty() + "");
-        edtBaozhuang.setText(map1.get(a).getPacking());
-        initView(map1.get(a).getListUom());
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == 139 || keyCode == 280) {
+            if (event.getRepeatCount() == 0) {
+                ScanBarcode();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    //扫条码
+    private void ScanBarcode() {
+        if (AppApplication.barcode2DWithSoft != null) {
+            AppApplication.barcode2DWithSoft.scan();
+            AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
+        }
+    }
+
+    public Barcode2DWithSoft.ScanCallback
+            ScanBack = new Barcode2DWithSoft.ScanCallback() {
+        @Override
+        public void onScanComplete(int i, int length, byte[] bytes) {
+            if (length < 1) {
+            } else {
+                final String barCode = new String(bytes, 0, length);
+                if (barCode != null && barCode.length() > 0) {
+                    SoundManage.PlaySound(CheckMessActivity.this, SoundManage.SoundType.SUCCESS);
+                    if (a == 2) {
+                        etShangpin.setText(barCode);
+                        if (!barCode.equals(map1.get(current).getProductId())) {
+                            ToastUtil.toast("商品编码不一致，请重新扫描");
+                            a = 2;
+                        } else {
+                            tvTick.setText("请输入盘点数量，并提交");
+                        }
+                    } else if (a == 1) {
+                        edKuwei.setText(barCode);
+                        if (barCode.equals(map1.get(current).getLoc())) {
+                            a = 2;
+                            tvTick.setText("请扫描/输入商品");
+                        } else {
+                            ToastUtil.toast("目标库位不一致，请重新扫描");
+                            a = 1;
+                            tvTick.setText("请扫描/输入目标库位");
+                        }
+                    } else {
+                        return;
+                    }
+                }
+            }
+        }
+    };
+
+    private void takeUI(int b) {
+        if (intmap1.containsKey(current)){
+            tvTick.setText("该单号已提交");
+            ToastUtil.toast("该单号已提交");
+        }else {
+            tvTick.setText("请扫描/输入目标库位");
+        }
+        a=1;
+        edKuwei.setText("");
+        etShangpin.setText("");
+        edPandian.setText("");
+
+        edMubiao.setText(map1.get(b).getLoc());
+        edPinming.setText(map1.get(b).getProductName());
+        edKucun.setText(map1.get(b).getQty() + "");
+        edtBaozhuang.setText(map1.get(b).getPacking());
+        initView(map1.get(b).getListUom());
     }
 
     private void initView(List<ListUomBean> list) {
+        doubMap.clear();
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
@@ -147,6 +241,7 @@ public class CheckMessActivity extends NewBaseActivity {
         ArrayList<String> arrayList = new ArrayList<>();
         int select = 0;
         for (int i = 0; i < list.size(); i++) {
+            doubMap.put(list.get(i).getUom(),list.get(i).getQty());
             arrayList.add(list.get(i).getUom());
             if (list.get(i).isIsDefault()) {
                 select = i;
@@ -164,6 +259,7 @@ public class CheckMessActivity extends NewBaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected = parent.getItemAtPosition(position).toString();
+                edPandian.setText("");
             }
 
             @Override
@@ -173,12 +269,54 @@ public class CheckMessActivity extends NewBaseActivity {
         });
     }
 
+    //判断收货数据大小是否合理
+    private int checkData(){
+        Iterator it = doubMap.keySet().iterator();
+        while (it.hasNext()){
+            String key = (String) it.next();
+            if (key.equals(selected)){
+                double t = doubMap.get(key);
+                double l = doubMap.get("EA");
+                double yuqi =Double.valueOf(edKucun.getText().toString());
+                int shouhuo = Integer.valueOf(edPandian.getText().toString());
+                if (yuqi-shouhuo*t/l<0){
+                    //ToastUtil.toast("盘点数量超出标准，请重新输入");
+                    return 0;
+                }else if (yuqi-shouhuo*t/l>0){
+                    return 1;
+                }
+            }
+        }
+        return 2;
+    }
+
     private void takeData() {
-        progressDialog = new CustomProgressDialog(this, "提交数据中...");
-        progressDialog.show();
         String loc = edMubiao.getText().toString();
         String qty = edPandian.getText().toString();
+        String productId = etShangpin.getText().toString();
+        if (!loc.equals(map1.get(current).getLoc())){
+            ToastUtil.toast("目标库位不一致，请重新扫描");
+            a = 1;
+            tvTick.setText("请扫描/输入目标库位");
+            return;
+        }
+        if (!productId.equals(map1.get(current).getProductId())){
+            ToastUtil.toast("商品编码不一致，请重新扫描");
+            a = 2;
+            tvTick.setText("请扫描/输入商品");
+            return;
+        }
+        if (TextUtils.isEmpty(qty)){
+            ToastUtil.toast("盘点数量不能为空");
+            return;
+        }
+        if (checkData()==0){
+            ToastUtil.toast("盘点数量超出标准，请重新输入");
+            return;
+        }
 
+        progressDialog = new CustomProgressDialog(this, "提交数据中...");
+        progressDialog.show();
 
         Map<String, String> params = new HashMap<>();
         params.put("taskId", map1.get(current).getTaskId());
@@ -194,6 +332,11 @@ public class CheckMessActivity extends NewBaseActivity {
             public void onNext(BaseBean baseBean) {
                 if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
+                    tvTick.setText("提交成功");
+                    intmap1.put(current,current);
+                    if (intmap1.size()==map1.size()){
+                        finish();
+                    }
                 } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());
                 }
@@ -258,7 +401,6 @@ public class CheckMessActivity extends NewBaseActivity {
                 break;
             case R.id.bt_sure:
                 takeData();
-                finish();
                 break;
             case R.id.bt_left:
                 showUI("left");
