@@ -26,6 +26,7 @@ import com.ioter.warehouse.ui.dialog.BaseDialog;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -72,7 +73,7 @@ public class PickMessActivity extends NewBaseActivity {
     Spinner spCangku;
     private CustomProgressDialog progressDialog;
     private ConcurrentHashMap<Integer, PickModel> map = new ConcurrentHashMap<>();
-    private HashMap<Integer,Integer> map1 = new HashMap<>();
+    private ConcurrentHashMap<Integer, PickModel> map1 = new ConcurrentHashMap<>();
     private HashMap<String,Double> doubMap = new HashMap<>();
     private int current = 1;
     private String selected =null;
@@ -93,6 +94,7 @@ public class PickMessActivity extends NewBaseActivity {
                     edKuwei.setFocusableInTouchMode(true);
                     edKuwei.requestFocus();
                     a = 1;
+                    tvTick.setText("请扫描/输入原始库位");
                 }
             }
         });
@@ -103,6 +105,7 @@ public class PickMessActivity extends NewBaseActivity {
                     etChanpin.setFocusableInTouchMode(true);
                     etChanpin.requestFocus();
                     a = 2;
+                    tvTick.setText("请扫描/输入产品编码");
                 }
             }
         });
@@ -114,6 +117,8 @@ public class PickMessActivity extends NewBaseActivity {
 
         String stockOutId = getIntent().getStringExtra("stockOutId");
 
+        map1.clear();
+        map.clear();
         Map<String, String> params = new HashMap<>();
         params.put("stockOutId", stockOutId);
 
@@ -122,12 +127,11 @@ public class PickMessActivity extends NewBaseActivity {
                     @Override
                     public void onNext(List<PickModel> recommendWhSites) {
                         if (recommendWhSites != null && recommendWhSites.size() > 0) {
-                            map1.clear();
-                            map.clear();
                             int key = 1;
                             try {
                                 for (PickModel info : recommendWhSites) {
                                     map.put(key, info);
+                                    map1.put(key,info);
                                     key++;
                                 }
                             } catch (Exception e) {
@@ -150,6 +154,25 @@ public class PickMessActivity extends NewBaseActivity {
                 });
     }
 
+    private void remakeData(){
+        map.clear();
+        Object[] key_arr = map1.keySet().toArray();
+        Arrays.sort(key_arr);
+        int current1 = 1;
+        for (Object key2 : key_arr) {
+            int kk = (int) key2;
+            map.put(current1, map1.get(kk));
+            current1++;
+        }
+        map1.clear();
+        Iterator it = map.keySet().iterator();
+        while (it.hasNext()){
+            int key = (int)it.next();
+            map1.put(key,map.get(key));
+        }
+        showUI("nor");
+    }
+
     private void showUI(String abc) {
         if (map == null || map.size() == 0) {
             ToastUtil.toast("出库单号不存在");
@@ -158,6 +181,7 @@ public class PickMessActivity extends NewBaseActivity {
 
         if (abc.equals("nor")) {
             current = 1;
+            takeclear();
             takeUI(current);
         } else if (abc.equals("left")) {
             if (current == 1) {
@@ -311,11 +335,11 @@ public class PickMessActivity extends NewBaseActivity {
             public void onNext(BaseBean baseBean) {
                 if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
-                    map1.put(current,current);
-                    if (map1.size()==map.size()){
+                    if (map1.size()==0){
                         finish();
                     }else {
-                        tvTick.setText("提交成功");
+                        map1.remove(current);
+                        remakeData();
                     }
                 } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());

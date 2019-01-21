@@ -57,6 +57,7 @@ public class CheckActivity extends NewBaseActivity {
                     etPandian.setFocusableInTouchMode(true);
                     etPandian.requestFocus();
                     a = 1;
+                    tvTick.setText("请扫描/输入盘点单");
                 }
             }
         });
@@ -67,6 +68,7 @@ public class CheckActivity extends NewBaseActivity {
                     edKaishi.setFocusableInTouchMode(true);
                     edKaishi.requestFocus();
                     a = 2;
+                    tvTick.setText("请扫描/输入开始任务号");
                 }
             }
         });
@@ -77,6 +79,7 @@ public class CheckActivity extends NewBaseActivity {
                     edJieshu.setFocusableInTouchMode(true);
                     edJieshu.requestFocus();
                     a = 3;
+                    tvTick.setText("请扫描/输入结束任务号");
                 }
             }
         });
@@ -111,6 +114,23 @@ public class CheckActivity extends NewBaseActivity {
                     @Override
                     public void onComplete() {
                         progressDialog.dismiss();
+                        String start = edKaishi.getText().toString();
+                        String end = edJieshu.getText().toString();
+                        if (map == null || map.size()==0) {
+                            tvTick.setText("该盘点单不存在，请重新扫描");
+                            return;
+                        }
+                        if (start == null || start.equals("")) {
+                            start = "start";
+                        }
+                        if (end == null || end.equals("")) {
+                            end = "end";
+                        }
+                        Intent intent = new Intent(CheckActivity.this, CheckMessActivity.class);
+                        intent.putExtra("list", map);
+                        intent.putExtra("start", start);
+                        intent.putExtra("end", end);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -153,7 +173,6 @@ public class CheckActivity extends NewBaseActivity {
                         a = 3;
                     } else if (a == 1) {
                         etPandian.setText(barCode);
-                        takeData(barCode);
                         a = 2;
                     } else if (a == 3) {
                         edJieshu.setText(barCode);
@@ -170,23 +189,8 @@ public class CheckActivity extends NewBaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_sure:
-                String start = edKaishi.getText().toString();
-                String end = edJieshu.getText().toString();
-                if (map == null || map.size()==0) {
-                    tvTick.setText("该盘点单不存在，请重新扫描");
-                    return;
-                }
-                if (start == null || start.equals("")) {
-                    start = "start";
-                }
-                if (end == null || end.equals("")) {
-                    end = "end";
-                }
-                Intent intent = new Intent(CheckActivity.this, CheckMessActivity.class);
-                intent.putExtra("list", map);
-                intent.putExtra("start", start);
-                intent.putExtra("end", end);
-                startActivity(intent);
+                String bar = etPandian.getText().toString();
+                takeData(bar);
                 break;
             case R.id.btn_cancel:
                 finish();

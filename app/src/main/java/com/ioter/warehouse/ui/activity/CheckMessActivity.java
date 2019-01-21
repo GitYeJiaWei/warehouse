@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,8 +74,7 @@ public class CheckMessActivity extends NewBaseActivity {
     TextView tvTick;
     private int current = 1;
     private HashMap<Integer, StockTake> map1 = new HashMap<>();
-    private HashMap<Integer,Integer> intmap1= new HashMap<>();
-    private HashMap<String,Double> doubMap = new HashMap<>();
+    private ConcurrentHashMap<Integer, StockTake> cmap = new ConcurrentHashMap<>();
     private String selected = null;
     private CustomProgressDialog progressDialog;
     private int a = 1;
@@ -96,6 +96,7 @@ public class CheckMessActivity extends NewBaseActivity {
                     edKuwei.setFocusableInTouchMode(true);
                     edKuwei.requestFocus();
                     a = 1;
+                    tvTick.setText("请扫描/输入目标库位");
                 }
             }
         });
@@ -106,6 +107,7 @@ public class CheckMessActivity extends NewBaseActivity {
                     etShangpin.setFocusableInTouchMode(true);
                     etShangpin.requestFocus();
                     a = 2;
+                    tvTick.setText("请扫描/输入商品编码");
                 }
             }
         });
@@ -152,9 +154,29 @@ public class CheckMessActivity extends NewBaseActivity {
         for (Object key2 : key_arr) {
             int kk = (int) key2;
             if (kk >= key && kk <= keydown) {
+                cmap.put(current1, map.get(kk));
                 map1.put(current1, map.get(kk));
                 current1++;
             }
+        }
+        showUI("nor");
+    }
+
+    private void remakeData() {
+        map1.clear();
+        Object[] key_arr = cmap.keySet().toArray();
+        Arrays.sort(key_arr);
+        int current1 = 1;
+        for (Object key2 : key_arr) {
+            int kk = (int) key2;
+            map1.put(current1, cmap.get(kk));
+            current1++;
+        }
+        cmap.clear();
+        Iterator it = map1.keySet().iterator();
+        while (it.hasNext()){
+            int key = (int)it.next();
+            cmap.put(key,map1.get(key));
         }
         showUI("nor");
     }
@@ -213,13 +235,7 @@ public class CheckMessActivity extends NewBaseActivity {
     };
 
     private void takeUI(int b) {
-        if (intmap1.containsKey(current)){
-            tvTick.setText("该单号已提交");
-            ToastUtil.toast("该单号已提交");
-        }else {
-            tvTick.setText("请扫描/输入目标库位");
-        }
-        a=1;
+        a = 1;
         edKuwei.setText("");
         etShangpin.setText("");
         edPandian.setText("");
@@ -232,7 +248,6 @@ public class CheckMessActivity extends NewBaseActivity {
     }
 
     private void initView(List<ListUomBean> list) {
-        doubMap.clear();
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
@@ -241,7 +256,6 @@ public class CheckMessActivity extends NewBaseActivity {
         ArrayList<String> arrayList = new ArrayList<>();
         int select = 0;
         for (int i = 0; i < list.size(); i++) {
-            doubMap.put(list.get(i).getUom(),list.get(i).getQty());
             arrayList.add(list.get(i).getUom());
             if (list.get(i).isIsDefault()) {
                 select = i;
@@ -269,49 +283,36 @@ public class CheckMessActivity extends NewBaseActivity {
         });
     }
 
-    //判断收货数据大小是否合理
-    private int checkData(){
-        Iterator it = doubMap.keySet().iterator();
-        while (it.hasNext()){
-            String key = (String) it.next();
-            if (key.equals(selected)){
-                double t = doubMap.get(key);
-                double l = doubMap.get("EA");
-                double yuqi =Double.valueOf(edKucun.getText().toString());
-                int shouhuo = Integer.valueOf(edPandian.getText().toString());
-                if (yuqi-shouhuo*t/l<0){
-                    //ToastUtil.toast("盘点数量超出标准，请重新输入");
-                    return 0;
-                }else if (yuqi-shouhuo*t/l>0){
-                    return 1;
-                }
-            }
-        }
-        return 2;
-    }
-
     private void takeData() {
-        String loc = edMubiao.getText().toString();
+        String loc = edKuwei.getText().toString();
         String qty = edPandian.getText().toString();
         String productId = etShangpin.getText().toString();
-        if (!loc.equals(map1.get(current).getLoc())){
+        if (TextUtils.isEmpty(loc)) {
+            ToastUtil.toast("目标库位不能为空");
+            a = 1;
+            tvTick.setText("请扫描/输入目标库位");
+            return;
+        }
+        if (!loc.equals(map1.get(current).getLoc())) {
             ToastUtil.toast("目标库位不一致，请重新扫描");
             a = 1;
             tvTick.setText("请扫描/输入目标库位");
             return;
         }
-        if (!productId.equals(map1.get(current).getProductId())){
+        if (TextUtils.isEmpty(productId)) {
+            ToastUtil.toast("商品编码不能为空");
+            a = 2;
+            tvTick.setText("请扫描/输入商品");
+            return;
+        }
+        if (!productId.equals(map1.get(current).getProductId())) {
             ToastUtil.toast("商品编码不一致，请重新扫描");
             a = 2;
             tvTick.setText("请扫描/输入商品");
             return;
         }
-        if (TextUtils.isEmpty(qty)){
+        if (TextUtils.isEmpty(qty)) {
             ToastUtil.toast("盘点数量不能为空");
-            return;
-        }
-        if (checkData()==0){
-            ToastUtil.toast("盘点数量超出标准，请重新输入");
             return;
         }
 
@@ -331,11 +332,17 @@ public class CheckMessActivity extends NewBaseActivity {
             @Override
             public void onNext(BaseBean baseBean) {
                 if (baseBean.success()) {
+                    a = 1;
+                    edKuwei.setText("");
+                    etShangpin.setText("");
+                    edPandian.setText("");
                     ToastUtil.toast("提交成功");
-                    tvTick.setText("提交成功");
-                    intmap1.put(current,current);
-                    if (intmap1.size()==map1.size()){
+                    tvTick.setText("请扫描/输入目标库位");
+                    if (cmap.size() == 1) {
                         finish();
+                    }else {
+                        cmap.remove(current);
+                        remakeData();
                     }
                 } else {
                     ToastUtil.toast("提交失败：" + baseBean.getMessage());
@@ -370,7 +377,7 @@ public class CheckMessActivity extends NewBaseActivity {
             current--;
             takeUI(current);
         } else if (abc.equals("right")) {
-            if (current == hashMap.size()) {
+            if (current == map1.size()) {
                 return;
             }
             current++;

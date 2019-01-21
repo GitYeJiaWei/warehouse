@@ -31,7 +31,7 @@ public class SettingActivity extends NewBaseActivity {
     Spinner spCangku;
     @BindView(R.id.sp_kuqu)
     Spinner spKuqu;
-    private String selected =null;
+    private String selected = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class SettingActivity extends NewBaseActivity {
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         /*静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
          * 第二个参数：已经编写好的数组
          * 第三个数据：默认的样式
@@ -73,28 +73,34 @@ public class SettingActivity extends NewBaseActivity {
          * 动态添显示下来菜单的选项，可以动态添加元素
          */
         List<String> list = ACacheUtils.getWhCodeWithUser();
+        if (list == null || list.size() == 0) {
+            return;
+        }
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
          * 第四个参数是将要显示的数据
          */
-        ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item,list);
+        ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.item, R.id.text_item, list);
         spCangku.setAdapter(adapter2);
-        if (list!=null){
-            String a = ACache.get(AppApplication.getApplication()).getAsString("UserName");
-            if (a!=null){
-                for (int i = 0; i < list.size(); i++) {
-                    if (a.equals(list.get(i))){
-                        //设置默认值
-                        spCangku.setSelection(i, true);
-                    }
+        String a = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (a != null) {
+            for (int i = 0; i < list.size(); i++) {
+                if (a.equals(list.get(i))) {
+                    //设置默认值
+                    spCangku.setSelection(i, true);
+                    selected = list.get(i);
                 }
-            }else {
-                //设置默认值
-                spCangku.setSelection(0, true);
             }
-
+            if (selected ==null){
+                selected = list.get(0);
+            }
+        } else {
+            //设置默认值
+            spCangku.setSelection(0, true);
+            selected = list.get(0);
         }
+
         spCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
