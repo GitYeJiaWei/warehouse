@@ -61,10 +61,12 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
     private String DefaultText = null;
     private ArrayList<String> ListTitle = null;
     private ArrayList<String> ListField = null;
+    private ArrayList<Boolean> listTitleVisable = null;
     private String value = null;
     private String text = null;
-    private String TextField,ValueField;
+    private String TextField, ValueField;
     private int name;
+    private int num = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,32 +76,39 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
 
         Intent intent = getIntent();
         WindowsModelBean windowsModelBean = (WindowsModelBean) intent.getSerializableExtra("windowsModelBean");
-        if (windowsModelBean==null){
+        if (windowsModelBean == null) {
             ToastUtil.toast("弹出框数据为空");
         }
         windowsType = windowsModelBean.getWindowsType();
         DefaultText = windowsModelBean.getDefaultText();
-        TextField =windowsModelBean.getTextField();
-        ValueField =windowsModelBean.getValueField();
+        TextField = windowsModelBean.getTextField();
+        ValueField = windowsModelBean.getValueField();
+        listTitleVisable = (ArrayList<Boolean>) windowsModelBean.getListTitleVisable();
         ListTitle = (ArrayList<String>) windowsModelBean.getListTitle();
-        ListField=(ArrayList<String>)windowsModelBean.getListField();
+        ListField = (ArrayList<String>) windowsModelBean.getListField();
         for (int i = 0; i < ListField.size(); i++) {
-            if (TextField.equals(ListField.get(i))){
+            if (TextField.equals(ListField.get(i))) {
                 name = i;
             }
         }
 
-        if (windowsType==4){
-            tvLeft.setText(ListTitle.get(0));
-            tvRight.setVisibility(View.GONE);
-            tvTick.setText("请通过关键字查询,点击选取"+TextField);
-        }else{
-            tvLeft.setText(ListTitle.get(0));
-            tvRight.setText(ListTitle.get(1));
-            tvTick.setText("请通过关键字查询,点击选取"+TextField);
+        for (int i = 0; i < listTitleVisable.size(); i++) {
+            if (listTitleVisable.get(i) == true) {
+                num++;
+            }
         }
 
-        receiveDialogadapter = new ReceiveDialogadapter(this,windowsType);
+        if (num == 1) {
+            tvLeft.setText(ListTitle.get(1));
+            tvRight.setVisibility(View.GONE);
+            tvTick.setText("请通过关键字查询,点击选取" + TextField);
+        } else {
+            tvLeft.setText(ListTitle.get(0));
+            tvRight.setText(ListTitle.get(1));
+            tvTick.setText("请通过关键字查询,点击选取" + TextField);
+        }
+
+        receiveDialogadapter = new ReceiveDialogadapter(this, windowsType);
         paikingRecord.setAdapter(receiveDialogadapter);
 
         //上拉加载
@@ -151,19 +160,14 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                 if (position == receiveDialogadapter.getCount())
                     return;
                 EPC epc = epcArrayList.get(position);
-                if (windowsType==4){
+                if (name == 1) {
                     value = epc.getData1();
+                    text = epc.getData2();
+                } else {
+                    value = epc.getData2();
                     text = epc.getData1();
-                }else {
-                    if (name==1){
-                        value = epc.getData1();
-                        text = epc.getData2();
-                    }else {
-                        value = epc.getData2();
-                        text = epc.getData1();
-                    }
                 }
-               receiveDialogadapter.setSelectedPosition(position);
+                receiveDialogadapter.setSelectedPosition(position);
                 receiveDialogadapter.notifyDataSetInvalidated();
             }
         });
@@ -217,12 +221,8 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                                 ArrayList<String> list = (ArrayList<String>) recommendWhSites.getListData().get(i);
                                 EPC epc = new EPC();
                                 epc.setData1(list.get(0));
-                                if (windowsType==4){
-                                    epcArrayList.add(epc);
-                                }else {
-                                    epc.setData2(list.get(1));
-                                    epcArrayList.add(epc);
-                                }
+                                epc.setData2(list.get(1));
+                                epcArrayList.add(epc);
                             }
                             if (epcArrayList != null) {
                                 int count = recommendWhSites.getTotalCount();
@@ -261,7 +261,7 @@ public class ReceiveDiaolgActivity extends NewBaseActivity {
                 }
                 Intent intent = new Intent();
                 intent.putExtra("value", value);
-                intent.putExtra("text",text);
+                intent.putExtra("text", text);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;

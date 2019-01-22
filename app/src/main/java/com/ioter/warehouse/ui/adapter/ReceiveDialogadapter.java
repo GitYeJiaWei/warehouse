@@ -129,7 +129,7 @@ public class ReceiveDialogadapter extends BaseAdapter {
         final EPC m1=(EPC) this.getItem(position);
         if (type==4){
             listItemView.total.setText(position+1+"");
-            listItemView.left.setText(m1.getData1());
+            listItemView.left.setText(m1.getData2());
         }else {
             listItemView.total.setText(position+1+"");
             listItemView.left.setText(m1.getData1());

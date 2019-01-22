@@ -170,43 +170,6 @@ public class MainActivity extends NewBaseActivity{
     }
 
 
-    public void press()
-    {
-        //update the selected item in the drawer and the title
-        mDrawerList.setItemChecked(0, true);
-        setTitle(mOptionTitles[0]);
-        try
-        {
-            super.onBackPressed();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void getPressDialog(String content)
-    {
-        final BaseDialog baseDialog = new BaseDialog(this, 1);
-        baseDialog.setHintTvValue(content);
-        baseDialog.setConfrimBtnOnclick(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                baseDialog.dismiss();
-                press();
-            }
-        });
-        baseDialog.setCancelBtnOnclick(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                baseDialog.dismiss();
-            }
-        });
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
