@@ -15,10 +15,19 @@ public class ListLotBean implements Serializable {
      */
 
     private String Title;
+    private String Id;
     private int Type;
     private String Value;
     private Object ListOption;
     private WindowsModelBean WindowsModel;
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
 
     public Object getListOption() {
         return ListOption;

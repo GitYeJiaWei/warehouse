@@ -81,6 +81,7 @@
                         android:textSize="18sp" />
 
                     <EditText
+                        android:inputType="number"
                         android:id="@+id/ef_shuliang"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/ed_height"
@@ -210,7 +211,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="上架数EA"
+                        android:text="预架数EA"
                         android:textSize="18sp" />
 
                     <EditText

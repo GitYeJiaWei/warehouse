@@ -78,8 +78,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
     private ArrayList<String> listEpc = null;
     private ArrayList<EPC> epclis = null;
     private String selected = null;
-    private HashMap<String,Double> doubMap = new HashMap<>();
-    private double result =0;
+    private HashMap<String, Double> doubMap = new HashMap<>();
+    private double result = 0;
     private String stockInId;
     private String orderNo;
 
@@ -92,6 +92,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         setTitle("收货");
 
         edShouhuo.setText("");
+        etDingdan.setText("*");
 
         etDanhao.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -113,7 +114,16 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 }
             }
         });
-
+        edPlan.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    edPlan.setFocusableInTouchMode(true);
+                    edPlan.requestFocus();
+                    a = 3;
+                }
+            }
+        });
         takeData();
     }
 
@@ -127,7 +137,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
         ArrayList<String> arrayList = new ArrayList<>();
         int select = 0;
         for (int i = 0; i < list.size(); i++) {
-            doubMap.put(list.get(i).getUom(),list.get(i).getQty());
+            doubMap.put(list.get(i).getUom(), list.get(i).getQty());
             arrayList.add(list.get(i).getUom());
             if (list.get(i).isIsDefault()) {
                 //默认item
@@ -217,8 +227,8 @@ public class ReceiveMessActivity extends NewBaseActivity {
             a = 1;
             return;
         } else {
-            if (sb!=null){
-                sb=null;
+            if (sb != null) {
+                sb = null;
             }
             sb = hashMap.get(barCode);
             edtPinming.setText(sb.get(0).getProductName());
@@ -248,15 +258,17 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN){
-            switch (event.getKeyCode()){
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (event.getKeyCode()) {
                 case 66:
                     if (a == 2) {
                         commit();
                     } else if (a == 1) {
-                        a = 2;
+                        a = 3;
                         String bar = etDanhao.getText().toString();
                         showUI(bar);
+                    }else if (a==3){
+                        a = 2;
                     }
                     break;
             }
@@ -285,10 +297,11 @@ public class ReceiveMessActivity extends NewBaseActivity {
                         etDingdan.setText(barCode);
                     } else if (a == 1) {
                         etDanhao.setText(barCode);
-                        a = 2;
+                        a = 3;
                         showUI(barCode);
-                    } else {
-                        return;
+                    } else if(a==3){
+                        edPlan.setText(barCode);
+                        a = 2;
                     }
                 }
             }
@@ -302,15 +315,15 @@ public class ReceiveMessActivity extends NewBaseActivity {
             if (resultCode == RESULT_OK) {
                 //清空数据，保存已提交数据，等待下次扫描
                 String bar = etDanhao.getText().toString();
-                if (!TextUtils.isEmpty(bar)){
-                    if (checkData()==2){
-                        map.put(bar,bar);
-                        if (map.size()==hashMap.size()){
+                if (!TextUtils.isEmpty(bar)) {
+                    if (checkData() == 2) {
+                        map.put(bar, bar);
+                        if (map.size() == hashMap.size()) {
                             finish();
-                        }else {
+                        } else {
                             takeClear();
                         }
-                    }else if (checkData()==1){
+                    } else if (checkData() == 1) {
                         ArrayList<StockBean> s = hashMap.get(bar);
                         s.get(0).setStockQty(result);
                         takeClear();
@@ -330,23 +343,23 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
     private void takeClear() {
         if (epclis != null) {
-            epclis=null;
+            epclis = null;
         }
-        if (sb!=null){
-            sb=null;
+        if (sb != null) {
+            sb = null;
         }
         if (listLotBeans != null) {
-            listLotBeans=null;
+            listLotBeans = null;
         }
-        if (listEpc!=null){
-            listEpc=null;
+        if (listEpc != null) {
+            listEpc = null;
         }
-        a=1;
+        a = 1;
         selected = null;
         result = 0;
         tvTick.setText("请扫描/输入产品");
         edPlan.setText("");
-        etDingdan.setText("");
+        etDingdan.setText("*");
         etDanhao.setText("");
         edtPinming.setText("");
         edtYuqi.setText("");
@@ -379,7 +392,9 @@ public class ReceiveMessActivity extends NewBaseActivity {
             ToastUtil.toast("请输入收货数量");
             return;
         }
-        checkData();
+        if (checkData() == 3 || checkData() == 0) {
+            return;
+        }
 
         if (epclis != null) {
             for (int i = 0; i < epclis.size(); i++) {
@@ -392,7 +407,7 @@ public class ReceiveMessActivity extends NewBaseActivity {
 
         Map<String, String> params = new HashMap<>();
         params.put("stockInId", stockInId);
-        params.put("orderNo",orderNo);
+        params.put("orderNo", orderNo);
         params.put("productId", sb.get(0).getProductId());
         params.put("stockQty", stockQty);
         params.put("uom", selected);
@@ -411,15 +426,15 @@ public class ReceiveMessActivity extends NewBaseActivity {
                 if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
                     String bar = etDanhao.getText().toString();
-                    if (!TextUtils.isEmpty(bar)){
-                        if (checkData()==2){
-                            map.put(bar,bar);
-                            if (map.size()==hashMap.size()){
+                    if (!TextUtils.isEmpty(bar)) {
+                        if (checkData() == 2) {
+                            map.put(bar, bar);
+                            if (map.size() == hashMap.size()) {
                                 finish();
-                            }else {
+                            } else {
                                 takeClear();
                             }
-                        }else if (checkData()==1){
+                        } else if (checkData() == 1) {
                             ArrayList<StockBean> s = hashMap.get(bar);
                             s.get(0).setStockQty(result);
                             takeClear();
@@ -445,21 +460,24 @@ public class ReceiveMessActivity extends NewBaseActivity {
     }
 
     //判断收货数据大小是否合理
-    private int checkData(){
+    private int checkData() {
         Iterator it = doubMap.keySet().iterator();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             String key = (String) it.next();
-            if (key.equals(selected)){
+            if (key.equals(selected)) {
                 double t = doubMap.get(key);
                 double l = doubMap.get("EA");
-                double yuqi =Double.valueOf(edtYuqi.getText().toString());
-                double yihou =Double.valueOf(edtYishou.getText().toString());
+                double yuqi = Double.valueOf(edtYuqi.getText().toString());
+                double yihou = Double.valueOf(edtYishou.getText().toString());
                 int shouhuo = Integer.valueOf(edShouhuo.getText().toString());
-                result = yihou+shouhuo*t/l;
-                if (yuqi-result<0){
+                result = yihou + shouhuo * t / l;
+                if (shouhuo < 0) {
+                    ToastUtil.toast("收货数不能为负数");
+                    return 3;
+                } else if (yuqi - result < 0) {
                     ToastUtil.toast("收货数大于预期数-已收数");
                     return 0;
-                }else if (yuqi-result>0){
+                } else if (yuqi - result > 0) {
                     return 1;
                 }
             }
@@ -467,38 +485,39 @@ public class ReceiveMessActivity extends NewBaseActivity {
         return 2;
     }
 
-    private void commit(){
+    private void commit() {
         if (listLotBeans == null || listLotBeans.size() == 0) {
             commitData();
         } else {
             String stockQty = edShouhuo.getText().toString();
             String stockLoc = edPlan.getText().toString();
             String trackCode = etDingdan.getText().toString();
-            if (TextUtils.isEmpty(trackCode)){
+            if (TextUtils.isEmpty(trackCode)) {
                 ToastUtil.toast("收货跟踪号不能为空");
                 return;
             }
-            if (TextUtils.isEmpty(stockQty)){
+            if (TextUtils.isEmpty(stockQty)) {
                 ToastUtil.toast("收货数量不能为空");
                 return;
             }
-            if (TextUtils.isEmpty(stockLoc)){
+            if (TextUtils.isEmpty(stockLoc)) {
                 ToastUtil.toast("收货库位不能为空");
                 return;
             }
-            if (checkData()!=0){
-                Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
-                intent1.putExtra("listlost", listLotBeans);//动态数组
-                intent1.putExtra("epclis", epclis);//扫描的EPC
-                intent1.putExtra("stockQty", stockQty);//收货数量
-                intent1.putExtra("sb", sb);//获取到的查询数据
-                intent1.putExtra("uom", selected);
-                intent1.putExtra("stockLoc", stockLoc);
-                intent1.putExtra("trackCode", trackCode);
-                intent1.putExtra("stockInId",stockInId);
-                intent1.putExtra("orderNo",orderNo);
-                startActivityForResult(intent1, RAG);
+            if (checkData() == 3 || checkData() == 0) {
+                return;
             }
+            Intent intent1 = new Intent(ReceiveMessActivity.this, ReceiveDateActivity.class);
+            intent1.putExtra("listlost", listLotBeans);//动态数组
+            intent1.putExtra("epclis", epclis);//扫描的EPC
+            intent1.putExtra("stockQty", stockQty);//收货数量
+            intent1.putExtra("sb", sb);//获取到的查询数据
+            intent1.putExtra("uom", selected);
+            intent1.putExtra("stockLoc", stockLoc);
+            intent1.putExtra("trackCode", trackCode);
+            intent1.putExtra("stockInId", stockInId);
+            intent1.putExtra("orderNo", orderNo);
+            startActivityForResult(intent1, RAG);
         }
     }
 

@@ -64,6 +64,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
     private Intent intent = null;
     private ArrayList<String> listLotTitleJson = new ArrayList<>();
     private ArrayList<String> listLotValueJson = new ArrayList<>();
+    private ArrayList<String> listId = new ArrayList<>();
     private int select = 0;
     private int itemId = 0;
     private int RAG = 0;
@@ -88,8 +89,12 @@ public class ReceiveDateActivity extends NewBaseActivity {
             final TextView textView1 = new TextView(this);
             textView1.setTextSize(18);
             textView1.setText(title);
+
             listLotTitleJson.add(title);
             layoutContent.addView(textView1);
+
+            String id = listLotBeans.get(i).getId();
+            listId.add(id);
 
             int type = listLotBeans.get(i).getType();
             String value = listLotBeans.get(i).getValue();
@@ -273,7 +278,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                 button.setId(itemId);
                 final WindowsModelBean windowsModelBean = listLotBeans.get(i).getWindowsModel();
                 if (!map1.containsKey(itemId)) {
-                    map1.put(itemId, windowsModelBean.getTextField());
+                    map1.put(itemId, value);
                 }
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -399,6 +404,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
         params.put("uom", uom);
         params.put("stockLoc", stockLoc);
         params.put("trackCode", trackCode);
+        params.put("listLotIdJson",AppApplication.getGson().toJson(listId));
         params.put("listEpcJson", AppApplication.getGson().toJson(listEpcJson));
         params.put("listLotTitleJson", AppApplication.getGson().toJson(listLotTitleJson));
         params.put("listLotValueJson", AppApplication.getGson().toJson(listLotValueJson));

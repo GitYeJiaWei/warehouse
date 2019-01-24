@@ -71,6 +71,7 @@ public class GroundActivity extends NewBaseActivity {
     private int a = 1;
     private HashMap<String, String> map = new HashMap<>();
     private String selected = null;
+    private HashMap<String,Double> doubMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,9 +169,9 @@ public class GroundActivity extends NewBaseActivity {
             while (it.hasNext()) {
                 String key = (String) it.next();
                 ArrayList<TrackBean> trackBean = hashMap.get(key);
-                edtYishangjia.setText(trackBean.get(0).getShelfQty() + "");
+                edZongshu.setText(trackBean.get(0).getShelfQty() + "");
                 edtBaozhuang.setText(trackBean.get(0).getPacking());
-                edZongshu.setText(trackBean.get(0).getAlreadyQty() + "");
+                edtYishangjia.setText(trackBean.get(0).getAlreadyQty() + "");
                 edtKuwei.setText(trackBean.get(0).getRecommendLoc());
                 edtPinming.setText(trackBean.get(0).getProductName());
                 edChanpin.setText(trackBean.get(0).getProductId());
@@ -195,9 +196,9 @@ public class GroundActivity extends NewBaseActivity {
             return;
         }
         ArrayList<TrackBean> trackBean = hashMap.get(barCode);
-        edtYishangjia.setText(trackBean.get(0).getShelfQty() + "");
+        edZongshu.setText(trackBean.get(0).getShelfQty() + "");
         edtBaozhuang.setText(trackBean.get(0).getPacking());
-        edZongshu.setText(trackBean.get(0).getAlreadyQty() + "");
+        edtYishangjia.setText(trackBean.get(0).getAlreadyQty() + "");
         edtKuwei.setText(trackBean.get(0).getRecommendLoc());
         edtPinming.setText(trackBean.get(0).getProductName());
         init(trackBean.get(0).getListUom());
@@ -207,6 +208,7 @@ public class GroundActivity extends NewBaseActivity {
     }
 
     private void init(List<ListUomBean> list) {
+        doubMap.clear();
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
@@ -216,6 +218,7 @@ public class GroundActivity extends NewBaseActivity {
         int select = 0;
         for (int i = 0; i < list.size(); i++) {
             arrayList.add(list.get(i).getUom());
+            doubMap.put(list.get(i).getUom(),list.get(i).getQty());
             if (list.get(i).isIsDefault()) {
                 select = i;
                 selected = list.get(i).getUom();
@@ -304,6 +307,32 @@ public class GroundActivity extends NewBaseActivity {
         }
     };
 
+    //判断收货数据大小是否合理
+    private int checkData(){
+        Iterator it = doubMap.keySet().iterator();
+        while (it.hasNext()){
+            String key = (String) it.next();
+            if (key.equals(selected)){
+                double t = doubMap.get(key);
+                double l = doubMap.get("EA");
+                double yuqi =Double.valueOf(edZongshu.getText().toString());
+                double yihou =Double.valueOf(edtYishangjia.getText().toString());
+                int shouhuo = Integer.valueOf(efShuliang.getText().toString());
+                double result = yihou+shouhuo*t/l;
+                if (shouhuo < 0) {
+                    ToastUtil.toast("上架数不能为负数");
+                    return 3;
+                }else if (yuqi-result<0){
+                    ToastUtil.toast("上架数大于预期数-已收数");
+                    return 0;
+                }else if (yuqi-result>0){
+                    return 1;
+                }
+            }
+        }
+        return 2;
+    }
+
     //清除数据
     private void takeclear(int b) {
         if (b == 1){
@@ -321,7 +350,7 @@ public class GroundActivity extends NewBaseActivity {
             selected = null;
             a = 1;
             tvSize.setText("");
-        }{
+        }else {
             tvTick.setText("请扫描/输入产品");
             edChanpin.setText("");
             efShuliang.setText("");
@@ -367,6 +396,9 @@ public class GroundActivity extends NewBaseActivity {
 
         if (trackBean==null){
             ToastUtil.toast("产品与相关数据不符");
+            return;
+        }
+        if (checkData()==0 || checkData() ==3){
             return;
         }
 
