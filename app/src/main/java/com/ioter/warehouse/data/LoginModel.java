@@ -1,9 +1,7 @@
 package com.ioter.warehouse.data;
 
-import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.bean.BaseBean;
 import com.ioter.warehouse.bean.LoginBean;
-import com.ioter.warehouse.common.util.DataUtil;
 import com.ioter.warehouse.data.http.ApiService;
 import com.ioter.warehouse.presenter.contract.LoginContract;
 

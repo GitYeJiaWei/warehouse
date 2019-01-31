@@ -19,6 +19,7 @@ import com.ioter.warehouse.bean.TrackBean;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACache;
 import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.ioter.warehouse.common.util.ToastUtil;
@@ -72,6 +73,7 @@ public class GroundActivity extends NewBaseActivity {
     private HashMap<String, String> map = new HashMap<>();
     private String selected = null;
     private HashMap<String,Double> doubMap = new HashMap<>();
+    private String name = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,10 @@ public class GroundActivity extends NewBaseActivity {
                 }
             }
         });
+        name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+        }
     }
 
     protected void takeData(String barCode) {
@@ -401,6 +407,10 @@ public class GroundActivity extends NewBaseActivity {
         if (checkData()==0 || checkData() ==3){
             return;
         }
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+            return;
+        }
 
         progressDialog = new CustomProgressDialog(this, "提交数据中...");
         progressDialog.show();
@@ -413,6 +423,7 @@ public class GroundActivity extends NewBaseActivity {
         params.put("uom", selected);
         params.put("loc", loc);
         params.put("userId", ACacheUtils.getUserId());
+        params.put("whId", ACacheUtils.getWareIdByWhCode(name));
 
         AppApplication.getApplication().getAppComponent().getApiService().Shelf(params).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this) {

@@ -17,6 +17,7 @@ import com.ioter.warehouse.bean.ListUomBean;
 import com.ioter.warehouse.bean.StockMoveModel;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACache;
 import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.ioter.warehouse.common.util.ToastUtil;
@@ -59,6 +60,7 @@ public class MoveMessActivity extends NewBaseActivity {
     private int a = 1;
     private CustomProgressDialog progressDialog;
     private StockMoveModel list=null;
+    private String name = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,10 @@ public class MoveMessActivity extends NewBaseActivity {
                 }
             }
         });
+        name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+        }
     }
 
 
@@ -181,6 +187,10 @@ public class MoveMessActivity extends NewBaseActivity {
         if (list==null){
             return;
         }
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+            return;
+        }
         progressDialog = new CustomProgressDialog(this, "提交数据中...");
         progressDialog.show();
         String qty = edYiku.getText().toString();
@@ -199,6 +209,7 @@ public class MoveMessActivity extends NewBaseActivity {
         params.put("targetTrackCode", targetTrackCode);
         params.put("userId", ACacheUtils.getUserId());
         params.put("reason", reason);
+        params.put("whId",ACacheUtils.getWareIdByWhCode(name));
 
         AppApplication.getApplication().getAppComponent().getApiService().StockMovePostParam(params).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this)

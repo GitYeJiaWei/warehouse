@@ -14,6 +14,7 @@ import com.ioter.warehouse.bean.StockMoveModel;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACache;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.ioter.warehouse.common.util.ToastUtil;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
@@ -48,6 +49,7 @@ public class MoveActivity extends NewBaseActivity {
     private CustomProgressDialog progressDialog= null;
     private StockMoveModel stockMoveModel =null;
     private int RAD =1;
+    private String name = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,14 +89,23 @@ public class MoveActivity extends NewBaseActivity {
         });
 
         setTitle("库存移动");
+        name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+        }
     }
 
     protected void takeData(String barCode) {
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+            return;
+        }
         progressDialog = new CustomProgressDialog(this, "获取数据中...");
         progressDialog.show();
 
         Map<String, String> params = new HashMap<>();
-        params.put("locid", barCode);
+        params.put("whId",name);
+        params.put("loc", barCode);
         hashMap.clear();
         AppApplication.getApplication().getAppComponent().getApiService().GetStockMoveInfo(params).compose(RxHttpReponseCompat.<List<StockMoveModel>>compatResult())
                 .subscribe(new AdapterItemSubcriber<List<StockMoveModel>>(AppApplication.getApplication()) {

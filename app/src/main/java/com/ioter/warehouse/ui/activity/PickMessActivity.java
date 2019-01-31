@@ -19,6 +19,7 @@ import com.ioter.warehouse.bean.PickModel;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACache;
 import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.common.util.SoundManage;
 import com.ioter.warehouse.common.util.ToastUtil;
@@ -78,6 +79,7 @@ public class PickMessActivity extends NewBaseActivity {
     private int current = 1;
     private String selected =null;
     private int a =1;
+    private String name = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,10 @@ public class PickMessActivity extends NewBaseActivity {
                 }
             }
         });
+        name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+        }
     }
 
     protected void initView() {
@@ -142,8 +148,8 @@ public class PickMessActivity extends NewBaseActivity {
 
                     @Override
                     public void onComplete() {
-                        showUI("nor");
                         progressDialog.dismiss();
+                        showUI("nor");
                     }
 
                     @Override
@@ -317,6 +323,10 @@ public class PickMessActivity extends NewBaseActivity {
             ToastUtil.toast("拣货数量超出标准，请重新输入");
             return;
         }
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+            return;
+        }
 
         progressDialog = new CustomProgressDialog(this, "提交数据中...");
         progressDialog.show();
@@ -324,10 +334,11 @@ public class PickMessActivity extends NewBaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("taskId", map.get(current).getTaskId());
         params.put("productId",productId);
-        params.put("locId", locId);
+        params.put("loc", locId);
         params.put("qty", qty);
         params.put("uom", selected);
         params.put("userId", ACacheUtils.getUserId());
+        params.put("whId",ACacheUtils.getWareIdByWhCode(name));
 
         AppApplication.getApplication().getAppComponent().getApiService().Pick(params).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new AdapterItemSubcriber<BaseBean>(this) {
@@ -335,7 +346,7 @@ public class PickMessActivity extends NewBaseActivity {
             public void onNext(BaseBean baseBean) {
                 if (baseBean.success()) {
                     ToastUtil.toast("提交成功");
-                    if (map1.size()==0){
+                    if (map1.size()==1){
                         finish();
                     }else {
                         map1.remove(current);
@@ -384,6 +395,10 @@ public class PickMessActivity extends NewBaseActivity {
             if (length < 1) {
             } else {
                 final String barCode = new String(bytes, 0, length);
+                if (map == null || map.size() == 0) {
+                    ToastUtil.toast("出库单号不存在");
+                    return;
+                }
                 if (barCode != null && barCode.length() > 0) {
                     SoundManage.PlaySound(PickMessActivity.this, SoundManage.SoundType.SUCCESS);
                     if (a == 2) {
