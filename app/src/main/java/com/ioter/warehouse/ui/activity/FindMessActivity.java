@@ -15,6 +15,8 @@ import com.ioter.warehouse.bean.GetStock;
 import com.ioter.warehouse.common.CustomProgressDialog;
 import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
 import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACache;
+import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.common.util.ToastUtil;
 import com.ioter.warehouse.ui.fragment.FindMessFragment;
 
@@ -42,7 +44,6 @@ public class FindMessActivity extends NewBaseActivity implements FindMessFragmen
     private FindMessFragment findMessFragment;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
-    private CustomProgressDialog progressDialog=null;
     private int current =1;
     private ConcurrentHashMap<Integer,ArrayList> map = new ConcurrentHashMap<>();
 
@@ -54,56 +55,24 @@ public class FindMessActivity extends NewBaseActivity implements FindMessFragmen
 
         setTitle("库存查询");
 
-        takeData();
-    }
-
-    protected void takeData() {
         Intent intent = getIntent();
-        String locId = intent.getStringExtra("locId");
-        String productId = intent.getStringExtra("productId");
-        boolean isIgnoreLot = intent.getBooleanExtra("isIgnoreLot",true);
-
-        progressDialog = new CustomProgressDialog(this, "获取数据中...");
-        progressDialog.show();
-
-        Map<String, String> params = new HashMap<>();
-        params.put("locId", locId);
-        params.put("productId", productId);
-        params.put("isIgnoreLot", isIgnoreLot+"");
-
-        AppApplication.getApplication().getAppComponent().getApiService().GetStock(params).compose(RxHttpReponseCompat.<List<GetStock>>compatResult())
-                .subscribe(new AdapterItemSubcriber<List<GetStock>>(AppApplication.getApplication()) {
-                    @Override
-                    public void onNext(List<GetStock> recommendWhSites) {
-                        if (recommendWhSites != null && recommendWhSites.size() > 0) {
-                            map.clear();
-                            int key =1;
-                            try {
-                                for (GetStock info : recommendWhSites) {
-                                    ArrayList<GetStock> arrayList = new ArrayList<>();
-                                    arrayList.add(info);
-                                    map.put(key, arrayList);
-                                    key++;
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        showUI("nor");
-                        progressDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        progressDialog.dismiss();
-                        super.onError(e);
-                    }
-                });
+        ArrayList<GetStock> array = (ArrayList<GetStock>)intent.getSerializableExtra("map");
+        map.clear();
+        int key =1;
+        try {
+            for (GetStock info : array) {
+                ArrayList<GetStock> arrayList = new ArrayList<>();
+                arrayList.add(info);
+                map.put(key, arrayList);
+                key++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        showUI("nor");
     }
+
+
 
     private void showUI(String abc) {
         if (map == null) {

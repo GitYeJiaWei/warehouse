@@ -184,7 +184,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 // 此处得到选择的时间，可以进行你想要的操作
-                                textView.setText("您选择了：" + year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                textView.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                                 map1.put(v.getId(), year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                             }
                         }
@@ -233,7 +233,7 @@ public class ReceiveDateActivity extends NewBaseActivity {
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        textView.setText("您选择了：" + hourOfDay + ":" + minute);
+                                        textView.setText(hourOfDay + ":" + minute);
                                         map1.put(v.getId(), hourOfDay + ":" + minute);
                                     }
                                 }

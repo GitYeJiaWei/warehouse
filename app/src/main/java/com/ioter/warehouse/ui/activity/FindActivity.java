@@ -13,8 +13,22 @@ import android.widget.TextView;
 
 import com.ioter.warehouse.AppApplication;
 import com.ioter.warehouse.R;
+import com.ioter.warehouse.bean.GetStock;
+import com.ioter.warehouse.common.CustomProgressDialog;
+import com.ioter.warehouse.common.rx.RxHttpReponseCompat;
+import com.ioter.warehouse.common.rx.subscriber.AdapterItemSubcriber;
+import com.ioter.warehouse.common.util.ACache;
+import com.ioter.warehouse.common.util.ACacheUtils;
 import com.ioter.warehouse.common.util.SoundManage;
+import com.ioter.warehouse.common.util.ToastUtil;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +50,8 @@ public class FindActivity extends NewBaseActivity {
     TextView tvTick;
     private int a = 1;
     private boolean check = false;
+    private String name = null;
+    private CustomProgressDialog progressDialog=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +60,11 @@ public class FindActivity extends NewBaseActivity {
         ButterKnife.bind(this);
 
         setTitle("库存查询");
+
+        name = ACache.get(AppApplication.getApplication()).getAsString("UserName");
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+        }
 
         etDanhao.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -117,6 +138,48 @@ public class FindActivity extends NewBaseActivity {
         }
     };
 
+    protected void takeData(String locId,String productId) {
+        boolean isIgnoreLot = check;
+        if (name == null) {
+            ToastUtil.toast("请到系统设置中设置仓库");
+            return;
+        }
+
+        progressDialog = new CustomProgressDialog(this, "获取数据中...");
+        progressDialog.show();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("loc", locId);
+        params.put("productId", productId);
+        params.put("isIgnoreLot", isIgnoreLot+"");
+        params.put("whId", ACacheUtils.getWareIdByWhCode(name));
+
+        AppApplication.getApplication().getAppComponent().getApiService().GetStock(params).compose(RxHttpReponseCompat.<List<GetStock>>compatResult())
+                .subscribe(new AdapterItemSubcriber<List<GetStock>>(AppApplication.getApplication()) {
+                    @Override
+                    public void onNext(List<GetStock> recommendWhSites) {
+                        if (recommendWhSites != null && recommendWhSites.size() > 0) {
+                            Intent intent = new Intent(FindActivity.this, FindMessActivity.class);
+                            intent.putExtra("map", (Serializable) recommendWhSites);
+                            startActivity(intent);
+                        }else {
+                            ToastUtil.toast("库位或产品不存在");
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        super.onError(e);
+                    }
+                });
+    }
+
     @OnClick({R.id.bt_sure, R.id.btn_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -127,11 +190,7 @@ public class FindActivity extends NewBaseActivity {
                     tvTick.setText("库位和产品不能为空");
                     return;
                 }
-                Intent intent = new Intent(FindActivity.this, FindMessActivity.class);
-                intent.putExtra("locId", locId);
-                intent.putExtra("productId", productId);
-                intent.putExtra("isIgnoreLot", check);
-                startActivity(intent);
+                takeData(locId,productId);
                 break;
             case R.id.btn_cancel:
                 finish();
